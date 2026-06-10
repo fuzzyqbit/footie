@@ -189,5 +189,5 @@ def enrich(
     )
     for miss in result.missed:
         console.print(f"[yellow]miss:[/yellow] {miss}")
-    if not result.enriched and not result.skipped:
-        _fail("nothing enriched")
+    if not result.enriched and not result.skipped and not result.missed:
+        _fail("nothing enriched - is the database empty?")

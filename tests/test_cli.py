@@ -203,13 +203,23 @@ def test_enrich_command_reports_summary(db_path, monkeypatch):
     assert "z--base" in result.output
 
 
-def test_enrich_command_exit_1_when_nothing_done(db_path, monkeypatch):
+def test_enrich_command_exit_1_only_when_truly_nothing_happened(db_path, monkeypatch):
+    from fc26.ingest.enrich import EnrichResult
+
+    monkeypatch.setattr("fc26.cli.enrich_cards",
+                        lambda repo, **kw: EnrichResult((), (), ()))
+    result = runner.invoke(app, ["enrich", "--db", str(db_path)])
+    assert result.exit_code == 1
+
+
+def test_enrich_command_exit_0_when_only_misses(db_path, monkeypatch):
     from fc26.ingest.enrich import EnrichResult
 
     monkeypatch.setattr("fc26.cli.enrich_cards",
                         lambda repo, **kw: EnrichResult((), (), ("a--base: gone",)))
     result = runner.invoke(app, ["enrich", "--db", str(db_path)])
-    assert result.exit_code == 1
+    assert result.exit_code == 0
+    assert "a--base" in result.output
 
 
 def test_enrich_command_exit_0_when_all_skipped(db_path, monkeypatch):
