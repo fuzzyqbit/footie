@@ -16,18 +16,39 @@ _PLAYER_LINK_RE = re.compile(
 
 
 def parse_all_clubs(html: str) -> dict[str, str]:
-    """Club display name AND its slug alias -> club page URL."""
+    """Return {display_name: url, slug: url} for every men's club on the all-clubs page.
+
+    Only anchors inside a ``data-gender="0"`` container are considered; women's
+    clubs (``data-gender="1"``) are silently skipped.  This resolves the 11
+    display-name collisions between the men's and women's catalogues (e.g.
+    "Athletic club" maps to the men's id ``-448`` rather than the women's
+    ``-116328``).
+
+    A display name seen with two DIFFERENT urls — even after the gender filter —
+    is ambiguous and dropped entirely; the orchestrator records those players as
+    misses rather than fetching a guessed squad page.
+    """
     tree = HTMLParser(html)
     clubs: dict[str, str] = {}
-    for anchor in tree.css("a"):
-        href = anchor.attributes.get("href") or ""
-        if "/clubs/" not in href:
-            continue
-        display = anchor.text(strip=True)
-        if not display:
-            continue
-        clubs[display] = href
-        clubs[slugify(display)] = href
+    ambiguous: set[str] = set()
+    for container in tree.css("div[data-gender='0']"):
+        for anchor in container.css("a"):
+            href = anchor.attributes.get("href") or ""
+            if "/clubs/" not in href:
+                continue
+            display = anchor.text(strip=True)
+            if not display:
+                continue
+            if display in ambiguous:
+                continue
+            existing = clubs.get(display)
+            if existing is not None and existing != href:
+                ambiguous.add(display)
+                clubs.pop(display, None)
+                clubs.pop(slugify(display), None)
+                continue
+            clubs[display] = href
+            clubs[slugify(display)] = href
     return clubs
 
 
