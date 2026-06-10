@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 from fc26.errors import ParseError
-from fc26.ingest.fcratings import parse_top100_page
+from fc26.ingest.fcratings import extract_player_urls, parse_top100_page
 
 FIXTURE = Path(__file__).parent / "fixtures" / "fcratings_top100.html"
 URL = "https://www.fcratings.com/lists/top-100-players"
@@ -69,8 +69,6 @@ def test_top100_rows_carry_nation(top100_html):
 
 
 def test_extract_player_urls(top100_html):
-    from fc26.ingest.fcratings import extract_player_urls
-
     urls = extract_player_urls(top100_html)
     assert len(urls) == 100
     assert urls["kylian-mbappe"] == "https://www.fcratings.com/kylian-mbappe-231747"
@@ -83,3 +81,30 @@ def test_live_fetch_top100():
 
     cards = fetch_top100()
     assert len(cards) >= 50
+
+
+def test_rows_without_flag_get_no_nation():
+    rows = "".join(
+        f'<tr>'
+        f'<td class="custom-rank text-center" data-sort-value="{i}">{i}</td>'
+        f'<td class="custom-profile" data-sort-value="Player{i}">'
+        f'<div class="custom-name">Player {i}</div>'
+        f'</td>'
+        f'<td class="custom-stat" data-sort-value="90">'
+        f'<span>90</span>'
+        f'</td>'
+        f'<td class="custom-stat"><div>96</div></td>'
+        f'<td class="custom-stat"><div>90</div></td>'
+        f'<td class="custom-stat"><div>80</div></td>'
+        f'<td class="custom-stat"><div>91</div></td>'
+        f'<td class="custom-stat"><div>35</div></td>'
+        f'<td class="custom-stat"><div>75</div></td>'
+        f'<a class="custom-pos-badge">ST</a>'
+        f'<a class="custom-roster-team">Club {i}</a>'
+        f'</tr>'
+        for i in range(1, 51)
+    )
+    html = f'<html><body><table class="custom-table">{rows}</table></body></html>'
+    cards = parse_top100_page(html, source_url=URL)
+    assert len(cards) == 50
+    assert all(c.nation is None for c in cards)

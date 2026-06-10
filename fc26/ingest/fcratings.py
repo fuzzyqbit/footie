@@ -76,7 +76,7 @@ def parse_top100_page(html: str, source_url: str) -> list[Card]:
         club_link = row.css_first("a.custom-roster-team")
         club: Optional[str] = (club_link.text(strip=True) or None) if club_link else None
 
-        # Nation flag alt/title text; None when missing.
+        # Nation flag title text; None when missing.
         flag = row.css_first("img.custom-flag")
         nation = (flag.attributes.get("title") or None) if flag else None
 
@@ -135,6 +135,9 @@ def extract_player_urls(html: str) -> dict[str, str]:
             if anchor.css_first("div.custom-name") is not None:
                 href = anchor.attributes.get("href") or ""
                 if href:
+                    # slug collision: last entry wins (same as make_card_id in
+                    # parse_top100_page); downstream should treat the URL as
+                    # name-derived, not identity-verified
                     urls[slugify(name)] = href
                 break
     return urls
