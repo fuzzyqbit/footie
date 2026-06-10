@@ -2,7 +2,7 @@
 name = "fc26"
 version = "0.1.0"
 description = "FC 26 (PS5) FUT player database and squad assistant"
-requires-python = ">=3.9"
+requires-python = ">=3.12"
 dependencies = [
     "typer>=0.12",
     "rich>=13",
