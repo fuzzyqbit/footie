@@ -20,8 +20,8 @@ fc26 = "fc26.cli:app"
 requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-packages = ["fc26", "tests"]
+[tool.setuptools.packages.find]
+include = ["fc26*"]
 
 [tool.pytest.ini_options]
 markers = ["live: hits the real network (opt-in via --run-live)"]
