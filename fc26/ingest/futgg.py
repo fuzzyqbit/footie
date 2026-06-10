@@ -99,18 +99,10 @@ def _js_int_in_section(blob: str, anchor: str, key: str) -> Optional[int]:
     return _js_int(section, key)
 
 
-def _js_str_in_section(blob: str, anchor: str, key: str) -> Optional[str]:
-    """Extract a string value from a section starting at anchor."""
-    idx = blob.find(anchor)
-    if idx < 0:
-        return None
-    section = blob[idx:idx + 2000]
-    return _js_str(section, key)
-
 
 def _require(value: Optional[object], field: str, source_url: str) -> object:
-    """Raise ParseError if value is None."""
-    if value is None:
+    """Raise ParseError if value is None or empty string."""
+    if value is None or value == "":
         raise ParseError(
             f"missing {field} on fut.gg page {source_url} - layout changed?"
         )
@@ -159,7 +151,7 @@ def _extract_subs(html: str) -> Optional[SubStats]:
 # ---------------------------------------------------------------------------
 
 def _extract_playstyles(
-    html: str, blob: str
+    html: str,
 ) -> tuple[tuple[str, ...], tuple[str, ...]]:
     """Return (playstyles, playstyles_plus) as tuples of names.
 
@@ -239,19 +231,27 @@ def parse_futgg_card(html: str, source_url: str) -> Card:
 
     # ---- Required fields --------------------------------------------------
 
-    # Player name: commonName or cardName in JS blob
+    # Player name: commonName or cardName in JS blob.
+    # Assumption: commonName/cardName appear only for the main card at the
+    # top of the blob, so a full-blob first-match is safe here.
     player_name = _js_str(blob, "commonName") or _js_str(blob, "cardName")
     _require(player_name, "player_name", source_url)
     assert player_name is not None  # narrowing for type checker
 
-    # Card version: rarityName
+    # Card version: rarityName.
+    # Assumption: rarityName for sibling cards, if present, appears after
+    # the main card's object so first-match gives the correct value.
     version = _js_str(blob, "rarityName")
     _require(version, "version", source_url)
     assert version is not None
 
     # OVR + position: co-located in the card presentation object as
-    # overall:96,position:"CDM"
-    ovr_pos_match = re.search(r'overall:(\d+),position:"([^"]+)"', blob)
+    # overall:96,position:"CDM".  Scope to the main card's data object
+    # (anchored by facePace) so a sibling/comparison card earlier in the
+    # blob can't win the match.
+    face_idx = blob.find("facePace")
+    card_section = blob[max(0, face_idx - 500):face_idx + 15000] if face_idx != -1 else blob
+    ovr_pos_match = re.search(r'overall:(\d+),position:"([^"]+)"', card_section)
     if ovr_pos_match is None:
         _require(None, "ovr/position", source_url)
     assert ovr_pos_match is not None
@@ -358,7 +358,7 @@ def parse_futgg_card(html: str, source_url: str) -> Card:
     subs = _extract_subs(html)
 
     # Playstyles from DOM
-    playstyles, playstyles_plus = _extract_playstyles(html, blob)
+    playstyles, playstyles_plus = _extract_playstyles(html)
 
     # Card id
     card_id = make_card_id(player_name, version)

@@ -31,7 +31,10 @@ def test_parses_known_rodri_ptg_values(rodri_html):
     assert card.league == "Premier League"
     assert "Manchester City" in (card.club or "")
     assert card.subs is not None
-    assert card.subs.acceleration is not None
+    assert card.subs.acceleration == 91
+    assert card.subs.sprint_speed == 90
+    assert card.subs.standing_tackle == 95
+    assert card.subs.interceptions == 95
     # live fut.gg ground truth (verified 2026-06-10): four PlayStyles+;
     # Incisive Pass and Press Proven are plain PlayStyles on this card
     assert card.playstyles_plus == (
