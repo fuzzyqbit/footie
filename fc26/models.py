@@ -11,7 +11,7 @@ VALID_POSITIONS = frozenset({
     "CDM", "CM", "CAM", "RM", "LM", "RW", "LW", "ST", "CF",
 })
 
-FACE_STAT_NAMES = ("pac", "sho", "pas", "dri", "def_", "phy")
+FACE_STAT_NAMES = ("pac", "sho", "pas", "dri", "def_", "phy")  # shared with merge.py - single source for the face-stat field list
 
 
 class ValidationError(ValueError):
@@ -97,6 +97,8 @@ def make_card_id(player_name: str, version: str) -> str:
 
 def validate_card(card: Card) -> Card:
     errors: list[str] = []
+    if not card.id:
+        errors.append("id is empty")
     if not card.player_name.strip():
         errors.append("player_name is empty")
     if not card.version.strip():

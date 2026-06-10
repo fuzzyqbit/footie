@@ -73,3 +73,26 @@ def test_face_stats_default_to_none():
     card = _card()
     assert card.face.pac is None
     assert card.subs is None
+
+
+def test_validate_rejects_empty_id():
+    with pytest.raises(ValidationError, match="id is empty"):
+        validate_card(_card(id=""))
+
+
+def test_validate_accepts_boundary_values():
+    assert validate_card(_card(ovr=1)) is not None
+    assert validate_card(_card(ovr=99)) is not None
+    assert validate_card(_card(skill_moves=1, weak_foot=5)) is not None
+
+
+def test_validate_rejects_invalid_alt_position():
+    with pytest.raises(ValidationError, match="unknown alt position"):
+        validate_card(_card(alt_positions=("QB",)))
+
+
+def test_validate_rejects_bad_subs_stat():
+    from fc26.models import SubStats
+
+    with pytest.raises(ValidationError, match="subs.acceleration"):
+        validate_card(_card(subs=SubStats(acceleration=0)))
