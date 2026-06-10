@@ -117,3 +117,41 @@ def test_top100_rows_with_non_numeric_ovr_are_skipped():
     )
     cards = parse_top100(md)
     assert [c.player_name for c in cards] == ["Kylian Mbappé"]
+
+
+def test_short_rows_are_padded_not_truncated():
+    md = (
+        "| Player | Card Version | OVR | Pos | PAC | SHO | PAS | DRI | DEF | PHY | AcceleRATE | SM/WF | Key PlayStyles+ |\n"
+        "|---|---|---|---|---|---|---|---|---|---|---|---|---|\n"
+        "| Shorty | TOTS | 90 | ST | 90 | 90 | 90 | 90 | 45 |\n"
+    )
+    # row is short (9 cells vs 13 headers): PHY cell missing -> numeric guard
+    # must skip the row instead of raising KeyError
+    assert parse_special_cards(md) == []
+
+
+def test_empty_position_rows_are_skipped():
+    md = (
+        "| Rank | Player | OVR | Pos | Club |\n"
+        "|---|---|---|---|---|\n"
+        "| 1 | Ghost | 88 |  | Nowhere FC |\n"
+        "| 2 | Kylian Mbappé | 91 | ST | Real Madrid CF |\n"
+    )
+    cards = parse_top100(md)
+    assert [c.player_name for c in cards] == ["Kylian Mbappé"]
+
+
+def test_master_row_with_bad_ovr_is_skipped():
+    md = (
+        "| PAC | Player | Pos | OVR | Club |\n"
+        "|---|---|---|---|---|\n"
+        "| 96 | Test Row | LW | TBD | Some Club |\n"
+    )
+    assert parse_master_pace_list(md) == []
+
+
+def test_parse_stars_error_branches():
+    from fc26.ingest.seed import _parse_stars
+
+    assert _parse_stars("") == (None, None)
+    assert _parse_stars("x/y") == (None, None)

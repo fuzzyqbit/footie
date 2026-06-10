@@ -29,7 +29,10 @@ def extract_tables(markdown: str) -> list[list[dict[str, str]]]:
         elif _is_separator(cells):
             continue
         else:
-            rows.append(dict(zip(header, cells)))
+            # pad short rows so every header key exists; extra cells beyond
+            # the header are dropped (standard pipe-table semantics)
+            padded = cells + [""] * (len(header) - len(cells))
+            rows.append(dict(zip(header, padded)))
     if header is not None and rows:
         tables.append(rows)
     return tables

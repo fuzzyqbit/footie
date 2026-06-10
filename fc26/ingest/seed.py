@@ -12,6 +12,8 @@ SPECIAL_HEADERS = {"Player", "Card Version", "OVR", "Pos", "PAC", "SHO", "PAS", 
 
 def _split_positions(raw: str) -> tuple[str, tuple[str, ...]]:
     parts = [part.strip() for part in raw.split("/") if part.strip()]
+    if not parts:
+        return "", ()
     return parts[0], tuple(parts[1:])
 
 
@@ -28,7 +30,9 @@ def parse_top100(markdown: str) -> list[Card]:
         for row in table:
             if not row.get("OVR", "").strip().lstrip("-").isdigit():
                 continue
-            position, alts = _split_positions(row["Pos"])
+            position, alts = _split_positions(row.get("Pos", ""))
+            if not position:
+                continue
             cards.append(Card(
                 id=make_card_id(row["Player"], "base"),
                 player_name=row["Player"],
@@ -51,7 +55,9 @@ def parse_master_pace_list(markdown: str) -> list[Card]:
                 continue
             if not row.get("OVR", "").strip().lstrip("-").isdigit():
                 continue
-            position, alts = _split_positions(row["Pos"])
+            position, alts = _split_positions(row.get("Pos", ""))
+            if not position:
+                continue
             cards.append(Card(
                 id=make_card_id(row["Player"], "base"),
                 player_name=row["Player"],
@@ -78,14 +84,15 @@ def _parse_stars(raw: str) -> tuple[int | None, int | None]:
 def parse_special_cards(markdown: str) -> list[Card]:
     cards: list[Card] = []
     for table in _tables_matching(markdown, SPECIAL_HEADERS):
-        if "Rank" in table[0]:  # the pace-ranking table, not the tracker
+        if "Rank" in table[0]:  # the pace-ranking table, not the tracker  # belt-and-suspenders: subset-match already excludes the pace-ranking table
             continue
         for row in table:
-            if not row.get("OVR", "").strip().lstrip("-").isdigit():
+            stat_fields = ("OVR", "PAC", "SHO", "PAS", "DRI", "DEF", "PHY")
+            if any(not row.get(f, "").strip().lstrip("-").isdigit() for f in stat_fields):
                 continue
-            if not row.get("PAC", "").strip().lstrip("-").isdigit():
+            position, alts = _split_positions(row.get("Pos", ""))
+            if not position:
                 continue
-            position, alts = _split_positions(row["Pos"])
             skill_moves, weak_foot = _parse_stars(row.get("SM/WF", ""))
             playstyles_plus = tuple(
                 part.strip()
@@ -116,7 +123,12 @@ def parse_special_cards(markdown: str) -> list[Card]:
 
 
 def seed_cards(top100_md: str, master_md: str, specials_md: str) -> list[Card]:
-    """All seed cards, in upsert order: top-100 first, then pace (adds PAC), then specials."""
+    """All seed cards, in upsert order: top-100 first, then pace (adds PAC), then specials.
+
+    Last non-None value wins for scalar fields on merge: if top-100 and the
+    master pace list ever disagree on OVR for a shared player, the master's
+    value silently wins (ingested second). Currently both sources agree.
+    """
     return [
         *parse_top100(top100_md),
         *parse_master_pace_list(master_md),
