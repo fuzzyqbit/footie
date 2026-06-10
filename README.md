@@ -33,6 +33,8 @@ acquisition plans for both **Ultimate Team (FUT)** and **Career Mode**.
    meta. → [`docs/09-fastest-players-and-pace-meta.md`](docs/09-fastest-players-and-pace-meta.md)
 10. **The Fastest XI.** Fastest player per position ranked by PAC, plus a master
     fast-player list. → [`docs/10-fastest-xi.md`](docs/10-fastest-xi.md)
+11. **Special cards.** Per-card stats crawled from fut.gg player pages (paste a card
+    URL to add). → [`docs/11-special-cards.md`](docs/11-special-cards.md)
 
 ## Quick-start TL;DR
 
