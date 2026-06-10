@@ -36,6 +36,24 @@ acquisition plans for both **Ultimate Team (FUT)** and **Career Mode**.
 11. **Special cards.** Per-card stats crawled from fut.gg player pages (paste a card
     URL to add). → [`docs/11-special-cards.md`](docs/11-special-cards.md)
 
+## The `fc26` program
+
+The playbook now has a companion CLI: a player-card database seeded from the
+crawled docs, with live ingest from fut.gg and fcratings.
+
+```bash
+python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
+.venv/bin/fc26 seed                          # one-time: docs → data/players.json
+.venv/bin/fc26 add <fut.gg card URL>         # add a special card
+.venv/bin/fc26 sync                          # refresh fcratings top-100
+.venv/bin/fc26 search "rodri"
+.venv/bin/fc26 list --pos ST --sort pac
+.venv/bin/fc26 show kylian-mbappe--base
+```
+
+Design: [`docs/superpowers/specs/2026-06-10-fc26-player-db-design.md`](docs/superpowers/specs/2026-06-10-fc26-player-db-design.md).
+Coming next: chemistry engine, squad/lineup builder, acquisition planner.
+
 ## Quick-start TL;DR
 
 - **Most forgiving meta formation:** `4-2-3-1` — defensive solidity from the double
