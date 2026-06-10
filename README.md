@@ -27,6 +27,8 @@ acquisition plans for both **Ultimate Team (FUT)** and **Career Mode**.
    → [`docs/06-skill-and-mechanics.md`](docs/06-skill-and-mechanics.md)
 7. **Apply it per mode** (FUT / Career / Clubs / Rush).
    → [`docs/07-game-modes.md`](docs/07-game-modes.md)
+8. **Reference the ratings.** FC 26 Top 100 + best-per-position, crawled from
+   fcratings.com. → [`docs/08-player-ratings-top100.md`](docs/08-player-ratings-top100.md)
 
 ## Quick-start TL;DR
 
