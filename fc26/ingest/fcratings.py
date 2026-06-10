@@ -73,7 +73,7 @@ def parse_top100_page(html: str, source_url: str) -> list[Card]:
 
         # Club link text; None when missing.
         club_link = row.css_first("a.custom-roster-team")
-        club: Optional[str] = club_link.text(strip=True) or None if club_link else None
+        club: Optional[str] = (club_link.text(strip=True) or None) if club_link else None
 
         # Defensively handle compound positions like "RW/RM".
         primary_position = position.split("/")[0]
@@ -81,6 +81,8 @@ def parse_top100_page(html: str, source_url: str) -> list[Card]:
         alt_positions: tuple[str, ...] = tuple(alt_raw)
 
         card_id = make_card_id(player_name, "base")
+        # duplicate ids are possible if two players share a romanized name;
+        # the repository upsert layer resolves collisions (last write wins)
 
         cards.append(
             Card(
