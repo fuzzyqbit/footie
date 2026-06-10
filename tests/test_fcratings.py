@@ -84,23 +84,17 @@ def test_live_fetch_top100():
 
 
 def test_rows_without_flag_get_no_nation():
+    # anchors must live inside a <td>: HTML5 foster-parenting relocates
+    # elements placed directly inside <tr> out of the table entirely
     rows = "".join(
         f'<tr>'
         f'<td class="custom-rank text-center" data-sort-value="{i}">{i}</td>'
         f'<td class="custom-profile" data-sort-value="Player{i}">'
         f'<div class="custom-name">Player {i}</div>'
-        f'</td>'
-        f'<td class="custom-stat" data-sort-value="90">'
-        f'<span>90</span>'
-        f'</td>'
-        f'<td class="custom-stat"><div>96</div></td>'
-        f'<td class="custom-stat"><div>90</div></td>'
-        f'<td class="custom-stat"><div>80</div></td>'
-        f'<td class="custom-stat"><div>91</div></td>'
-        f'<td class="custom-stat"><div>35</div></td>'
-        f'<td class="custom-stat"><div>75</div></td>'
         f'<a class="custom-pos-badge">ST</a>'
         f'<a class="custom-roster-team">Club {i}</a>'
+        f'</td>'
+        f'<td class="custom-stat" data-sort-value="90"><span>90</span></td>'
         f'</tr>'
         for i in range(1, 51)
     )
