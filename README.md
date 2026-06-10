@@ -1,0 +1,43 @@
+# ⚽ FC 26 Playbook (PS5)
+
+A practical, opinionated guide to dominating **EA Sports FC 26** on PlayStation 5 —
+strategies, formations & lineups, tactics (FC IQ + Player Roles), and player
+acquisition plans for both **Ultimate Team (FUT)** and **Career Mode**.
+
+> **Patch note:** EA tunes gameplay throughout the year via Title Updates. Anything
+> here about the "meta" (best formations, OP PlayStyles, must-buy players) is a
+> snapshot and will drift. The *principles* — spacing, role chemistry, defensive
+> shape, value in the market — outlast any single patch. Re-check ratings and
+> prices in-game before spending coins.
+
+## How to use this playbook
+
+1. **Lock your settings first.** Controller, camera, and gameplay config matter
+   more than any tactic. → [`docs/01-gameplay-settings.md`](docs/01-gameplay-settings.md)
+2. **Pick an identity.** Decide *how* you want to play (possession, counter,
+   wing-overload, gegenpress) before you pick a formation.
+   → [`docs/02-tactics-fc-iq.md`](docs/02-tactics-fc-iq.md)
+3. **Choose a formation + lineup** that expresses that identity.
+   → [`docs/03-formations-lineups.md`](docs/03-formations-lineups.md)
+4. **Assign Player Roles** so every position has a job.
+   → [`docs/04-player-roles.md`](docs/04-player-roles.md)
+5. **Build the squad.** Hunt PlayStyles+ and chemistry, not just overalls.
+   → [`docs/05-player-acquisitions.md`](docs/05-player-acquisitions.md)
+6. **Drill the mechanics** that win games at the margins.
+   → [`docs/06-skill-and-mechanics.md`](docs/06-skill-and-mechanics.md)
+7. **Apply it per mode** (FUT / Career / Clubs / Rush).
+   → [`docs/07-game-modes.md`](docs/07-game-modes.md)
+
+## Quick-start TL;DR
+
+- **Most forgiving meta formation:** `4-2-3-1` — defensive solidity from the double
+  pivot plus a creative 10. Great for learning FC IQ.
+- **Highest skill ceiling:** `4-3-3 (False 9)` or `4-2-2-2` for wing/half-space play.
+- **Best "I just want to win" defensive shape:** drop into a `4-4-2` block out of
+  possession, regardless of your on-paper formation.
+- **Two non-negotiable PlayStyles+ to chase:** an attacker with **Finesse Shot+**
+  and a passer with **Incisive Pass+**.
+- **Defending priority:** master **secondary-press contain (L2/LT jockey) + manual
+  player switching**. Spamming tackle (○/B) loses games at high levels.
+
+See [`docs/`](docs/) for the full breakdown.
