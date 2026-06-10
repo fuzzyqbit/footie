@@ -6,6 +6,8 @@ import re
 import unicodedata
 from dataclasses import asdict, dataclass, field
 
+from .errors import FC26Error
+
 VALID_POSITIONS = frozenset({
     "GK", "RB", "RWB", "CB", "LB", "LWB",
     "CDM", "CM", "CAM", "RM", "LM", "RW", "LW", "ST", "CF",
@@ -14,7 +16,7 @@ VALID_POSITIONS = frozenset({
 FACE_STAT_NAMES = ("pac", "sho", "pas", "dri", "def_", "phy")  # shared with merge.py - single source for the face-stat field list
 
 
-class ValidationError(ValueError):
+class ValidationError(FC26Error, ValueError):
     """Card data failed boundary validation."""
 
 

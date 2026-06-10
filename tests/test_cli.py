@@ -175,3 +175,14 @@ def test_list_corrupt_db_exits_clean(corrupt_db):
     assert result.exit_code == 1
     assert "cannot read" in result.output
     assert "Traceback" not in result.output
+
+
+def test_add_invalid_card_exits_clean(db_path, monkeypatch):
+    def fake_fetch(url):
+        return Card(id="bad--tots", player_name="Bad", version="TOTS", ovr=200, position="ST")
+
+    monkeypatch.setattr("fc26.cli.fetch_futgg_card", fake_fetch)
+    result = runner.invoke(app, ["add", "http://x", "--db", str(db_path)])
+    assert result.exit_code == 1
+    assert "out of range" in result.output
+    assert "Traceback" not in result.output

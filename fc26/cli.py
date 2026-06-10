@@ -59,8 +59,11 @@ def seed(
     cards = seed_cards(top100_md, master_md, specials_md)
     # no transaction needed: upsert is idempotent, so a mid-loop failure
     # leaves a partial-but-consistent DB and re-running seed completes it
-    for card in cards:
-        repo.upsert(card)
+    try:
+        for card in cards:
+            repo.upsert(card)
+    except FC26Error as exc:
+        _fail(f"seed aborted: {exc}")
     console.print(f"seeded {len(cards)} card records → {len(repo.find_all())} unique cards in {db}")
 
 
