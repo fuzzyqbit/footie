@@ -95,3 +95,25 @@ def test_seed_cards_combines_all_sources():
     assert "kylian-mbappe--base" in ids  # appears once per source; repo merge dedupes
     assert "cristiano-ronaldo--team-of-the-season-tots" in ids
     assert len(cards) == 3 + 2 + 2
+
+
+def test_rows_with_non_numeric_stats_are_skipped():
+    md = (
+        "| PAC | Player | Pos | OVR | Club |\n"
+        "|---|---|---|---|---|\n"
+        "| 96 | Kylian Mbappé | ST | 91 | Real Madrid CF |\n"
+        "| — | *not crawled* | LB | — | — |\n"
+    )
+    cards = parse_master_pace_list(md)
+    assert [c.player_name for c in cards] == ["Kylian Mbappé"]
+
+
+def test_top100_rows_with_non_numeric_ovr_are_skipped():
+    md = (
+        "| Rank | Player | OVR | Pos | Club |\n"
+        "|---|---|---|---|---|\n"
+        "| 1 | Kylian Mbappé | 91 | ST | Real Madrid CF |\n"
+        "| 2 | Mystery Man | TBD | ST | Nowhere FC |\n"
+    )
+    cards = parse_top100(md)
+    assert [c.player_name for c in cards] == ["Kylian Mbappé"]
