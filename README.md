@@ -31,6 +31,8 @@ acquisition plans for both **Ultimate Team (FUT)** and **Career Mode**.
    fcratings.com. → [`docs/08-player-ratings-top100.md`](docs/08-player-ratings-top100.md)
 9. **Chase pace.** Fastest players (crawled PAC) + the fast special-card/AcceleRATE
    meta. → [`docs/09-fastest-players-and-pace-meta.md`](docs/09-fastest-players-and-pace-meta.md)
+10. **The Fastest XI.** Fastest player per position ranked by PAC, plus a master
+    fast-player list. → [`docs/10-fastest-xi.md`](docs/10-fastest-xi.md)
 
 ## Quick-start TL;DR
 
