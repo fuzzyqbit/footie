@@ -60,3 +60,25 @@ def test_empty_tuple_treated_as_missing():
     existing = _card(playstyles_plus=("Intercept",))
     incoming = _card(playstyles_plus=())
     assert merge_cards(existing, incoming).playstyles_plus == ("Intercept",)
+
+
+def test_empty_string_treated_as_missing():
+    existing = _card(club="Arsenal F.C.")
+    incoming = _card(club="")
+    assert merge_cards(existing, incoming).club == "Arsenal F.C."
+
+
+def test_zero_integer_treated_as_present():
+    existing = _card(price=500)
+    incoming = _card(price=0)
+    assert merge_cards(existing, incoming).price == 0  # 0 is present, not missing
+
+
+def test_subs_merge_is_atomic_by_design():
+    # Spec: subs only ever arrives complete from fut.gg crawls, so it is
+    # replaced as a whole object, never merged field-wise.
+    from fc26.models import SubStats
+
+    existing = _card(subs=SubStats(acceleration=80))
+    incoming = _card(subs=SubStats(sprint_speed=90))
+    assert merge_cards(existing, incoming).subs == SubStats(sprint_speed=90)

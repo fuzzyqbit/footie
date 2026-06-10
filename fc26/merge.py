@@ -21,6 +21,8 @@ def _is_rich(card: Card) -> bool:
 def _pick(primary_value, filler_value):
     if primary_value is None:
         return filler_value
+    if isinstance(primary_value, str) and not primary_value:
+        return filler_value
     if isinstance(primary_value, tuple) and not primary_value:
         return filler_value
     return primary_value

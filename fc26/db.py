@@ -81,6 +81,8 @@ class CardRepository:
         cards = {existing.id: existing for existing in self.find_all()}
         if card.id in cards:
             card = merge_cards(cards[card.id], card)
+            # merge_cards output is valid by construction: both inputs were
+            # validated on their own upserts and _pick never invents values.
         cards[card.id] = card
         self._save(tuple(cards.values()))
         return card
