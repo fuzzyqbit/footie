@@ -79,11 +79,18 @@ def enrich_cards(
             sleep(REQUEST_DELAY_SECONDS)
             fresh = parse_player_page(html, source_url=player_url)
             merged = repo.upsert(fresh)
+            if merged.id != card.id:
+                on_progress(
+                    f"WARNING: page id {merged.id!r} != card id {card.id!r} "
+                    f"- original card left unenriched"
+                )
             enriched.append(merged.id)
             on_progress(f"enriched {merged.id} ({merged.nation}, {merged.league})")
         except FC26Error as exc:
             failures += 1
             missed.append(f"{card.id}: {exc}")
+        # only parse/fetch attempts count toward the abort ratio;
+        # URL-discovery misses (no club / not on page) do not
         if attempts >= ABORT_CHECK_AFTER and failures / attempts > ABORT_FAILURE_RATIO:
             raise ParseError(
                 f"{failures}/{attempts} player pages failed - fcratings layout changed?"

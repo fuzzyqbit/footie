@@ -113,3 +113,40 @@ def test_aborts_when_most_pages_fail(tmp_path, monkeypatch):
     monkeypatch.setattr("fc26.ingest.enrich.parse_player_page", boom)
     with pytest.raises(ParseError, match="layout changed"):
         enrich_cards(repo, fetch_html=lambda u: u, sleep=lambda s: None)
+
+
+def test_id_mismatch_surfaces_warning(repo, monkeypatch):
+    # page name differs from the DB card name -> upsert lands under a NEW id;
+    # the original stays unenriched and the operator must be told
+    monkeypatch.setattr("fc26.ingest.enrich.extract_player_urls",
+                        lambda html: {"kylian-mbappe": "https://www.fcratings.com/vinicius-junior-1"})
+    monkeypatch.setattr("fc26.ingest.enrich.parse_all_clubs", lambda html: {})
+    monkeypatch.setattr("fc26.ingest.enrich.parse_player_page",
+                        lambda html, source_url: _enriched_card("vinicius-junior--base", "Vinícius Júnior"))
+    messages = []
+    result = enrich_cards(repo, fetch_html=lambda u: u, sleep=lambda s: None,
+                          on_progress=messages.append)
+    assert "vinicius-junior--base" in result.enriched
+    assert any("WARNING" in m and "kylian-mbappe--base" in m for m in messages)
+
+
+def test_no_club_card_recorded_as_miss(tmp_path, monkeypatch):
+    from fc26.db import CardRepository
+
+    repo = CardRepository(tmp_path / "players.json")
+    repo.upsert(Card(id="lost--base", player_name="Lost", version="base", ovr=80, position="ST"))
+    monkeypatch.setattr("fc26.ingest.enrich.extract_player_urls", lambda html: {})
+    result = enrich_cards(repo, fetch_html=lambda u: u, sleep=lambda s: None)
+    assert any(m.startswith("lost--base: no club") for m in result.missed)
+
+
+def test_player_not_on_club_page_recorded_as_miss(repo, monkeypatch):
+    monkeypatch.setattr("fc26.ingest.enrich.extract_player_urls",
+                        lambda html: {"kylian-mbappe": "https://www.fcratings.com/kylian-mbappe-231747"})
+    monkeypatch.setattr("fc26.ingest.enrich.parse_all_clubs",
+                        lambda html: {"Borussia Dortmund": "https://www.fcratings.com/clubs/borussia-dortmund-22"})
+    monkeypatch.setattr("fc26.ingest.enrich.find_player_link", lambda html, name: None)
+    monkeypatch.setattr("fc26.ingest.enrich.parse_player_page",
+                        lambda html, source_url: _enriched_card("kylian-mbappe--base", "Kylian Mbappé"))
+    result = enrich_cards(repo, fetch_html=lambda u: u, sleep=lambda s: None)
+    assert any(m.startswith("karim-adeyemi--base: not found on club page") for m in result.missed)
