@@ -1,0 +1,149 @@
+import json
+
+import pytest
+from typer.testing import CliRunner
+
+from fc26.cli import app
+from fc26.db import CardRepository
+from fc26.models import Card, FaceStats
+
+runner = CliRunner()
+
+
+@pytest.fixture()
+def db_path(tmp_path):
+    path = tmp_path / "players.json"
+    repo = CardRepository(path)
+    repo.upsert(Card(
+        id="rodri--base", player_name="Rodri", version="base", ovr=89,
+        position="CDM", club="Manchester City F.C.",
+        face=FaceStats(pac=72, sho=78, pas=89, dri=84, def_=87, phy=82),
+    ))
+    repo.upsert(Card(
+        id="kylian-mbappe--base", player_name="Kylian Mbappé", version="base",
+        ovr=91, position="ST", club="Real Madrid CF", face=FaceStats(pac=96),
+    ))
+    return path
+
+
+def test_search_finds_by_name(db_path):
+    result = runner.invoke(app, ["search", "rodri", "--db", str(db_path)])
+    assert result.exit_code == 0
+    assert "Rodri" in result.output
+    assert "Mbapp" not in result.output
+
+
+def test_search_json_output(db_path):
+    result = runner.invoke(app, ["search", "rodri", "--db", str(db_path), "--json"])
+    assert result.exit_code == 0
+    data = json.loads(result.output)
+    assert data[0]["id"] == "rodri--base"
+
+
+def test_search_no_match_exits_nonzero(db_path):
+    result = runner.invoke(app, ["search", "zzz", "--db", str(db_path)])
+    assert result.exit_code == 1
+    assert "no cards" in result.output.lower()
+
+
+def test_show_by_id_and_by_name(db_path):
+    by_id = runner.invoke(app, ["show", "rodri--base", "--db", str(db_path)])
+    by_name = runner.invoke(app, ["show", "Rodri", "--db", str(db_path)])
+    assert by_id.exit_code == 0 and by_name.exit_code == 0
+    assert "CDM" in by_id.output
+
+
+def test_show_unknown_exits_nonzero(db_path):
+    result = runner.invoke(app, ["show", "nobody", "--db", str(db_path)])
+    assert result.exit_code == 1
+
+
+def test_list_filters_by_position_and_sorts_by_pace(db_path):
+    result = runner.invoke(app, ["list", "--pos", "ST", "--sort", "pac", "--db", str(db_path)])
+    assert result.exit_code == 0
+    assert "Mbapp" in result.output
+    assert "Rodri" not in result.output
+
+
+def test_list_json(db_path):
+    result = runner.invoke(app, ["list", "--sort", "ovr", "--db", str(db_path), "--json"])
+    data = json.loads(result.output)
+    assert [c["id"] for c in data] == ["kylian-mbappe--base", "rodri--base"]
+
+
+def test_seed_reads_docs_and_writes_db(tmp_path):
+    docs = tmp_path / "docs"
+    docs.mkdir()
+    (docs / "08-player-ratings-top100.md").write_text(
+        "| Rank | Player | OVR | Pos | Club |\n|---|---|---|---|---|\n"
+        "| 1 | Kylian Mbappé | 91 | ST | Real Madrid CF |\n"
+    )
+    (docs / "10-fastest-xi.md").write_text(
+        "| PAC | Player | Pos | OVR | Club |\n|---|---|---|---|---|\n"
+        "| 96 | Kylian Mbappé | ST | 91 | Real Madrid CF |\n"
+    )
+    (docs / "11-special-cards.md").write_text(
+        "| Player | Card Version | OVR | Pos | PAC | SHO | PAS | DRI | DEF | PHY | AcceleRATE | SM/WF | Key PlayStyles+ |\n"
+        "|---|---|---|---|---|---|---|---|---|---|---|---|---|\n"
+        "| Rodri | Path to Glory | 96 | CDM/CM | 90 | 88 | 96 | 95 | 94 | 92 | Controlled | 5★/5★ | Intercept |\n"
+    )
+    db = tmp_path / "players.json"
+    result = runner.invoke(app, ["seed", "--docs-dir", str(docs), "--db", str(db)])
+    assert result.exit_code == 0, result.output
+    repo = CardRepository(db)
+    mbappe = repo.find_by_id("kylian-mbappe--base")
+    assert mbappe is not None
+    assert mbappe.face.pac == 96  # enriched by the pace list merge
+    assert repo.find_by_id("rodri--path-to-glory") is not None
+
+
+def test_seed_is_idempotent(tmp_path):
+    docs = tmp_path / "docs"
+    docs.mkdir()
+    (docs / "08-player-ratings-top100.md").write_text(
+        "| Rank | Player | OVR | Pos | Club |\n|---|---|---|---|---|\n"
+        "| 1 | Kylian Mbappé | 91 | ST | Real Madrid CF |\n"
+    )
+    (docs / "10-fastest-xi.md").write_text("")
+    (docs / "11-special-cards.md").write_text("")
+    db = tmp_path / "players.json"
+    runner.invoke(app, ["seed", "--docs-dir", str(docs), "--db", str(db)])
+    first = db.read_text()
+    runner.invoke(app, ["seed", "--docs-dir", str(docs), "--db", str(db)])
+    assert db.read_text() == first
+
+
+def test_add_calls_futgg_fetch(db_path, monkeypatch):
+    fetched_urls = []
+
+    def fake_fetch(url):
+        fetched_urls.append(url)
+        return Card(id="x--tots", player_name="X", version="TOTS", ovr=90, position="ST")
+
+    monkeypatch.setattr("fc26.cli.fetch_futgg_card", fake_fetch)
+    result = runner.invoke(app, ["add", "https://www.fut.gg/players/1-x/26-1/", "--db", str(db_path)])
+    assert result.exit_code == 0
+    assert fetched_urls == ["https://www.fut.gg/players/1-x/26-1/"]
+    assert CardRepository(db_path).find_by_id("x--tots") is not None
+
+
+def test_sync_calls_fcratings_fetch(db_path, monkeypatch):
+    def fake_fetch():
+        return [Card(id="y--base", player_name="Y", version="base", ovr=85, position="CB")]
+
+    monkeypatch.setattr("fc26.cli.fetch_top100", fake_fetch)
+    result = runner.invoke(app, ["sync", "--db", str(db_path)])
+    assert result.exit_code == 0
+    assert CardRepository(db_path).find_by_id("y--base") is not None
+
+
+def test_fetch_error_is_clean_not_traceback(db_path, monkeypatch):
+    from fc26.errors import FetchError
+
+    def fake_fetch(url):
+        raise FetchError("could not fetch http://x: boom")
+
+    monkeypatch.setattr("fc26.cli.fetch_futgg_card", fake_fetch)
+    result = runner.invoke(app, ["add", "http://x", "--db", str(db_path)])
+    assert result.exit_code == 1
+    assert "could not fetch" in result.output
