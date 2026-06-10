@@ -32,7 +32,12 @@ def test_parses_known_rodri_ptg_values(rodri_html):
     assert "Manchester City" in (card.club or "")
     assert card.subs is not None
     assert card.subs.acceleration is not None
-    assert "Incisive Pass" in card.playstyles_plus or "Incisive Pass" in card.playstyles
+    assert card.playstyles_plus == (
+        "Intercept", "Anticipate", "Pinged Pass", "Tiki Taka", "Incisive Pass", "Press Proven",
+    )
+    assert card.playstyles == (
+        "Power Shot", "Long Ball", "Aerial Fortress", "Technical", "Bruiser",
+    )
     assert card.source_url == URL
     assert card.crawled_at is not None
 

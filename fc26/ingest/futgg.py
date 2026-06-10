@@ -16,9 +16,14 @@ USER_AGENT = "footie-playbook/0.1 (personal squad tool)"
 TIMEOUT_SECONDS = 15
 
 # ---------------------------------------------------------------------------
-# DOM icon paths used to distinguish PlayStyles+ (pentagon) from PlayStyles (diamond)
+# DOM icon fill colour used to distinguish PlayStyles+ (gold) from PlayStyles (themed)
 # ---------------------------------------------------------------------------
 
+# PS+ badges render the 42-px outline with a fixed gold fill; plain PS badges
+# use CSS currentColor so the outline adopts the card's theme colour.
+_PS_PLUS_FILL = "#e3c075"
+
+# Path strings kept for fallback detection in case fill colour alone is absent.
 _PENTAGON_PATH = "M12.813,104.953L68.157,21.862H188.143l55.045,83.091L128,235.138Z"
 _DIAMOND_PATH = "M128,12.808L243.192,128,128,243.192,12.808,128Z"
 
@@ -158,44 +163,58 @@ def _extract_playstyles(
 ) -> tuple[tuple[str, ...], tuple[str, ...]]:
     """Return (playstyles, playstyles_plus) as tuples of names.
 
-    Pentagon icon (PS+) vs diamond icon (regular PS) distinguishes the groups.
-    The DOM renders PS+ first (pentagon), then regular PS (diamond).
+    Strategy: scan forward — for each 42×42 outline SVG on the card, look ahead
+    up to 4 000 chars for the label span that belongs to it.  A badge is PS+ when
+    its 42-px outline uses the gold fill (#e3c075); regular PS badges use
+    currentColor.  Pentagon/diamond path shapes are kept as a secondary check.
+
+    Forward scanning avoids the fragile lookback window: the SVG always precedes
+    its label in the DOM, so the distance is small and predictable regardless of
+    card position.
     """
-    span_re = re.compile(
-        r'<span class="overflow-hidden">([^<]+)</span>'
-    )
     svg_42_re = re.compile(
         r'<svg[^>]+height="42"[^>]*>(.*?)</svg>', re.DOTALL
     )
+    span_re = re.compile(
+        r'<span class="overflow-hidden">([^<]+)</span>'
+    )
 
-    # Determine the expected counts from the JS blob for validation
-    ps_count_match = re.search(
-        r"playstyles:\$R\[\d+\]=\[([\d,]+)\]", blob
-    )
-    psplus_count_match = re.search(
-        r"playstylesPlus:\$R\[\d+\]=\[([\d,]+)\]", blob
-    )
+    # Pre-compute all span positions for fast forward lookup.
+    spans: list[tuple[int, str]] = [
+        (m.start(), m.group(1)) for m in span_re.finditer(html)
+    ]
 
     ps_plus: list[str] = []
     ps_regular: list[str] = []
 
-    for m in span_re.finditer(html):
-        label = m.group(1)
-        pos = m.start()
-        # Look back up to 5000 chars for the containing 42x42 SVG
-        pre = html[max(0, pos - 5000) : pos]
-        # Find the last height="42" SVG in pre-context
-        last_svg_match = None
-        for svg_m in svg_42_re.finditer(pre):
-            last_svg_match = svg_m
+    for svg_m in svg_42_re.finditer(html):
+        svg_content = svg_m.group(1)
+        svg_end = svg_m.end()
 
-        if last_svg_match is None:
+        # Determine badge type: gold fill → PS+; fallback to path shape.
+        if _PS_PLUS_FILL in svg_content or _PENTAGON_PATH in svg_content:
+            is_plus = True
+        elif _DIAMOND_PATH in svg_content:
+            is_plus = False
+        else:
+            continue  # unrecognised badge shape — skip
+
+        # Find the first label span within 4 000 chars after this SVG.
+        label: Optional[str] = None
+        for span_pos, span_text in spans:
+            if span_pos < svg_end:
+                continue
+            if span_pos > svg_end + 4000:
+                break
+            label = span_text
+            break
+
+        if label is None:
             continue
 
-        svg_content = last_svg_match.group(1)
-        if _PENTAGON_PATH in svg_content:
+        if is_plus:
             ps_plus.append(label)
-        elif _DIAMOND_PATH in svg_content:
+        else:
             ps_regular.append(label)
 
     return tuple(ps_regular), tuple(ps_plus)
