@@ -61,6 +61,22 @@ def test_too_few_rows_raises_parse_error():
         parse_top100_page(html, source_url=URL)
 
 
+def test_top100_rows_carry_nation(top100_html):
+    cards = parse_top100_page(top100_html, source_url=URL)
+    assert cards[0].nation == "France"  # Mbappé
+    rodri = next(c for c in cards if c.player_name == "Rodri")
+    assert rodri.nation == "Spain"
+
+
+def test_extract_player_urls(top100_html):
+    from fc26.ingest.fcratings import extract_player_urls
+
+    urls = extract_player_urls(top100_html)
+    assert len(urls) == 100
+    assert urls["kylian-mbappe"] == "https://www.fcratings.com/kylian-mbappe-231747"
+    assert all(url.startswith("https://www.fcratings.com/") for url in urls.values())
+
+
 @pytest.mark.live
 def test_live_fetch_top100():
     from fc26.ingest.fcratings import fetch_top100

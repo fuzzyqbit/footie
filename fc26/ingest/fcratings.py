@@ -9,10 +9,11 @@ import httpx
 from selectolax.parser import HTMLParser
 
 from fc26.errors import FetchError, ParseError
-from fc26.models import Card, make_card_id
+from fc26.models import Card, make_card_id, slugify
 
 USER_AGENT = "footie-playbook/0.1 (personal squad tool)"
 TIMEOUT_SECONDS = 15
+TOP100_URL = "https://www.fcratings.com/lists/top-100-players"
 
 # Minimum number of cards that must be parsed before we consider the result valid.
 _MIN_CARDS = 50
@@ -75,6 +76,10 @@ def parse_top100_page(html: str, source_url: str) -> list[Card]:
         club_link = row.css_first("a.custom-roster-team")
         club: Optional[str] = (club_link.text(strip=True) or None) if club_link else None
 
+        # Nation flag alt/title text; None when missing.
+        flag = row.css_first("img.custom-flag")
+        nation = (flag.attributes.get("title") or None) if flag else None
+
         # Defensively handle compound positions like "RW/RM".
         primary_position = position.split("/")[0]
         alt_raw = position.split("/")[1:] if "/" in position else []
@@ -93,6 +98,7 @@ def parse_top100_page(html: str, source_url: str) -> list[Card]:
                 position=primary_position,
                 alt_positions=alt_positions,
                 club=club,
+                nation=nation,
                 source_url=source_url,
                 crawled_at=today,
             )
@@ -108,12 +114,39 @@ def parse_top100_page(html: str, source_url: str) -> list[Card]:
 
 
 # ---------------------------------------------------------------------------
+# URL extraction
+# ---------------------------------------------------------------------------
+
+
+def extract_player_urls(html: str) -> dict[str, str]:
+    """Slugified player name -> absolute player-page URL, from top-100 rows.
+
+    Player pages live at the site root (e.g. /kylian-mbappe-231747); the row's
+    name anchor wraps the div.custom-name node.
+    """
+    tree = HTMLParser(html)
+    urls: dict[str, str] = {}
+    for row in tree.css("table tr"):
+        name_div = row.css_first("div.custom-name")
+        if name_div is None:
+            continue
+        name = name_div.text(strip=True)
+        for anchor in row.css("a"):
+            if anchor.css_first("div.custom-name") is not None:
+                href = anchor.attributes.get("href") or ""
+                if href:
+                    urls[slugify(name)] = href
+                break
+    return urls
+
+
+# ---------------------------------------------------------------------------
 # Fetcher
 # ---------------------------------------------------------------------------
 
 
 def fetch_top100(
-    url: str = "https://www.fcratings.com/lists/top-100-players",
+    url: str = TOP100_URL,
 ) -> list[Card]:
     """Fetch and parse the fcratings top-100 list page.
 
