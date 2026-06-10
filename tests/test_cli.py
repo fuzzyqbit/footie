@@ -147,3 +147,31 @@ def test_fetch_error_is_clean_not_traceback(db_path, monkeypatch):
     result = runner.invoke(app, ["add", "http://x", "--db", str(db_path)])
     assert result.exit_code == 1
     assert "could not fetch" in result.output
+
+
+@pytest.fixture()
+def corrupt_db(tmp_path):
+    path = tmp_path / "players.json"
+    path.write_text("{not json")
+    return path
+
+
+def test_search_corrupt_db_exits_clean(corrupt_db):
+    result = runner.invoke(app, ["search", "rodri", "--db", str(corrupt_db)])
+    assert result.exit_code == 1
+    assert "cannot read" in result.output
+    assert "Traceback" not in result.output
+
+
+def test_show_corrupt_db_exits_clean(corrupt_db):
+    result = runner.invoke(app, ["show", "rodri--base", "--db", str(corrupt_db)])
+    assert result.exit_code == 1
+    assert "cannot read" in result.output
+    assert "Traceback" not in result.output
+
+
+def test_list_corrupt_db_exits_clean(corrupt_db):
+    result = runner.invoke(app, ["list", "--db", str(corrupt_db)])
+    assert result.exit_code == 1
+    assert "cannot read" in result.output
+    assert "Traceback" not in result.output

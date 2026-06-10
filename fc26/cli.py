@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json as json_lib
 from pathlib import Path
+from typing import NoReturn
 
 import typer
 from rich.console import Console
@@ -24,7 +25,7 @@ DB_OPTION = typer.Option(DEFAULT_DB, "--db", help="Path to players.json")
 JSON_FLAG = typer.Option(False, "--json", help="Emit JSON instead of a table")
 
 
-def _fail(message: str) -> None:
+def _fail(message: str) -> NoReturn:
     console.print(f"[red]error:[/red] {message}")
     raise typer.Exit(code=1)
 
@@ -54,9 +55,10 @@ def seed(
         specials_md = (docs_dir / "11-special-cards.md").read_text(encoding="utf-8")
     except OSError as exc:
         _fail(f"cannot read seed docs: {exc}")
-        return
     repo = CardRepository(db)
     cards = seed_cards(top100_md, master_md, specials_md)
+    # no transaction needed: upsert is idempotent, so a mid-loop failure
+    # leaves a partial-but-consistent DB and re-running seed completes it
     for card in cards:
         repo.upsert(card)
     console.print(f"seeded {len(cards)} card records → {len(repo.find_all())} unique cards in {db}")
@@ -70,7 +72,6 @@ def add(url: str, db: Path = DB_OPTION) -> None:
         merged = CardRepository(db).upsert(card)
     except FC26Error as exc:
         _fail(str(exc))
-        return
     console.print(f"added [bold]{merged.player_name}[/bold] ({merged.version}) as {merged.id}")
 
 
@@ -81,7 +82,6 @@ def sync(db: Path = DB_OPTION) -> None:
         cards = fetch_top100()
     except FC26Error as exc:
         _fail(str(exc))
-        return
     repo = CardRepository(db)
     for card in cards:
         repo.upsert(card)
@@ -91,29 +91,32 @@ def sync(db: Path = DB_OPTION) -> None:
 @app.command()
 def search(text: str, db: Path = DB_OPTION, json: bool = JSON_FLAG) -> None:
     """Find cards by name, club, or version (case-insensitive)."""
-    cards = CardRepository(db).search(text)
+    try:
+        cards = CardRepository(db).search(text)
+    except FC26Error as exc:
+        _fail(str(exc))
     if not cards:
         _fail(f"no cards match {text!r}")
-        return
     _print_cards(cards, json)
 
 
 @app.command()
 def show(ident: str, db: Path = DB_OPTION, json: bool = JSON_FLAG) -> None:
     """Show one card in full detail, by id or name."""
-    repo = CardRepository(db)
-    card = repo.find_by_id(ident)
-    if card is None:
-        matches = [c for c in repo.find_all() if c.player_name.lower() == ident.lower()]
-        if len(matches) == 1:
-            card = matches[0]
-        elif matches:
-            _print_cards(matches, as_json=False)
-            _fail(f"{ident!r} is ambiguous - use an id from the list above")
-            return
+    try:
+        repo = CardRepository(db)
+        card = repo.find_by_id(ident)
+        if card is None:
+            matches = [c for c in repo.find_all() if c.player_name.lower() == ident.lower()]
+            if len(matches) == 1:
+                card = matches[0]
+            elif matches:
+                _print_cards(matches, as_json=False)
+                _fail(f"{ident!r} is ambiguous - use an id from the list above")
+    except FC26Error as exc:
+        _fail(str(exc))
     if card is None:
         _fail(f"no card found for {ident!r}")
-        return
     if json:
         typer.echo(json_lib.dumps(card_to_dict(card), ensure_ascii=False, indent=2))
         return
@@ -139,8 +142,10 @@ def list_cards(
     """List cards with filters and sorting."""
     if sort not in SORT_KEYS:
         _fail(f"unknown sort key {sort!r} (use: {', '.join(SORT_KEYS)})")
-        return
-    cards = list(CardRepository(db).find_all())
+    try:
+        cards = list(CardRepository(db).find_all())
+    except FC26Error as exc:
+        _fail(str(exc))
     if pos:
         wanted = pos.upper()
         cards = [c for c in cards if c.position == wanted or wanted in c.alt_positions]
