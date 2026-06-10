@@ -82,3 +82,23 @@ def test_file_has_schema_version(tmp_path):
     data = json.loads(path.read_text())
     assert data["schema_version"] == 1
     assert len(data["cards"]) == 1
+
+
+def test_malformed_card_record_raises_database_error():
+    with pytest.raises(DatabaseError, match="malformed card record"):
+        card_from_dict({"id": "x--base", "player_name": "X", "version": "base",
+                        "ovr": 80, "position": "ST", "face": {"bogus_stat": 99}})
+
+
+def test_wrong_schema_version_raises_database_error(tmp_path):
+    path = tmp_path / "players.json"
+    path.write_text('{"schema_version": 99, "cards": []}')
+    with pytest.raises(DatabaseError, match="schema_version"):
+        CardRepository(path).find_all()
+
+
+def test_roundtrip_all_none_substats():
+    from fc26.models import SubStats
+
+    card = _card(subs=SubStats())
+    assert card_from_dict(card_to_dict(card)) == card

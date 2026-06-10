@@ -25,14 +25,17 @@ def card_to_dict(card: Card) -> dict[str, Any]:
 
 
 def card_from_dict(data: dict[str, Any]) -> Card:
-    payload = dict(data)
-    payload["face"] = FaceStats(**payload.get("face") or {})
-    subs = payload.get("subs")
-    payload["subs"] = SubStats(**subs) if subs else None
-    payload["alt_positions"] = tuple(payload.get("alt_positions") or ())
-    payload["playstyles"] = tuple(payload.get("playstyles") or ())
-    payload["playstyles_plus"] = tuple(payload.get("playstyles_plus") or ())
-    return Card(**payload)
+    try:
+        payload = dict(data)
+        payload["face"] = FaceStats(**payload.get("face") or {})
+        subs = payload.get("subs")
+        payload["subs"] = SubStats(**subs) if subs else None
+        payload["alt_positions"] = tuple(payload.get("alt_positions") or ())
+        payload["playstyles"] = tuple(payload.get("playstyles") or ())
+        payload["playstyles_plus"] = tuple(payload.get("playstyles_plus") or ())
+        return Card(**payload)
+    except TypeError as exc:
+        raise DatabaseError(f"malformed card record: {exc}") from exc
 
 
 class CardRepository:
@@ -46,6 +49,11 @@ class CardRepository:
             return ()
         try:
             data = json.loads(self._path.read_text(encoding="utf-8"))
+            version = data.get("schema_version")
+            if version != SCHEMA_VERSION:
+                raise DatabaseError(
+                    f"{self._path}: schema_version {version!r}, expected {SCHEMA_VERSION}"
+                )
             return tuple(card_from_dict(item) for item in data["cards"])
         except (json.JSONDecodeError, KeyError, TypeError) as exc:
             raise DatabaseError(f"cannot read {self._path}: {exc}") from exc
@@ -66,6 +74,8 @@ class CardRepository:
             or needle in card.version.lower()
         )
 
+    # NOTE: each upsert re-reads and rewrites the whole file - fine for
+    # interactive use and one-shot seeds (n~150); revisit if the DB grows.
     def upsert(self, card: Card) -> Card:
         validate_card(card)
         cards = {existing.id: existing for existing in self.find_all()}
