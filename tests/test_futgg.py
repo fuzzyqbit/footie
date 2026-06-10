@@ -32,11 +32,13 @@ def test_parses_known_rodri_ptg_values(rodri_html):
     assert "Manchester City" in (card.club or "")
     assert card.subs is not None
     assert card.subs.acceleration is not None
+    # live fut.gg ground truth (verified 2026-06-10): four PlayStyles+;
+    # Incisive Pass and Press Proven are plain PlayStyles on this card
     assert card.playstyles_plus == (
-        "Intercept", "Anticipate", "Pinged Pass", "Tiki Taka", "Incisive Pass", "Press Proven",
+        "Intercept", "Anticipate", "Pinged Pass", "Tiki Taka",
     )
     assert card.playstyles == (
-        "Power Shot", "Long Ball", "Aerial Fortress", "Technical", "Bruiser",
+        "Power Shot", "Incisive Pass", "Long Ball", "Aerial Fortress", "Technical", "Press Proven", "Bruiser",
     )
     assert card.source_url == URL
     assert card.crawled_at is not None

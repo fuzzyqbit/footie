@@ -18,15 +18,18 @@ and they'll slot into the pace ranking.
 | Player | Card Version | OVR | Pos | PAC | SHO | PAS | DRI | DEF | PHY | AcceleRATE | SM/WF | Key PlayStyles+ |
 |---|---|---:|:--:|---:|---:|---:|---:|---:|---:|:--:|:--:|---|
 | Cristiano Ronaldo | Team of the Season (TOTS) | 95 | ST | **93** | 96 | 87 | 93 | 45 | 88 | Controlled | 5★/5★ | **Rapid, Quick Step**, Finesse Shot, Power Shot, Trickster, Technical |
-| Rodri | Festival of Football: Path to Glory | 96 | CDM/CM | 90 | 88 | 96 | 95 | 94 | 92 | Controlled | 5★/5★ | Intercept, Anticipate, Pinged Pass, Tiki Taka, Incisive Pass, Press Proven |
+| Rodri | Festival of Football: Path to Glory | 96 | CDM/CM | 90 | 88 | 96 | 95 | 94 | 92 | Controlled | 5★/5★ | Intercept, Anticipate, Pinged Pass, Tiki Taka |
 
 > Full PlayStyle lists:
 > - **Ronaldo (TOTS):** Finesse Shot, Low Driven, Quick Step, Power Shot, Precision
 >   Header, Game Changer, Incisive Pass, Technical, Rapid, Trickster.
 >   (187cm · Portugal · Al Nassr · ROSHN Saudi League.)
-> - **Rodri (PTG):** Intercept, Anticipate, Pinged Pass, Tiki Taka, Power Shot,
->   Incisive Pass, Long Ball, Aerial Fortress, Technical, Press Proven, Bruiser.
+> - **Rodri (PTG):** PlayStyles+ are the four bolded in the table (Intercept,
+>   Anticipate, Pinged Pass, Tiki Taka); plain PlayStyles: Power Shot, Incisive
+>   Pass, Long Ball, Aerial Fortress, Technical, Press Proven, Bruiser.
 >   (190cm · Spain · Manchester City · Premier League · Age 30.)
+>   *Corrected 2026-06-10 against the live fut.gg card page — an earlier crawl
+>   wrongly listed Incisive Pass and Press Proven as PlayStyles+.*
 
 ---
 
