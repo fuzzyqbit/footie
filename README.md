@@ -29,6 +29,8 @@ acquisition plans for both **Ultimate Team (FUT)** and **Career Mode**.
    → [`docs/07-game-modes.md`](docs/07-game-modes.md)
 8. **Reference the ratings.** FC 26 Top 100 + best-per-position, crawled from
    fcratings.com. → [`docs/08-player-ratings-top100.md`](docs/08-player-ratings-top100.md)
+9. **Chase pace.** Fastest players (crawled PAC) + the fast special-card/AcceleRATE
+   meta. → [`docs/09-fastest-players-and-pace-meta.md`](docs/09-fastest-players-and-pace-meta.md)
 
 ## Quick-start TL;DR
 
