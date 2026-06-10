@@ -186,3 +186,49 @@ def test_add_invalid_card_exits_clean(db_path, monkeypatch):
     assert result.exit_code == 1
     assert "out of range" in result.output
     assert "Traceback" not in result.output
+
+
+def test_enrich_command_reports_summary(db_path, monkeypatch):
+    from fc26.ingest.enrich import EnrichResult
+
+    def fake_enrich(repo, **kwargs):
+        kwargs["on_progress"]("enriched x--base (France, La Liga)")
+        return EnrichResult(("x--base",), ("y--base",), ("z--base: not found",))
+
+    monkeypatch.setattr("fc26.cli.enrich_cards", fake_enrich)
+    result = runner.invoke(app, ["enrich", "--db", str(db_path)])
+    assert result.exit_code == 0
+    assert "enriched x--base (France, La Liga)" in result.output
+    assert "enriched 1, skipped 1, missed 1" in result.output
+    assert "z--base" in result.output
+
+
+def test_enrich_command_exit_1_when_nothing_done(db_path, monkeypatch):
+    from fc26.ingest.enrich import EnrichResult
+
+    monkeypatch.setattr("fc26.cli.enrich_cards",
+                        lambda repo, **kw: EnrichResult((), (), ("a--base: gone",)))
+    result = runner.invoke(app, ["enrich", "--db", str(db_path)])
+    assert result.exit_code == 1
+
+
+def test_enrich_command_exit_0_when_all_skipped(db_path, monkeypatch):
+    from fc26.ingest.enrich import EnrichResult
+
+    monkeypatch.setattr("fc26.cli.enrich_cards",
+                        lambda repo, **kw: EnrichResult((), ("a--base", "b--base"), ()))
+    result = runner.invoke(app, ["enrich", "--db", str(db_path)])
+    assert result.exit_code == 0
+
+
+def test_enrich_command_clean_error_on_abort(db_path, monkeypatch):
+    from fc26.errors import ParseError
+
+    def boom(repo, **kwargs):
+        raise ParseError("11/12 player pages failed - fcratings layout changed?")
+
+    monkeypatch.setattr("fc26.cli.enrich_cards", boom)
+    result = runner.invoke(app, ["enrich", "--db", str(db_path)])
+    assert result.exit_code == 1
+    assert "layout changed" in result.output
+    assert "Traceback" not in result.output

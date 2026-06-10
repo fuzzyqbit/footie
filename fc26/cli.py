@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json as json_lib
+import time
 from pathlib import Path
 from typing import NoReturn
 
@@ -12,9 +13,11 @@ from rich.table import Table
 
 from .db import CardRepository, card_to_dict
 from .errors import FC26Error
+from .ingest.enrich import enrich_cards
 from .ingest.fcratings import fetch_top100
 from .ingest.futgg import fetch_futgg_card
 from .ingest.seed import seed_cards
+from .ingest.web import fetch_html
 from .models import Card
 
 app = typer.Typer(help="FC 26 (PS5) FUT player database", no_args_is_help=True)
@@ -159,3 +162,32 @@ def list_cards(
     reverse = sort != "name"
     cards.sort(key=SORT_KEYS[sort], reverse=reverse)
     _print_cards(cards, json)
+
+
+@app.command()
+def enrich(
+    refresh: bool = typer.Option(False, "--refresh", help="Re-fetch even already-enriched cards"),
+    limit: int | None = typer.Option(None, "--limit", help="Cap player-page fetches"),
+    db: Path = DB_OPTION,
+) -> None:
+    """Bulk-fill league/nation/face stats from fcratings player pages."""
+    repo = CardRepository(db)
+    try:
+        result = enrich_cards(
+            repo,
+            fetch_html=fetch_html,
+            sleep=time.sleep,
+            on_progress=console.print,
+            refresh=refresh,
+            limit=limit,
+        )
+    except FC26Error as exc:
+        _fail(str(exc))
+    console.print(
+        f"enriched {len(result.enriched)}, skipped {len(result.skipped)}, "
+        f"missed {len(result.missed)}"
+    )
+    for miss in result.missed:
+        console.print(f"[yellow]miss:[/yellow] {miss}")
+    if not result.enriched and not result.skipped:
+        _fail("nothing enriched")
