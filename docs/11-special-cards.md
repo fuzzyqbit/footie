@@ -17,11 +17,30 @@ and they'll slot into the pace ranking.
 
 | Player | Card Version | OVR | Pos | PAC | SHO | PAS | DRI | DEF | PHY | AcceleRATE | SM/WF | Key PlayStyles+ |
 |---|---|---:|:--:|---:|---:|---:|---:|---:|---:|:--:|:--:|---|
+| Cristiano Ronaldo | Team of the Season (TOTS) | 95 | ST | **93** | 96 | 87 | 93 | 45 | 88 | Controlled | 5★/5★ | **Rapid, Quick Step**, Finesse Shot, Power Shot, Trickster, Technical |
 | Rodri | Festival of Football: Path to Glory | 96 | CDM/CM | 90 | 88 | 96 | 95 | 94 | 92 | Controlled | 5★/5★ | Intercept, Anticipate, Pinged Pass, Tiki Taka, Incisive Pass, Press Proven |
 
-> Full PlayStyle list for Rodri: Intercept, Anticipate, Pinged Pass, Tiki Taka,
-> Power Shot, Incisive Pass, Long Ball, Aerial Fortress, Technical, Press Proven,
-> Bruiser. (190cm · Spain · Manchester City · Premier League · Age 30.)
+> Full PlayStyle lists:
+> - **Ronaldo (TOTS):** Finesse Shot, Low Driven, Quick Step, Power Shot, Precision
+>   Header, Game Changer, Incisive Pass, Technical, Rapid, Trickster.
+>   (187cm · Portugal · Al Nassr · ROSHN Saudi League.)
+> - **Rodri (PTG):** Intercept, Anticipate, Pinged Pass, Tiki Taka, Power Shot,
+>   Incisive Pass, Long Ball, Aerial Fortress, Technical, Press Proven, Bruiser.
+>   (190cm · Spain · Manchester City · Premier League · Age 30.)
+
+---
+
+## Fast special cards — ranked by PAC
+Special cards with a pace-relevant profile, sorted by Pace (the fast-meta list).
+
+| Rank | Player | Card | OVR | Pos | PAC | AcceleRATE | Pace PlayStyles+ |
+|---:|---|---|---:|:--:|---:|:--:|---|
+| 1 | Cristiano Ronaldo | TOTS | 95 | ST | 93 | Controlled | Rapid, Quick Step |
+
+> **Read:** 93 PAC with **Rapid+ + Quick Step+** makes Ronaldo TOTS play faster than
+> his raw number on the ball and off the first step. The one knock is **Controlled**
+> AcceleRATE (height 187cm) — he won't have the instant burst of an Explosive winger,
+> but Quick Step+ narrows that gap. Elite as an Advanced Forward / Poacher (`04`).
 
 ---
 
