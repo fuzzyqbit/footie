@@ -11,10 +11,26 @@ from selectolax.parser import HTMLParser
 from ..errors import ParseError
 from ..models import Card, FaceStats, make_card_id
 
-# Face-stat labels in DOM order within .attr-group sections.
-# The page renders them as: Pace, Shooting, Passing, Dribbling, Defending, Physicality.
-# Each .attr-group has exactly one span.attr-rating holding the face-stat integer.
-_FACE_STAT_COUNT = 6
+# Label-to-field mappings for outfield players and GKs.
+# Outfield pages have exactly 6 .attr-groups labelled Pace … Physicality.
+# GK pages have 7 .attr-groups: the first is "Goalkeeping" (a GK composite)
+# followed by the same 6 outfield labels — we skip Goalkeeping and map by label.
+_OUTFIELD_LABELS: dict[str, str] = {
+    "Pace": "pac",
+    "Shooting": "sho",
+    "Passing": "pas",
+    "Dribbling": "dri",
+    "Defending": "def_",
+    "Physicality": "phy",
+}
+_GK_LABELS: dict[str, str] = {
+    "Diving": "pac",
+    "Handling": "sho",
+    "Kicking": "pas",
+    "Reflexes": "dri",
+    "Speed": "def_",
+    "Positioning": "phy",
+}
 
 # Regex to extract N-Star values from the meta description or prose paragraph.
 _SM_RE = re.compile(r"(\d)-Star Skill Moves")
@@ -100,6 +116,8 @@ def parse_player_page(html: str, source_url: str) -> Card:
     )
 
     # ---- Club, league, nation -----------------------------------------------
+    # first-match on href pattern: breadcrumb/hero/prose all agree today;
+    # scope to the hero container if fcratings ever adds cross-club links
     club_link = tree.css_first('a[href*="/clubs/"]')
     club = club_link.text(strip=True) if club_link else None
     _require(club, "club", source_url)
@@ -113,35 +131,60 @@ def parse_player_page(html: str, source_url: str) -> Card:
     _require(nation, "nation", source_url)
 
     # ---- Face stats ---------------------------------------------------------
-    # Each .attr-group section contains one span.attr-rating.
-    # They appear in DOM order: PAC, SHO, PAS, DRI, DEF, PHY.
-    attr_rating_nodes = tree.css("span.attr-rating")
-    if len(attr_rating_nodes) < _FACE_STAT_COUNT:
-        _require(None, "face stats", source_url)
-
-    def _parse_face_stat(node_text: str, field: str) -> int:
+    # Each .attr-group contains an <h5> label and a span.attr-rating value.
+    # Outfield pages have 6 groups labelled Pace/Shooting/Passing/Dribbling/
+    # Defending/Physicality. GK pages prepend a "Goalkeeping" group (7 total),
+    # which we skip; the remaining 6 still use the same outfield label names.
+    # _GK_LABELS is kept for sites that use Diving/Handling/… labels; we probe
+    # which map matches the first group label found, defaulting to outfield.
+    all_groups = tree.css(".attr-group")
+    first_labels = {
+        g.css_first("h5").text(strip=True)
+        for g in all_groups
+        if g.css_first("h5") is not None
+    }
+    label_map = (
+        _GK_LABELS
+        if position == "GK" and any(lbl in _GK_LABELS for lbl in first_labels)
+        else _OUTFIELD_LABELS
+    )
+    label_to_value: dict[str, int] = {}
+    for group in tree.css(".attr-group"):
+        h5 = group.css_first("h5")
+        rating = group.css_first("span.attr-rating")
+        if h5 is None or rating is None:
+            continue
+        label = h5.text(strip=True)
+        if label not in label_map:
+            # Skip unrecognised groups (e.g. "Goalkeeping" composite on GK pages)
+            continue
+        raw = rating.text(strip=True)
         try:
-            return int(node_text.strip())
+            label_to_value[label] = int(raw)
         except ValueError:
             raise ParseError(
-                f"non-integer {field} {node_text!r} on fcratings page {source_url}"
+                f"non-integer face stat {label!r}={raw!r} on fcratings page {source_url}"
             )
 
-    pac = _parse_face_stat(attr_rating_nodes[0].text(strip=True), "face.pac")
-    sho = _parse_face_stat(attr_rating_nodes[1].text(strip=True), "face.sho")
-    pas = _parse_face_stat(attr_rating_nodes[2].text(strip=True), "face.pas")
-    dri = _parse_face_stat(attr_rating_nodes[3].text(strip=True), "face.dri")
-    def_ = _parse_face_stat(attr_rating_nodes[4].text(strip=True), "face.def_")
-    phy = _parse_face_stat(attr_rating_nodes[5].text(strip=True), "face.phy")
+    # Verify every expected label was found
+    for label in label_map:
+        if label not in label_to_value:
+            raise ParseError(
+                f"missing face-stat label {label!r} on fcratings page {source_url} "
+                "- layout changed?"
+            )
 
-    _require(pac, "face.pac", source_url)
-    _require(sho, "face.sho", source_url)
-    _require(pas, "face.pas", source_url)
-    _require(dri, "face.dri", source_url)
-    _require(def_, "face.def_", source_url)
-    _require(phy, "face.phy", source_url)
+    # Build field→value using the label map (label→field) as a bridge
+    field_to_value = {field: label_to_value[label] for label, field in label_map.items()}
 
-    face = FaceStats(pac=pac, sho=sho, pas=pas, dri=dri, def_=def_, phy=phy)
+    face = FaceStats(
+        pac=field_to_value["pac"],
+        sho=field_to_value["sho"],
+        pas=field_to_value["pas"],
+        dri=field_to_value["dri"],
+        def_=field_to_value["def_"],
+        phy=field_to_value["phy"],
+    )
 
     # ---- Skill moves and weak foot ------------------------------------------
     # These are only present as text in the meta description and the prose paragraph.
