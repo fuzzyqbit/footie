@@ -29,7 +29,12 @@ _LEAGUE_ALIASES = {
 # canonical slugs that are NOT real chemistry leagues
 PSEUDO_LEAGUES = frozenset({"icons", "men-s-national"})
 
-_NATION_ALIASES: dict[str, str] = {}   # byte-identical across sources today
+# fcratings uses a couple of historical/short names where futbin uses the
+# modern form (live-DB verified 2026-06-11)
+_NATION_ALIASES = {
+    "holland": "netherlands",
+    "czech-republic": "czechia",
+}
 
 _CLUB_SUFFIXES = ("-f-c", "-fc", "-cf")
 

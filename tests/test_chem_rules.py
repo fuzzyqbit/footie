@@ -95,9 +95,15 @@ def test_similar_named_clubs_stay_distinct():
     assert canonical_club("Newcastle Jets") != canonical_club("Newcastle United F.C.")
 
 
-def test_nation_passthrough():
-    assert canonical_nation("France") == canonical_nation("France")
-    assert canonical_nation("Holland") != canonical_nation("France")
+def test_nation_aliases_resolve_real_db_pairs():
+    assert canonical_nation("Holland") == canonical_nation("Netherlands")
+    assert canonical_nation("Czech Republic") == canonical_nation("Czechia")
+
+
+def test_similar_nations_stay_distinct():
+    assert canonical_nation("Australia") != canonical_nation("Austria")
+    assert canonical_nation("Guinea") != canonical_nation("Guinea-Bissau")
+    assert canonical_nation("Slovakia") != canonical_nation("Slovenia")
 
 
 def test_unknown_strings_pass_through_slugified():

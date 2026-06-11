@@ -33,11 +33,13 @@
     "nation_groups": {
       "brazil_3": ["GK alisson", "CB2 gabriel", "LW martinelli"],
       "england_2": ["CDM2 rice", "RW saka"],
-      "others_1each": ["RB frimpong (Holland)", "CB1 van-dijk (Netherlands)", "LB gvardiol (Croatia)", "CDM1 rodrigo (Spain)", "CAM wirtz (Germany)", "ST haaland (Norway)"]
+      "netherlands_2": ["RB frimpong (Holland→Netherlands)", "CB1 van-dijk (Netherlands)"],
+      "others_1each": ["LB gvardiol (Croatia)", "CDM1 rodrigo (Spain)", "CAM wirtz (Germany)", "ST haaland (Norway)"]
     },
     "nation_tiers": {
       "brazil_3": "+1 pt each (tier 1: 2..4)",
       "england_2": "+1 pt each (tier 1: 2..4)",
+      "netherlands_2": "+1 pt each (tier 1: 2..4) [Holland alias merged]",
       "others": "0 pts (count 1 < 2)"
     },
     "league_group": {
@@ -48,8 +50,8 @@
     },
     "per_player_derivation": [
       "GK  alisson:   club Liverpool 4→+2  + nation Brazil 3→+1   + league PL 11→+3 = 6 → cap 3",
-      "RB  frimpong:  club Liverpool 4→+2  + nation Holland 1→0   + league PL 11→+3 = 5 → cap 3",
-      "CB1 van-dijk:  club Liverpool 4→+2  + nation Neth. 1→0     + league PL 11→+3 = 5 → cap 3",
+      "RB  frimpong:  club Liverpool 4→+2  + nation Neth. 2→+1*  + league PL 11→+3 = 6 → cap 3 [*Holland alias now merged]",
+      "CB1 van-dijk:  club Liverpool 4→+2  + nation Neth. 2→+1   + league PL 11→+3 = 6 → cap 3",
       "CB2 gabriel:   club Arsenal  4→+2  + nation Brazil 3→+1   + league PL 11→+3 = 6 → cap 3",
       "LB  gvardiol:  club ManCity  3→+1  + nation Croatia 1→0   + league PL 11→+3 = 4 → cap 3",
       "CDM1 rodrigo:  club ManCity  3→+1  + nation Spain 1→0     + league PL 11→+3 = 4 → cap 3",
