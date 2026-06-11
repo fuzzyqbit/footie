@@ -1,0 +1,64 @@
+{
+  "name": "Sample Rivals PL XI",
+  "formation": "4-2-3-1",
+  "manager": {
+    "league": "Premier League"
+  },
+  "starting_xi": {
+    "GK":   "alisson-ramses-becker--base",
+    "RB":   "jeremie-frimpong--base",
+    "CB1":  "virgil-van-dijk--base",
+    "CB2":  "gabriel-dos-s-magalhaes--base",
+    "LB":   "josko-gvardiol--base",
+    "CDM1": "rodrigo-hernandez-cascante--base",
+    "CDM2": "declan-rice--base",
+    "CAM":  "florian-wirtz--base",
+    "RW":   "bukayo-saka--base",
+    "LW":   "gabriel-martinelli--base",
+    "ST":   "erling-haaland--base"
+  },
+  "_hand_check": {
+    "expected_team_total": 33,
+    "rules_used": "CLUB_TIERS=(2:+1,4:+2,7:+3); NATION_TIERS=(2:+1,5:+2,8:+3); LEAGUE_TIERS=(3:+1,5:+2,8:+3); MAX_PLAYER_CHEM=3; manager+1 (already capped so no effect)",
+    "club_groups": {
+      "liverpool": ["GK alisson", "RB frimpong", "CB1 van-dijk", "CAM wirtz"],
+      "arsenal": ["CB2 gabriel", "CDM2 rice", "RW saka", "LW martinelli"],
+      "manchester-city": ["LB gvardiol", "CDM1 rodrigo", "ST haaland"]
+    },
+    "club_tiers": {
+      "liverpool_4": "+2 pts each",
+      "arsenal_4": "+2 pts each",
+      "manchester-city_3": "+1 pts each"
+    },
+    "nation_groups": {
+      "brazil_3": ["GK alisson", "CB2 gabriel", "LW martinelli"],
+      "england_2": ["CDM2 rice", "RW saka"],
+      "others_1each": ["RB frimpong (Holland)", "CB1 van-dijk (Netherlands)", "LB gvardiol (Croatia)", "CDM1 rodrigo (Spain)", "CAM wirtz (Germany)", "ST haaland (Norway)"]
+    },
+    "nation_tiers": {
+      "brazil_3": "+1 pt each (tier 1: 2..4)",
+      "england_2": "+1 pt each (tier 1: 2..4)",
+      "others": "0 pts (count 1 < 2)"
+    },
+    "league_group": {
+      "premier-league_11": "all 11 players (Premier League aliases English Premier League)"
+    },
+    "league_tiers": {
+      "premier-league_11": "+3 pts each (tier 3: 8+)"
+    },
+    "per_player_derivation": [
+      "GK  alisson:   club Liverpool 4→+2  + nation Brazil 3→+1   + league PL 11→+3 = 6 → cap 3",
+      "RB  frimpong:  club Liverpool 4→+2  + nation Holland 1→0   + league PL 11→+3 = 5 → cap 3",
+      "CB1 van-dijk:  club Liverpool 4→+2  + nation Neth. 1→0     + league PL 11→+3 = 5 → cap 3",
+      "CB2 gabriel:   club Arsenal  4→+2  + nation Brazil 3→+1   + league PL 11→+3 = 6 → cap 3",
+      "LB  gvardiol:  club ManCity  3→+1  + nation Croatia 1→0   + league PL 11→+3 = 4 → cap 3",
+      "CDM1 rodrigo:  club ManCity  3→+1  + nation Spain 1→0     + league PL 11→+3 = 4 → cap 3",
+      "CDM2 rice:     club Arsenal  4→+2  + nation England 2→+1  + league PL 11→+3 = 6 → cap 3",
+      "CAM  wirtz:    club Liverpool 4→+2 + nation Germany 1→0   + league PL 11→+3 = 5 → cap 3",
+      "RW   saka:     club Arsenal  4→+2  + nation England 2→+1  + league PL 11→+3 = 6 → cap 3",
+      "LW   martinelli: club Arsenal 4→+2 + nation Brazil 3→+1  + league PL 11→+3 = 6 → cap 3",
+      "ST   haaland:  club ManCity  3→+1  + nation Norway 1→0   + league PL 11→+3 = 4 → cap 3"
+    ],
+    "conclusion": "11 players × 3 chem = 33/33"
+  }
+}

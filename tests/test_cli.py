@@ -283,3 +283,63 @@ def test_expand_clean_error_on_abort(db_path, monkeypatch):
     assert result.exit_code == 1
     assert "layout changed" in result.output
     assert "Traceback" not in result.output
+
+
+@pytest.fixture()
+def chem_db(tmp_path):
+    path = tmp_path / "players.json"
+    repo = CardRepository(path)
+    positions = {"GK": "GK", "RB": "RB", "CB1": "CB", "CB2": "CB", "LB": "LB",
+                 "CDM1": "CDM", "CDM2": "CDM", "CAM": "CAM", "RW": "RW", "LW": "LW", "ST": "ST"}
+    for slot, pos in positions.items():
+        repo.upsert(Card(
+            id=f"{slot.lower()}--base", player_name=f"P{slot}", version="base",
+            ovr=88, position=pos, club=f"Club {slot}", nation=f"Nation {slot}",
+            league="Premier League",
+        ))
+    return path
+
+
+@pytest.fixture()
+def squad_file(tmp_path):
+    squad = {
+        "name": "CLI Test", "formation": "4-2-3-1",
+        "starting_xi": {slot: f"{slot.lower()}--base" for slot in
+                        ("GK", "RB", "CB1", "CB2", "LB", "CDM1", "CDM2", "CAM", "RW", "LW", "ST")},
+    }
+    path = tmp_path / "squad.json"
+    path.write_text(json.dumps(squad))
+    return path
+
+
+def test_chem_command_reports_table_and_total(chem_db, squad_file):
+    result = runner.invoke(app, ["chem", str(squad_file), "--db", str(chem_db)])
+    assert result.exit_code == 0, result.output
+    assert "33/33" in result.output          # 11 same-league players -> full chem
+    assert "Premier League" in result.output
+
+
+def test_chem_command_json(chem_db, squad_file):
+    result = runner.invoke(app, ["chem", str(squad_file), "--db", str(chem_db), "--json"])
+    assert result.exit_code == 0
+    data = json.loads(result.output)
+    assert data["team_total"] == 33
+    assert len(data["players"]) == 11
+
+
+def test_chem_command_lineup_error_is_clean(chem_db, tmp_path):
+    bad = tmp_path / "bad.json"
+    bad.write_text('{"formation": "9-9-9", "starting_xi": {}}')
+    result = runner.invoke(app, ["chem", str(bad), "--db", str(chem_db)])
+    assert result.exit_code == 1
+    assert "unknown formation" in result.output
+    assert "Traceback" not in result.output
+
+
+def test_chem_command_missing_card_is_clean(chem_db, squad_file):
+    squad = json.loads(squad_file.read_text())
+    squad["starting_xi"]["ST"] = "nobody--base"
+    squad_file.write_text(json.dumps(squad))
+    result = runner.invoke(app, ["chem", str(squad_file), "--db", str(chem_db)])
+    assert result.exit_code == 1
+    assert "nobody--base" in result.output

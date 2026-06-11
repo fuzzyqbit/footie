@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json as json_lib
 import time
+from dataclasses import asdict
 from pathlib import Path
 from typing import NoReturn
 
@@ -11,6 +12,8 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
+from .chem.engine import compute_chemistry
+from .chem.lineup import load_lineup, resolve_cards
 from .db import CardRepository, card_to_dict
 from .errors import FC26Error
 from .ingest.enrich import enrich_cards
@@ -221,3 +224,36 @@ def expand(
         console.print(f"[yellow]failed:[/yellow] {failure}")
     if result.seen == 0:
         _fail("nothing ingested")
+
+
+@app.command()
+def chem(
+    squad_file: Path = typer.Argument(..., help="Path to a squad JSON file (see squads/)"),
+    db: Path = DB_OPTION,
+    json: bool = JSON_FLAG,
+) -> None:
+    """Compute FC26 chemistry for a lineup file."""
+    try:
+        lineup = load_lineup(squad_file)
+        slot_cards = resolve_cards(lineup, CardRepository(db))
+    except FC26Error as exc:
+        _fail(str(exc))
+    report = compute_chemistry(lineup, slot_cards)
+    if json:
+        typer.echo(json_lib.dumps(asdict(report), ensure_ascii=False, indent=2))
+        return
+    table = Table("Slot", "Player", "Version", "Pos", "In pos", "Chem")
+    for p in report.players:
+        table.add_row(p.slot, p.player_name, p.version, p.position,
+                      "✓" if p.in_position else "✗", str(p.chem))
+    console.print(table)
+    console.print(f"[bold]team chemistry: {report.team_total}/33[/bold]")
+    # "Strength" is the weighted chemistry count (icons 2x nation, heroes 2x league),
+    # NOT a human headcount - do not relabel as "players"
+    breakdown = Table("Type", "Group", "Strength", "Points", "Next tier")
+    for t in report.tiers:
+        hint = f"+{t.next_tier_at - t.count} more" if t.next_tier_at else "max"
+        breakdown.add_row(t.kind, t.name, str(t.count), str(t.points), hint)
+    console.print(breakdown)
+    for warning in report.warnings:
+        console.print(f"[yellow]warn:[/yellow] {warning}")

@@ -182,3 +182,26 @@ def test_pseudo_league_contributes_nothing():
     assert not any(t.kind == "league" and "national" in t.name.lower() for t in report.tiers)
     gk = next(p for p in report.players if p.slot == "GK")
     assert gk.chem == 1   # Italy nation count 3 -> tier 1 (2..4) -> +1; no league pts
+
+
+def test_manager_league_only_match():
+    def make(slot):
+        league = "Premier League" if slot == "GK" else f"L {slot}"
+        return _player(slot, nation=f"N {slot}", league=league)
+
+    lineup, cards = _xi(make)
+    lineup = Lineup(name=lineup.name, formation=lineup.formation, slots=lineup.slots,
+                    manager=Manager(league="English Premier League"))
+    report = compute_chemistry(lineup, cards)
+    gk = next(p for p in report.players if p.slot == "GK")
+    assert gk.chem == 1   # manager league match only (nation not set)
+
+
+def test_unknown_nation_flagged():
+    def make(slot):
+        nation = None if slot == "ST" else f"N {slot}"
+        return _player(slot, nation=nation, league=f"L {slot}")
+
+    lineup, cards = _xi(make)
+    report = compute_chemistry(lineup, cards)
+    assert any("st--base" in w and "nation unknown" in w for w in report.warnings)
