@@ -74,6 +74,17 @@ def test_club_aliases_resolve_real_db_pairs():
         ("Celtic", "Celtic F.C."),
         ("Al Nassr", "Al-Nassr FC"),
         ("Athletic Club", "Athletic club"),
+        ("Atlético de Madrid", "Atlético Madrid"),
+        ("Newcastle United F.C.", "Newcastle Utd"),
+        ("Al Fayha", "Al-Fayha Club"),
+        ("Al Hilal", "Al Hilal SFC"),
+        ("Al Ittihad", "Al-Ittihad Club"),
+        ("Brighton", "Brighton & Hove Albion F.C."),
+        ("FC Bayern München", "FC Bayern Munich"),
+        ("Independiente", "Independiente DV"),
+        ("Levante LP", "Levante UD"),
+        ("Manchester United F.C.", "Manchester Utd"),
+        ("Sunderland", "Sunderland A.F.C."),
     ]
     for left, right in pairs:
         assert canonical_club(left) == canonical_club(right), (left, right)

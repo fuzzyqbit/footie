@@ -33,6 +33,21 @@ _NATION_ALIASES: dict[str, str] = {}   # byte-identical across sources today
 
 _CLUB_SUFFIXES = ("-f-c", "-fc", "-cf")
 
+# applied after suffix stripping: abbreviation variants the strip can't unify
+_CLUB_ALIASES = {
+    "al-fayha-club": "al-fayha",
+    "al-hilal-sfc": "al-hilal",
+    "al-ittihad-club": "al-ittihad",
+    "atletico-de-madrid": "atletico-madrid",
+    "brighton-hove-albion": "brighton",
+    "fc-bayern-munich": "fc-bayern-munchen",
+    "independiente-dv": "independiente",
+    "levante-ud": "levante-lp",
+    "manchester-utd": "manchester-united",
+    "newcastle-utd": "newcastle-united",
+    "sunderland-a": "sunderland",
+}
+
 
 def canonical_league(name: str) -> str:
     slug = slugify(name)
@@ -45,9 +60,10 @@ def canonical_nation(name: str) -> str:
 
 
 def canonical_club(name: str) -> str:
-    """Slugify and strip F.C./FC/CF suffixes so 'Arsenal F.C.' == 'Arsenal'."""
+    """Slugify, strip F.C./FC/CF suffixes, then apply abbreviation aliases."""
     slug = slugify(name)
     for suffix in _CLUB_SUFFIXES:
         if slug.endswith(suffix):
-            return slug[: -len(suffix)]
-    return slug
+            slug = slug[: -len(suffix)]
+            break
+    return _CLUB_ALIASES.get(slug, slug)
