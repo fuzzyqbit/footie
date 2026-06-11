@@ -49,9 +49,18 @@ class UpgradePlan:
 
 
 def _same_player(name_a: str, name_b: str) -> bool:
-    """Containment heuristic bridging short/long name variants across sources."""
+    """Same real player across name-vocabulary variants.
+
+    Exact slug match, or one slug extends the other at a token boundary
+    ("cristiano-ronaldo" -> "cristiano-ronaldo-dos-santos-aveiro"). Bare
+    substring matching is deliberately avoided: "rodri" must NOT match
+    "rodrigo-de-paul". Known miss: nickname forms ("Vini Jr." vs
+    "Vinicius Junior") - documented limitation.
+    """
     slug_a, slug_b = slugify(name_a), slugify(name_b)
-    return slug_a == slug_b or slug_a in slug_b or slug_b in slug_a
+    if slug_a == slug_b:
+        return True
+    return slug_b.startswith(slug_a + "-") or slug_a.startswith(slug_b + "-")
 
 
 def _squad_state(lineup: Lineup, slot_cards: dict[str, Card]) -> tuple[float, int]:

@@ -170,3 +170,32 @@ def test_unknown_resale_flagged():
     assert len(plan.swaps) == 1
     assert plan.swaps[0].net_cost == 50_000      # resale 0
     assert any("resale unknown" in w for w in plan.warnings)
+
+
+def test_same_player_heuristic_boundaries():
+    from fc26.builder.upgrade import _same_player
+
+    # dual-id wart: long-form extension of the same player IS matched
+    assert _same_player("Cristiano Ronaldo", "Cristiano Ronaldo dos Santos Aveiro")
+    # different players must NOT match (real-DB false positives under old rule)
+    assert not _same_player("Rodri", "Rodrigo De Paul")
+    assert not _same_player("Cole", "Seamus Coleman")
+    assert not _same_player("Gabriel", "Gabriela Nunes da Silva")
+    assert not _same_player("Gomez", "Joe Gomez")          # surname-share, distinct
+    assert not _same_player("Morgan Rogers", "Morgan Gibbs-White")
+
+
+def test_unbuyable_candidate_excluded():
+    lineup, cards = _squad()
+    pool = (_candidate("nopriced--tots", "NoPrice", "ST", price=None),)
+    plan = find_upgrades(lineup, cards, pool, budget=100_000, max_swaps=1)
+    assert plan.swaps == ()
+
+
+def test_missing_face_candidate_excluded():
+    lineup, cards = _squad()
+    pool = (Card(id="faceless--tots", player_name="Faceless", version="TOTS", ovr=95,
+                 position="ST", face=FaceStats(pac=99), club="CX", nation="NX",
+                 league="LX", price=50_000),)
+    plan = find_upgrades(lineup, cards, pool, budget=100_000, max_swaps=1)
+    assert plan.swaps == ()
