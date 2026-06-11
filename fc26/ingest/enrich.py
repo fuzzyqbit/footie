@@ -58,6 +58,11 @@ def enrich_cards(
         if _is_futgg(card):
             skipped.append(card.id)
             continue
+        if card.version != "base":
+            # fcratings only carries base cards; special versions are
+            # enriched via `fc26 add <fut.gg URL>`
+            skipped.append(card.id)
+            continue
         if not refresh and is_enriched(card):
             skipped.append(card.id)
             continue

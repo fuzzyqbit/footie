@@ -150,3 +150,18 @@ def test_player_not_on_club_page_recorded_as_miss(repo, monkeypatch):
                         lambda html, source_url: _enriched_card("kylian-mbappe--base", "Kylian Mbappé"))
     result = enrich_cards(repo, fetch_html=lambda u: u, sleep=lambda s: None)
     assert any(m.startswith("karim-adeyemi--base: not found on club page") for m in result.missed)
+
+
+def test_non_base_versions_are_skipped(repo, monkeypatch):
+    repo.upsert(Card(id="cristiano-ronaldo--team-of-the-season-tots",
+                     player_name="Cristiano Ronaldo",
+                     version="Team of the Season (TOTS)", ovr=95, position="ST"))
+    monkeypatch.setattr("fc26.ingest.enrich.extract_player_urls",
+                        lambda html: {"cristiano-ronaldo": "https://www.fcratings.com/cristiano-ronaldo-1"})
+    monkeypatch.setattr("fc26.ingest.enrich.parse_all_clubs", lambda html: {})
+    monkeypatch.setattr("fc26.ingest.enrich.parse_player_page",
+                        lambda html, source_url: _enriched_card("cristiano-ronaldo--base", "Cristiano Ronaldo"))
+    result = enrich_cards(repo, fetch_html=lambda u: u, sleep=lambda s: None)
+    assert "cristiano-ronaldo--team-of-the-season-tots" in result.skipped
+    # the TOTS card must never have been attempted: no base card created from it
+    assert repo.find_by_id("cristiano-ronaldo--base") is None
