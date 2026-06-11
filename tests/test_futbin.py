@@ -80,3 +80,13 @@ def test_junk_page_raises_parse_error():
 
     with pytest.raises(ParseError, match="futbin"):
         parse_futbin_page("<html><body>nope</body></html>", source_url=URL)
+
+
+def test_base_cards_map_to_version_base():
+    """Base cards with 'Normal' badge must map to version 'base', not 'Normal'."""
+    html = (Path(__file__).parent / "fixtures" / "futbin_list_87only_p1.html").read_text(encoding="utf-8")
+    cards = parse_futbin_page(html, source_url="https://www.futbin.com/players?player_rating=87-87&page=1")
+    base_cards = [c for c in cards if c.version == "base"]
+    assert base_cards, "fixture contains Normal rows; they must map to version 'base'"
+    assert all(c.id.endswith("--base") for c in base_cards)
+    assert not any(c.version == "Normal" for c in cards)

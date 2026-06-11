@@ -13,8 +13,11 @@ from ..models import Card, FaceStats, make_card_id
 LIST_URL_TEMPLATE = "https://www.futbin.com/players?player_rating={min_ovr}-99&page={page}"
 ROWS_PER_FULL_PAGE = 30
 
-# futbin badge texts that mean "this is the plain base card"
+# futbin badge texts that mean "this is the plain base card".
+# Live site uses "Normal" (verified 2026-06-10); gold/silver entries kept
+# as defensive aliases in case futbin renames tiers.
 _BASE_VERSIONS = {
+    "Normal",
     "Gold Rare",
     "Gold Common",
     "Gold NR",
