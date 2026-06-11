@@ -98,8 +98,13 @@ face slots under that mapping (established in phase 2).
    slugified player name matches — or contains/is contained by — any current XI
    member's name slug. This containment heuristic also bridges the known
    dual-id wart (futbin "Cristiano Ronaldo dos Santos Aveiro" vs fut.gg
-   "Cristiano Ronaldo"). Misses remain possible; documented limitation,
-   warning in output when the heuristic fires.
+   "Cristiano Ronaldo"). Implementation refinement: token-boundary prefix
+   extension only (bare substring over-blocked 44 real pairs, e.g.
+   Rodri/Rodrigo De Paul). KNOWN residual over-block: mononym Icon/Hero cards
+   ("Cole" = Ashley Cole blocks "Cole Palmer"; "Gabriel" blocks
+   "Gabriel Martinelli") — ~10 mononyms affected; name-only matching cannot
+   resolve these. Proper fix is EA-player-id dedup (ids exist in futbin/fut.gg
+   URLs), deferred to a later phase.
 2. **In-position only**: the candidate's position or alt_positions must include
    the slot position (out-of-position = 0 chem; never suggested).
 3. The budget is never exceeded (running total of net costs).
