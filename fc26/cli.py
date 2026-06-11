@@ -14,6 +14,7 @@ from rich.table import Table
 from .db import CardRepository, card_to_dict
 from .errors import FC26Error
 from .ingest.enrich import enrich_cards
+from .ingest.expand import expand_cards
 from .ingest.fcratings import fetch_top100
 from .ingest.futgg import fetch_futgg_card
 from .ingest.seed import seed_cards
@@ -191,3 +192,32 @@ def enrich(
         console.print(f"[yellow]miss:[/yellow] {miss}")
     if not result.enriched and not result.skipped and not result.missed:
         _fail("nothing enriched - is the database empty?")
+
+
+@app.command()
+def expand(
+    min_ovr: int = typer.Option(..., "--min-ovr", help="Ingest all cards at or above this rating"),
+    max_pages: int | None = typer.Option(None, "--max-pages", help="Cap list pages (testing/partial)"),
+    db: Path = DB_OPTION,
+) -> None:
+    """Bulk-ingest the live FUT card pool (base + specials, with prices) from futbin."""
+    repo = CardRepository(db)
+    try:
+        result = expand_cards(
+            repo,
+            min_ovr=min_ovr,
+            fetch_html=fetch_html,
+            sleep=time.sleep,
+            on_progress=console.print,
+            max_pages=max_pages,
+        )
+    except FC26Error as exc:
+        _fail(str(exc))
+    console.print(
+        f"seen {result.seen}, new {result.new}, merged {result.merged}, "
+        f"failed pages {len(result.failed_pages)}"
+    )
+    for failure in result.failed_pages:
+        console.print(f"[yellow]failed:[/yellow] {failure}")
+    if result.seen == 0:
+        _fail("nothing ingested")

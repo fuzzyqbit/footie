@@ -242,3 +242,44 @@ def test_enrich_command_clean_error_on_abort(db_path, monkeypatch):
     assert result.exit_code == 1
     assert "layout changed" in result.output
     assert "Traceback" not in result.output
+
+
+def test_expand_command_reports_summary(db_path, monkeypatch):
+    from fc26.ingest.expand import ExpandResult
+
+    def fake_expand(repo, **kwargs):
+        kwargs["on_progress"]("page 1: 30 cards")
+        return ExpandResult(37, 35, 2, ())
+
+    monkeypatch.setattr("fc26.cli.expand_cards", fake_expand)
+    result = runner.invoke(app, ["expand", "--min-ovr", "87", "--db", str(db_path)])
+    assert result.exit_code == 0
+    assert "page 1: 30 cards" in result.output
+    assert "seen 37, new 35, merged 2, failed pages 0" in result.output
+
+
+def test_expand_requires_min_ovr(db_path):
+    result = runner.invoke(app, ["expand", "--db", str(db_path)])
+    assert result.exit_code != 0
+
+
+def test_expand_exit_1_when_nothing_ingested(db_path, monkeypatch):
+    from fc26.ingest.expand import ExpandResult
+
+    monkeypatch.setattr("fc26.cli.expand_cards",
+                        lambda repo, **kw: ExpandResult(0, 0, 0, ("url: boom",)))
+    result = runner.invoke(app, ["expand", "--min-ovr", "87", "--db", str(db_path)])
+    assert result.exit_code == 1
+
+
+def test_expand_clean_error_on_abort(db_path, monkeypatch):
+    from fc26.errors import ParseError
+
+    def boom(repo, **kwargs):
+        raise ParseError("3/5 list pages failed - futbin layout changed?")
+
+    monkeypatch.setattr("fc26.cli.expand_cards", boom)
+    result = runner.invoke(app, ["expand", "--min-ovr", "87", "--db", str(db_path)])
+    assert result.exit_code == 1
+    assert "layout changed" in result.output
+    assert "Traceback" not in result.output
