@@ -76,13 +76,36 @@ def test_name_containment_variant_is_blocked():
 
 def test_out_of_position_candidate_excluded_alt_position_allowed():
     lineup, cards = _squad()
+    # Make the native CAM slot already strong so the altok card has no positive
+    # delta there; the only upgrade path is ST via alt_positions.
+    cards = dict(cards)
+    cards["CAM"] = _xi_card("CAM", price=10_000)
+    cards["CAM"] = Card(id="cam--strong", player_name="PCAM", version="base", ovr=80,
+                        position="CAM", face=STRONG, club="CCAM", nation="NCAM",
+                        league="LCAM", price=10_000)
+    lineup = Lineup(name="U", formation="4-2-3-1",
+                    slots=tuple((slot, cards[slot].id) for slot in SLOTS))
     pool = (
-        _candidate("wrongpos--tots", "WP", "CB", price=10_000),               # CB can't play ST
+        # CB-only card with WEAK face: ineligible for ST (position) and never a
+        # positive upgrade for the CB slots (same meta as incumbents)
+        _candidate("wrongpos--tots", "WP", "CB", price=10_000, face=WEAK),
         _candidate("altok--tots", "AO", "CAM", price=50_000, alt=("ST",)),     # alt ST ok
     )
     plan = find_upgrades(lineup, cards, pool, budget=100_000, max_swaps=1)
     assert len(plan.swaps) == 1
     assert plan.swaps[0].in_id == "altok--tots"
+    assert plan.swaps[0].slot == "ST"
+
+
+def test_equal_delta_tiebreak_prefers_cheaper():
+    lineup, cards = _squad()
+    pool = (
+        _candidate("pricey--tots", "Pricey", "ST", price=80_000),
+        _candidate("bargain--tots", "Bargain", "ST", price=30_000),
+    )
+    # identical STRONG faces -> identical deltas; cheaper must win
+    plan = find_upgrades(lineup, cards, pool, budget=100_000, max_swaps=1)
+    assert plan.swaps[0].in_id == "bargain--tots"
 
 
 def test_chem_aware_choice_beats_raw_meta():

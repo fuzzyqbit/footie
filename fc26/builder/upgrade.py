@@ -114,7 +114,9 @@ def find_upgrades(
                 delta = trial_score - base_score
                 if delta <= 0:
                     continue
-                better = best is None or delta >= best.score_delta
+                better = best is None or delta > best.score_delta or (
+                    delta == best.score_delta and cost < best.net_cost
+                )
                 if better:
                     best = Swap(
                         slot=slot_key,
