@@ -77,8 +77,8 @@ icon rule; "Men's National" cards (national-team items) count toward nation and 
 normally, league contribution none. Women's leagues stay distinct (they are real
 chem leagues in FUT).
 
-**Nations:** byte-identical across sources today (verified) — pass-through canonical
-(slugify), alias dict present but empty-until-needed.
+**Nations:** mostly identical across sources; two real divergences found against the
+live DB (2026-06-11) and aliased: Holland ↔ Netherlands, Czech Republic ↔ Czechia.
 
 **Club alias pairs:** Arsenal ↔ Arsenal F.C. · Real Madrid ↔ Real Madrid CF ·
 Manchester City ↔ Manchester City F.C. · Juventus ↔ Juventus FC ·

@@ -343,3 +343,17 @@ def test_chem_command_missing_card_is_clean(chem_db, squad_file):
     result = runner.invoke(app, ["chem", str(squad_file), "--db", str(chem_db)])
     assert result.exit_code == 1
     assert "nobody--base" in result.output
+
+
+def test_committed_sample_squad_hand_check_holds():
+    # squads/sample-rivals.json documents a hand-computed 33/33; guard it
+    # against silent DB drift (any of its 11 cards changing under enrichment).
+    from pathlib import Path
+
+    sample = Path("squads/sample-rivals.json")
+    db = Path("data/players.json")
+    if not sample.exists() or not db.exists():
+        pytest.skip("sample squad or real DB not present")
+    result = runner.invoke(app, ["chem", str(sample), "--db", str(db)])
+    assert result.exit_code == 0, result.output
+    assert "33/33" in result.output
