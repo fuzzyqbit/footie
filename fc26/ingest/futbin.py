@@ -8,7 +8,7 @@ import re
 from selectolax.parser import HTMLParser
 
 from ..errors import ParseError
-from ..models import Card, FaceStats, make_card_id
+from ..models import Card, FaceStats, VALID_POSITIONS, make_card_id
 
 LIST_URL_TEMPLATE = "https://www.futbin.com/players?player_rating={min_ovr}-99&page={page}"  # consumed by the expand orchestrator
 ROWS_PER_FULL_PAGE = 30  # consumed by the expand orchestrator
@@ -93,11 +93,14 @@ def _parse_row(row_html: str, source_url: str) -> Card | None:
         return None
 
     # --- Alt positions ---
+    # futbin sometimes appends "+N" tokens (e.g. "+1") when a card has more
+    # alt positions than the UI can display.  Filter to known positions only.
     alt_div = pos_td.css_first("div.xs-font")
     if alt_div:
         alt_text = alt_div.text(strip=True)
         alt_positions: tuple[str, ...] = tuple(
-            p.strip() for p in alt_text.split(",") if p.strip()
+            p.strip() for p in alt_text.split(",")
+            if p.strip() in VALID_POSITIONS
         )
     else:
         alt_positions = ()

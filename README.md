@@ -47,6 +47,7 @@ python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
 .venv/bin/fc26 add <fut.gg card URL>         # add a special card
 .venv/bin/fc26 sync                          # refresh fcratings top-100
 .venv/bin/fc26 enrich                        # backfill league/nation/face stats
+.venv/bin/fc26 expand --min-ovr 87           # bulk-ingest live FUT cards + prices (futbin)
 .venv/bin/fc26 search "rodri"
 .venv/bin/fc26 list --pos ST --sort pac
 .venv/bin/fc26 show kylian-mbappe--base
