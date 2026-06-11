@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 
+from fc26.errors import ParseError
 from fc26.ingest.futbin import parse_futbin_page, parse_price
 
 FIXTURE = Path(__file__).parent / "fixtures" / "futbin_list_87_p1.html"
@@ -90,3 +91,15 @@ def test_base_cards_map_to_version_base():
     assert base_cards, "fixture contains Normal rows; they must map to version 'base'"
     assert all(c.id.endswith("--base") for c in base_cards)
     assert not any(c.version == "Normal" for c in cards)
+
+
+def test_majority_bad_rows_raises_parse_error():
+    html = (
+        '<table>'
+        '<tr class="player-row"><td>bad1</td></tr>'
+        '<tr class="player-row"><td>bad2</td></tr>'
+        '<tr class="player-row"><td>bad3</td></tr>'
+        '</table>'
+    )
+    with pytest.raises(ParseError, match="futbin"):
+        parse_futbin_page(html, source_url="http://test")

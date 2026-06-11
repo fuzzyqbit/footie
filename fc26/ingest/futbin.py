@@ -10,8 +10,8 @@ from selectolax.parser import HTMLParser
 from ..errors import ParseError
 from ..models import Card, FaceStats, make_card_id
 
-LIST_URL_TEMPLATE = "https://www.futbin.com/players?player_rating={min_ovr}-99&page={page}"
-ROWS_PER_FULL_PAGE = 30
+LIST_URL_TEMPLATE = "https://www.futbin.com/players?player_rating={min_ovr}-99&page={page}"  # consumed by the expand orchestrator
+ROWS_PER_FULL_PAGE = 30  # consumed by the expand orchestrator
 
 # futbin badge texts that mean "this is the plain base card".
 # Live site uses "Normal" (verified 2026-06-10); gold/silver entries kept
@@ -172,6 +172,8 @@ def _parse_row(row_html: str, source_url: str) -> Card | None:
                 club = title
 
     # --- Price (PS platform price preferred) ---
+    # PS prices preferred: this project targets PS5. futbin exposes per-platform
+    # cells (platform-ps-only / platform-xbox-only / platform-pc-only).
     price: int | None = None
     price_td = tree.css_first("td.platform-ps-only")
     if price_td:
@@ -179,7 +181,7 @@ def _parse_row(row_html: str, source_url: str) -> Card | None:
         if price_div:
             # The div contains the price text followed by a coin <img>; text() includes
             # alt text from the img ("Coin"), so we strip that.
-            raw_price = price_div.text(strip=True).replace("Coin", "").strip()
+            raw_price = re.sub(r"coins?", "", price_div.text(strip=True), flags=re.IGNORECASE).strip()
             price = parse_price(raw_price)
 
     # --- Build card ---
