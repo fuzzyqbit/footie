@@ -81,13 +81,18 @@ def test_club_aliases_resolve_real_db_pairs():
         ("Al Ittihad", "Al-Ittihad Club"),
         ("Brighton", "Brighton & Hove Albion F.C."),
         ("FC Bayern München", "FC Bayern Munich"),
-        ("Independiente", "Independiente DV"),
-        ("Levante LP", "Levante UD"),
         ("Manchester United F.C.", "Manchester Utd"),
         ("Sunderland", "Sunderland A.F.C."),
     ]
     for left, right in pairs:
         assert canonical_club(left) == canonical_club(right), (left, right)
+
+
+def test_similar_named_clubs_stay_distinct():
+    assert canonical_club("Levante UD") != canonical_club("Levante LP")
+    assert canonical_club("Independiente") != canonical_club("Independiente DV")
+    assert canonical_club("Inter Miami") != canonical_club("Inter Milan")
+    assert canonical_club("Newcastle Jets") != canonical_club("Newcastle United F.C.")
 
 
 def test_nation_passthrough():

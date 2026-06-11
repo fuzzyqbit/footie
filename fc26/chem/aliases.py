@@ -33,7 +33,11 @@ _NATION_ALIASES: dict[str, str] = {}   # byte-identical across sources today
 
 _CLUB_SUFFIXES = ("-f-c", "-fc", "-cf")
 
-# applied after suffix stripping: abbreviation variants the strip can't unify
+# NOT aliased on purpose (verified different clubs despite similar names):
+# levante-ud (men, La Liga) vs levante-lp (women, Liga F);
+# independiente (ARG) vs independiente-dv (Independiente del Valle, ECU);
+# inter-miami vs inter-milan; houston-dash vs houston-dynamo;
+# newcastle-jets (AUS) vs newcastle-united; san-diego vs san-diego-wave
 _CLUB_ALIASES = {
     "al-fayha-club": "al-fayha",
     "al-hilal-sfc": "al-hilal",
@@ -41,8 +45,6 @@ _CLUB_ALIASES = {
     "atletico-de-madrid": "atletico-madrid",
     "brighton-hove-albion": "brighton",
     "fc-bayern-munich": "fc-bayern-munchen",
-    "independiente-dv": "independiente",
-    "levante-ud": "levante-lp",
     "manchester-utd": "manchester-united",
     "newcastle-utd": "newcastle-united",
     "sunderland-a": "sunderland",
