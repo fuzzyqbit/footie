@@ -36,6 +36,18 @@ _BASE_VERSIONS = {
 _HEIGHT_RE = re.compile(r"(\d{2,3})cm")
 
 
+def _clean_alt_positions(raw_tokens: list[str]) -> tuple[str, ...]:
+    """Filter alt-position tokens to only those in VALID_POSITIONS.
+
+    futbin sometimes appends "+N" tokens (e.g. "+1") when a card has more
+    alt positions than the UI can display. Strip these and any other invalid tokens.
+    """
+    return tuple(
+        p.strip() for p in raw_tokens
+        if p.strip() in VALID_POSITIONS
+    )
+
+
 def parse_price(raw: str) -> int | None:
     """'3.02M' -> 3_020_000, '750K' -> 750_000, '12,500' -> 12_500; junk/zero -> None."""
     text = (raw or "").strip().replace(",", "")
@@ -93,15 +105,10 @@ def _parse_row(row_html: str, source_url: str) -> Card | None:
         return None
 
     # --- Alt positions ---
-    # futbin sometimes appends "+N" tokens (e.g. "+1") when a card has more
-    # alt positions than the UI can display.  Filter to known positions only.
     alt_div = pos_td.css_first("div.xs-font")
     if alt_div:
         alt_text = alt_div.text(strip=True)
-        alt_positions: tuple[str, ...] = tuple(
-            p.strip() for p in alt_text.split(",")
-            if p.strip() in VALID_POSITIONS
-        )
+        alt_positions = _clean_alt_positions(alt_text.split(","))
     else:
         alt_positions = ()
 

@@ -3,7 +3,8 @@ from pathlib import Path
 import pytest
 
 from fc26.errors import ParseError
-from fc26.ingest.futbin import parse_futbin_page, parse_price
+from fc26.ingest.futbin import parse_futbin_page, parse_price, _clean_alt_positions
+from fc26.models import VALID_POSITIONS
 
 FIXTURE = Path(__file__).parent / "fixtures" / "futbin_list_87_p1.html"
 URL = "https://www.futbin.com/players?player_rating=87-99&page=1"
@@ -103,3 +104,17 @@ def test_majority_bad_rows_raises_parse_error():
     )
     with pytest.raises(ParseError, match="futbin"):
         parse_futbin_page(html, source_url="http://test")
+
+
+def test_clean_alt_positions_drops_overflow_tokens():
+    """futbin appends '+N' tokens when a card has more alt positions than UI can display."""
+    assert _clean_alt_positions(["CAM", "+1", "RW", ""]) == ("CAM", "RW")
+
+
+def test_alt_position_overflow_token_is_dropped_invariant(page_html):
+    """All parsed alt-positions must be in VALID_POSITIONS (regression for futbin '+1' token)."""
+    cards = parse_futbin_page(page_html, source_url=URL)
+    for card in cards:
+        assert all(p in VALID_POSITIONS for p in card.alt_positions), (
+            f"{card.id} has invalid alt position(s): {card.alt_positions}"
+        )
