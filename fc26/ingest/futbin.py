@@ -16,21 +16,31 @@ ROWS_PER_FULL_PAGE = 30  # consumed by the expand orchestrator
 # futbin badge texts that mean "this is the plain base card".
 # Live site uses "Normal" (verified 2026-06-10); gold/silver entries kept
 # as defensive aliases in case futbin renames tiers.
-_BASE_VERSIONS = {
-    "Normal",
-    "Gold Rare",
-    "Gold Common",
-    "Gold NR",
-    "Gold",
-    "Silver Rare",
-    "Silver Common",
-    "Silver NR",
-    "Silver",
-    "Bronze Rare",
-    "Bronze Common",
-    "Bronze NR",
-    "Bronze",
+# Stored lowercase so that _normalize_version can do a case-insensitive
+# exact-match without substring ambiguity (e.g. "Base Heroes" must NOT match).
+_BASE_VERSIONS_LOWER = {
+    "normal",
+    "gold rare",
+    "gold common",
+    "gold nr",
+    "gold",
+    "silver rare",
+    "silver common",
+    "silver nr",
+    "silver",
+    "bronze rare",
+    "bronze common",
+    "bronze nr",
+    "bronze",
 }
+
+
+def _normalize_version(badge_text: str) -> str:
+    """Map base-card badges to 'base' (case-insensitive); specials stay verbatim."""
+    text = (badge_text or "").strip()
+    if text.lower() in _BASE_VERSIONS_LOWER:
+        return "base"
+    return text or "base"
 
 # Regex to extract the leading cm value from height cells like "178cm | 5'10""
 _HEIGHT_RE = re.compile(r"(\d{2,3})cm")
@@ -91,7 +101,7 @@ def _parse_row(row_html: str, source_url: str) -> Card | None:
     # --- Version badge ---
     version_div = tree.css_first(".table-player-revision")
     badge_text = version_div.text(strip=True) if version_div else ""
-    version = "base" if badge_text in _BASE_VERSIONS else (badge_text or "base")
+    version = _normalize_version(badge_text)
 
     # --- Position ---
     pos_td = tree.css_first("td.table-pos")

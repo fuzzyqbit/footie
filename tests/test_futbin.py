@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 from fc26.errors import ParseError
-from fc26.ingest.futbin import parse_futbin_page, parse_price, _clean_alt_positions
+from fc26.ingest.futbin import parse_futbin_page, parse_price, _clean_alt_positions, _normalize_version
 from fc26.models import VALID_POSITIONS
 
 FIXTURE = Path(__file__).parent / "fixtures" / "futbin_list_87_p1.html"
@@ -118,3 +118,13 @@ def test_alt_position_overflow_token_is_dropped_invariant(page_html):
         assert all(p in VALID_POSITIONS for p in card.alt_positions), (
             f"{card.id} has invalid alt position(s): {card.alt_positions}"
         )
+
+
+def test_version_badge_mapping_is_case_insensitive():
+    assert _normalize_version("Normal") == "base"
+    assert _normalize_version("normal") == "base"
+    assert _normalize_version("NORMAL") == "base"
+    assert _normalize_version("  Normal ") == "base"
+    assert _normalize_version("TOTY") == "TOTY"
+    assert _normalize_version("Base Heroes") == "Base Heroes"  # hero class, not a base card
+    assert _normalize_version("") == "base"
