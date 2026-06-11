@@ -345,6 +345,93 @@ def test_chem_command_missing_card_is_clean(chem_db, squad_file):
     assert "nobody--base" in result.output
 
 
+@pytest.fixture()
+def upgrade_db(tmp_path):
+    path = tmp_path / "players.json"
+    repo = CardRepository(path)
+    positions = {"GK": "GK", "RB": "RB", "CB1": "CB", "CB2": "CB", "LB": "LB",
+                 "CDM1": "CDM", "CDM2": "CDM", "CAM": "CAM", "RW": "RW", "LW": "LW", "ST": "ST"}
+    for slot, pos in positions.items():
+        repo.upsert(Card(
+            id=f"{slot.lower()}--base", player_name=f"P{slot}", version="base",
+            ovr=80, position=pos, club=f"C{slot}", nation=f"N{slot}",
+            league="Premier League", price=10_000,
+            face=FaceStats(pac=70, sho=70, pas=70, dri=70, def_=70, phy=70),
+        ))
+    repo.upsert(Card(
+        id="upgrade--tots", player_name="Upgrade", version="TOTS", ovr=92,
+        position="ST", club="CX", nation="NX", league="Premier League", price=50_000,
+        face=FaceStats(pac=92, sho=92, pas=92, dri=92, def_=92, phy=92),
+    ))
+    return path
+
+
+def test_upgrade_command_suggests_and_reports(upgrade_db, squad_file):
+    result = runner.invoke(app, ["upgrade", str(squad_file), "--budget", "100K",
+                                 "--db", str(upgrade_db)])
+    assert result.exit_code == 0, result.output
+    assert "Upgrade" in result.output
+    assert "spent" in result.output
+
+
+def test_upgrade_command_json(upgrade_db, squad_file):
+    result = runner.invoke(app, ["upgrade", str(squad_file), "--budget", "100K",
+                                 "--db", str(upgrade_db), "--json"])
+    assert result.exit_code == 0
+    data = json.loads(result.output)
+    assert data["swaps"][0]["in_id"] == "upgrade--tots"
+    assert data["spent"] <= data["budget"]
+
+
+def test_upgrade_command_write_produces_loadable_squad(upgrade_db, squad_file, tmp_path):
+    out = tmp_path / "upgraded.json"
+    result = runner.invoke(app, ["upgrade", str(squad_file), "--budget", "100K",
+                                 "--db", str(upgrade_db), "--write", str(out)])
+    assert result.exit_code == 0, result.output
+    saved = json.loads(out.read_text())
+    assert saved["starting_xi"]["ST"] == "upgrade--tots"
+    chem = runner.invoke(app, ["chem", str(out), "--db", str(upgrade_db)])
+    assert chem.exit_code == 0, chem.output
+
+
+def test_upgrade_write_refuses_overwriting_input(upgrade_db, squad_file):
+    result = runner.invoke(app, ["upgrade", str(squad_file), "--budget", "100K",
+                                 "--db", str(upgrade_db), "--write", str(squad_file)])
+    assert result.exit_code == 1
+    assert "NEW file" in result.output
+
+
+def test_upgrade_no_upgrades_found_is_friendly(upgrade_db, squad_file):
+    result = runner.invoke(app, ["upgrade", str(squad_file), "--budget", "1",
+                                 "--db", str(upgrade_db)])
+    assert result.exit_code == 0
+    assert "no upgrades found" in result.output.lower()
+
+
+def test_upgrade_bad_budget_clean_error(upgrade_db, squad_file):
+    result = runner.invoke(app, ["upgrade", str(squad_file), "--budget", "lots",
+                                 "--db", str(upgrade_db)])
+    assert result.exit_code == 1
+    assert "cannot parse budget" in result.output
+    assert "Traceback" not in result.output
+
+
+def test_upgrade_against_real_db_ci_guard():
+    from pathlib import Path
+
+    sample = Path("squads/sample-rivals.json")
+    db = Path("data/players.json")
+    if not sample.exists() or not db.exists():
+        pytest.skip("sample squad or real DB not present")
+    result = runner.invoke(app, ["upgrade", str(sample), "--budget", "200K",
+                                 "--db", str(db), "--json"])
+    assert result.exit_code == 0, result.output
+    data = json.loads(result.output)
+    assert data["spent"] <= data["budget"]
+    for swap in data["swaps"]:
+        assert swap["score_delta"] > 0
+
+
 def test_committed_sample_squad_hand_check_holds():
     # squads/sample-rivals.json documents a hand-computed 33/33; guard it
     # against silent DB drift (any of its 11 cards changing under enrichment).

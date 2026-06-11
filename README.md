@@ -52,10 +52,11 @@ python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
 .venv/bin/fc26 list --pos ST --sort pac
 .venv/bin/fc26 show kylian-mbappe--base
 .venv/bin/fc26 chem squads/sample-rivals.json # chemistry for a lineup file
+.venv/bin/fc26 upgrade squads/sample-rivals.json --budget 200K # budgeted swap suggestions
 ```
 
 Design: [`docs/superpowers/specs/2026-06-10-fc26-player-db-design.md`](docs/superpowers/specs/2026-06-10-fc26-player-db-design.md).
-Coming next: squad/lineup builder, acquisition planner.
+Coming next: full-XI auto-builder, acquisition planner.
 
 ## Quick-start TL;DR
 

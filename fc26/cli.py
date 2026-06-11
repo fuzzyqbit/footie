@@ -12,6 +12,8 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
+from .builder.market import parse_budget
+from .builder.upgrade import find_upgrades
 from .chem.engine import compute_chemistry
 from .chem.lineup import load_lineup, resolve_cards
 from .db import CardRepository, card_to_dict
@@ -224,6 +226,69 @@ def expand(
         console.print(f"[yellow]failed:[/yellow] {failure}")
     if result.seen == 0:
         _fail("nothing ingested")
+
+
+@app.command()
+def upgrade(
+    squad_file: Path = typer.Argument(..., help="Path to a squad JSON file"),
+    budget: str = typer.Option(..., "--budget", help="Net spend cap, e.g. 100K, 1.2M"),
+    swaps: int = typer.Option(3, "--swaps", help="Max swaps to suggest"),
+    write: Path | None = typer.Option(None, "--write", help="Save upgraded squad to a NEW file"),
+    db: Path = DB_OPTION,
+    json: bool = JSON_FLAG,
+) -> None:
+    """Suggest budgeted squad upgrades (pace-meta + chemistry aware)."""
+    try:
+        coins = parse_budget(budget)
+        lineup = load_lineup(squad_file)
+        repo = CardRepository(db)
+        slot_cards = resolve_cards(lineup, repo)
+        plan = find_upgrades(lineup, slot_cards, repo.find_all(),
+                             budget=coins, max_swaps=swaps)
+    except FC26Error as exc:
+        _fail(str(exc))
+    if write is not None and write.resolve() == squad_file.resolve():
+        _fail("--write must target a NEW file, not the input")
+    if json:
+        typer.echo(json_lib.dumps(asdict(plan), ensure_ascii=False, indent=2))
+    elif not plan.swaps:
+        console.print("no upgrades found within budget")
+    else:
+        table = Table("Slot", "Out", "Resale", "In", "Price", "Net", "Δmeta", "Δchem")
+        for s in plan.swaps:
+            table.add_row(
+                s.slot, f"{s.out_name} ({s.out_version})", str(s.out_resale),
+                f"{s.in_name} ({s.in_version})", str(s.in_price), str(s.net_cost),
+                f"{s.meta_delta:+.1f}", f"{s.chem_delta:+d}",
+            )
+        console.print(table)
+        console.print(
+            f"spent {plan.spent} of {plan.budget} | squad score "
+            f"{plan.score_before:.1f} → {plan.score_after:.1f} | "
+            f"chem {plan.chem_before} → {plan.chem_after}"
+        )
+    if not json:
+        for warning in plan.warnings:
+            console.print(f"[yellow]warn:[/yellow] {warning}")
+    if write is not None:
+        swapped = dict(lineup.slots)
+        for s in plan.swaps:
+            swapped[s.slot] = s.in_id
+        payload: dict = {
+            "name": f"{lineup.name} (upgraded)",
+            "formation": lineup.formation,
+            "starting_xi": {slot: swapped[slot] for slot, _ in lineup.slots},
+        }
+        if lineup.manager is not None:
+            manager: dict = {}
+            if lineup.manager.league:
+                manager["league"] = lineup.manager.league
+            if lineup.manager.nation:
+                manager["nation"] = lineup.manager.nation
+            payload["manager"] = manager
+        write.write_text(json_lib.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+                         encoding="utf-8")
+        console.print(f"upgraded squad written to {write}")
 
 
 @app.command()
