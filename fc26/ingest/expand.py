@@ -11,7 +11,9 @@ from ..models import Card
 from .futbin import LIST_URL_TEMPLATE, ROWS_PER_FULL_PAGE, parse_futbin_page
 
 REQUEST_DELAY_SECONDS = 1.0
-ABORT_CHECK_AFTER = 5         # pages before the failure-ratio abort can trigger
+ABORT_CHECK_AFTER = 5         # pages before the failure-ratio abort can trigger;
+                              # runs with max_pages < 5 never abort, they just
+                              # report failed_pages in the result
 ABORT_FAILURE_RATIO = 0.5
 
 
@@ -61,8 +63,7 @@ def expand_cards(
             break   # past the last page
         for card in cards:
             seen += 1
-            card = _disambiguate(repo, card)
-            existing = repo.find_by_id(card.id)
+            card, existing = _resolve(repo, card)
             repo.upsert(card)
             if existing is None:
                 new += 1
@@ -75,16 +76,17 @@ def expand_cards(
     return ExpandResult(seen, new, merged, tuple(failed_pages))
 
 
-def _disambiguate(repo: CardRepository, card: Card) -> Card:
-    """Two different special cards can share name+version (e.g. two TOTW IFs).
+def _resolve(repo: CardRepository, card: Card) -> tuple[Card, Card | None]:
+    """Resolve id collisions and return (card_to_upsert, existing_card_or_None).
 
-    When the id already exists with a DIFFERENT ovr and the card is not a base
-    card, suffix the id with the ovr so both cards survive. Base-card ovr
-    drift (title updates) merges normally.
+    Two different special cards can share name+version (e.g. two TOTW IFs):
+    when the id exists with a DIFFERENT ovr and the card is not a base card,
+    suffix the id with the ovr so both survive. Base-card ovr drift (title
+    updates) merges normally. The existing-card lookup doubles as the
+    new-vs-merged signal so each card costs one repository read, not two.
     """
-    if card.version == "base":
-        return card
     existing = repo.find_by_id(card.id)
-    if existing is not None and existing.ovr != card.ovr:
-        return replace(card, id=f"{card.id}-{card.ovr}")
-    return card
+    if card.version != "base" and existing is not None and existing.ovr != card.ovr:
+        suffixed = replace(card, id=f"{card.id}-{card.ovr}")
+        return suffixed, repo.find_by_id(suffixed.id)
+    return card, existing

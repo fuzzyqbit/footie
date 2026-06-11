@@ -104,3 +104,16 @@ def test_sleeps_once_per_fetch(tmp_path, monkeypatch):
     expand_cards(repo, min_ovr=87, fetch_html=lambda u: u,
                  sleep=lambda s: slept.append(s))
     assert len(slept) == 2
+
+
+def test_stops_on_empty_page_after_full_page(tmp_path, monkeypatch):
+    repo = CardRepository(tmp_path / "players.json")
+    page1 = [_card(f"p{i}--toty", f"P{i}", "TOTY", 90) for i in range(30)]
+    # page 2 returns [] (past the end) -> loop must stop cleanly
+    monkeypatch.setattr("fc26.ingest.expand.parse_futbin_page", _pages(page1))
+    fetched = []
+    result = expand_cards(repo, min_ovr=87,
+                          fetch_html=lambda u: (fetched.append(u) or u),
+                          sleep=lambda s: None)
+    assert result.seen == 30
+    assert len(fetched) == 2  # full page 1, then the empty page 2 stops the loop
