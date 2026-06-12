@@ -444,3 +444,48 @@ def test_committed_sample_squad_hand_check_holds():
     result = runner.invoke(app, ["chem", str(sample), "--db", str(db)])
     assert result.exit_code == 0, result.output
     assert "33/33" in result.output
+
+
+def test_build_command_happy_path(upgrade_db, tmp_path):
+    out = tmp_path / "built.json"
+    result = runner.invoke(app, ["build", "--formation", "4-2-3-1", "--budget", "200K",
+                                 "--db", str(upgrade_db), "--write", str(out)])
+    assert result.exit_code == 0, result.output
+    assert "total cost" in result.output
+    saved = json.loads(out.read_text())
+    assert len(saved["starting_xi"]) == 11
+    chem = runner.invoke(app, ["chem", str(out), "--db", str(upgrade_db)])
+    assert chem.exit_code == 0, chem.output
+
+
+def test_build_command_json(upgrade_db):
+    result = runner.invoke(app, ["build", "--formation", "4-2-3-1", "--budget", "200K",
+                                 "--db", str(upgrade_db), "--json"])
+    assert result.exit_code == 0
+    data = json.loads(result.output)
+    assert data["total_cost"] <= 200_000
+    assert len(data["xi"]) == 11
+
+
+def test_build_command_infeasible_budget_clean(upgrade_db):
+    result = runner.invoke(app, ["build", "--formation", "4-2-3-1", "--budget", "1000",
+                                 "--db", str(upgrade_db)])
+    assert result.exit_code == 1
+    assert "budget too small" in result.output
+    assert "Traceback" not in result.output
+
+
+def test_build_command_real_db_ci_guard():
+    from pathlib import Path
+
+    db = Path("data/players.json")
+    if not db.exists():
+        pytest.skip("real DB not present")
+    result = runner.invoke(app, ["build", "--formation", "4-2-3-1", "--budget", "300K",
+                                 "--db", str(db), "--json"])
+    assert result.exit_code == 0, result.output
+    data = json.loads(result.output)
+    assert data["total_cost"] <= 300_000
+    assert len(data["xi"]) == 11
+    names = [p["player_name"] for p in data["xi"]]
+    assert len(set(names)) == 11

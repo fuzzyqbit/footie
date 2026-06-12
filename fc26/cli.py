@@ -12,6 +12,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
+from .builder.build import build_squad
 from .builder.market import parse_budget
 from .builder.upgrade import find_upgrades
 from .chem.engine import compute_chemistry
@@ -289,6 +290,56 @@ def upgrade(
         write.write_text(json_lib.dumps(payload, ensure_ascii=False, indent=2) + "\n",
                          encoding="utf-8")
         console.print(f"upgraded squad written to {write}")
+
+
+@app.command()
+def build(
+    formation: str = typer.Option(..., "--formation", help="e.g. 4-2-3-1"),
+    budget: str = typer.Option(..., "--budget", help="Total budget, e.g. 500K"),
+    league: str | None = typer.Option(None, "--league", help="Restrict pool to one league"),
+    write: Path | None = typer.Option(None, "--write", help="Save built squad to a file"),
+    db: Path = DB_OPTION,
+    json: bool = JSON_FLAG,
+) -> None:
+    """Build a fresh XI from scratch: cheapest legal seed, then budgeted upgrades."""
+    try:
+        coins = parse_budget(budget)
+        repo = CardRepository(db)
+        result = build_squad(formation, repo.find_all(), budget=coins, league=league)
+    except FC26Error as exc:
+        _fail(str(exc))
+    report = compute_chemistry(result.lineup, result.slot_cards)
+    xi_payload = [
+        {"slot": slot, "card_id": card.id, "player_name": card.player_name,
+         "version": card.version, "price": card.price}
+        for slot, card in ((s, result.slot_cards[s]) for s, _ in result.lineup.slots)
+    ]
+    if json:
+        typer.echo(json_lib.dumps({
+            "formation": formation, "budget": coins,
+            "seed_cost": result.seed_cost, "total_cost": result.total_cost,
+            "team_chem": report.team_total, "xi": xi_payload,
+        }, ensure_ascii=False, indent=2))
+    else:
+        table = Table("Slot", "Player", "Version", "Price")
+        for entry in xi_payload:
+            table.add_row(entry["slot"], entry["player_name"], entry["version"],
+                          str(entry["price"]))
+        console.print(table)
+        console.print(
+            f"total cost {result.total_cost} of {coins} | "
+            f"team chemistry {report.team_total}/33"
+        )
+    if write is not None:
+        payload = {
+            "name": result.lineup.name,
+            "formation": formation,
+            "starting_xi": {slot: result.slot_cards[slot].id
+                            for slot, _ in result.lineup.slots},
+        }
+        write.write_text(json_lib.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+                         encoding="utf-8")
+        console.print(f"built squad written to {write}")
 
 
 @app.command()
