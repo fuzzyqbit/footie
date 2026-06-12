@@ -12,6 +12,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
+from .builder.boost import boosted_stats
 from .builder.build import build_squad
 from .builder.market import parse_budget
 from .builder.upgrade import find_upgrades
@@ -373,3 +374,60 @@ def chem(
     console.print(breakdown)
     for warning in report.warnings:
         console.print(f"[yellow]warn:[/yellow] {warning}")
+
+
+@app.command()
+def boost(
+    squad_file: Path = typer.Argument(..., help="Squad JSON (slots may carry styles)"),
+    db: Path = DB_OPTION,
+    json: bool = JSON_FLAG,
+) -> None:
+    """Show chem-gated boosted stats for a styled lineup."""
+    try:
+        lineup = load_lineup(squad_file)
+        slot_cards = resolve_cards(lineup, CardRepository(db))
+        report = compute_chemistry(lineup, slot_cards)
+        chem_by_slot = {p.slot: p.chem for p in report.players}
+        results = []
+        for slot, _cid in lineup.slots:
+            card = slot_cards[slot]
+            style = lineup.styles.get(slot)
+            results.append((slot, card, style,
+                            boosted_stats(card, style, chem_by_slot[slot])))
+    except FC26Error as exc:
+        _fail(str(exc))
+    if json:
+        payload = [{
+            "slot": slot, "card_id": card.id, "player_name": card.player_name,
+            "style": style, "chem": chem_by_slot[slot], "precision": r.precision,
+            "face": asdict(r.face), "subs": asdict(r.subs) if r.subs else None,
+        } for slot, card, style, r in results]
+        typer.echo(json_lib.dumps({"players": payload, "team_chem": report.team_total},
+                                  ensure_ascii=False, indent=2))
+        return
+    table = Table("Slot", "Player", "Style", "Chem", "PAC", "SHO", "PAS", "DRI", "DEF", "PHY")
+    any_approx = False
+    for slot, card, style, r in results:
+        marker = "≈" if r.precision != "none" else ""
+        if r.precision == "approx":
+            any_approx = True
+
+        def cell(face_name, _card=card, _r=r, _marker=marker):
+            base = getattr(_card.face, face_name)
+            boosted_value = getattr(_r.face, face_name)
+            if base is None or boosted_value is None:
+                return "-"
+            if boosted_value != base:
+                return f"{boosted_value}{_marker}(+{boosted_value - base})"
+            return str(base)
+
+        table.add_row(slot, card.player_name, style or "-", str(chem_by_slot[slot]),
+                      cell("pac"), cell("sho"), cell("pas"),
+                      cell("dri"), cell("def_"), cell("phy"))
+    console.print(table)
+    console.print(f"team chemistry: {report.team_total}/33")
+    for slot, card, style, r in results:
+        if style and chem_by_slot[slot] == 0:
+            console.print(f"[yellow]warn:[/yellow] {card.id}: styled but 0 chem - style has no effect")
+    if any_approx:
+        console.print("[dim]≈ approximate faces - add cards via `fc26 add <fut.gg URL>` for sub-level precision[/dim]")

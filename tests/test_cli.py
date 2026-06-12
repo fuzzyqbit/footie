@@ -489,3 +489,67 @@ def test_build_command_real_db_ci_guard():
     assert len(data["xi"]) == 11
     names = [p["player_name"] for p in data["xi"]]
     assert len(set(names)) == 11
+
+
+def test_boost_command_table(chem_db, squad_file, tmp_path):
+    import json as j
+
+    squad = j.loads(squad_file.read_text())
+    squad["starting_xi"]["ST"] = {"id": "st--base", "style": "hunter"}
+    squad_file.write_text(j.dumps(squad))
+    result = runner.invoke(app, ["boost", str(squad_file), "--db", str(chem_db)])
+    assert result.exit_code == 0, result.output
+    assert "hunter" in result.output
+    assert "≈" in result.output                  # approx marker present
+    assert "fut.gg" in result.output             # precision hint shown once
+
+
+def test_boost_command_json(chem_db, squad_file):
+    import json as j
+
+    squad = j.loads(squad_file.read_text())
+    squad["starting_xi"]["ST"] = {"id": "st--base", "style": "hunter"}
+    squad_file.write_text(j.dumps(squad))
+    result = runner.invoke(app, ["boost", str(squad_file), "--db", str(chem_db), "--json"])
+    data = json.loads(result.output)
+    st = next(p for p in data["players"] if p["slot"] == "ST")
+    assert st["style"] == "hunter"
+    assert st["precision"] == "approx"
+    pac = st["face"]["pac"]
+    assert pac is None or pac >= 70              # boosted or equal, never lower
+
+
+def test_boost_command_unknown_style_clean(chem_db, squad_file):
+    import json as j
+
+    squad = j.loads(squad_file.read_text())
+    squad["starting_xi"]["ST"] = {"id": "st--base", "style": "zoom"}
+    squad_file.write_text(j.dumps(squad))
+    result = runner.invoke(app, ["boost", str(squad_file), "--db", str(chem_db)])
+    assert result.exit_code == 1
+    assert "zoom" in result.output
+    assert "Traceback" not in result.output
+
+
+def test_boost_real_db_ci_guard(tmp_path):
+    from pathlib import Path
+
+    sample = Path("squads/sample-rivals.json")
+    db = Path("data/players.json")
+    if not sample.exists() or not db.exists():
+        pytest.skip("sample squad or real DB not present")
+    import json as j
+
+    squad = j.loads(sample.read_text())
+    st_value = squad["starting_xi"]["CDM1"]
+    squad["starting_xi"]["CDM1"] = {"id": st_value if isinstance(st_value, str) else st_value["id"],
+                                    "style": "shadow"}
+    styled = tmp_path / "styled.json"
+    styled.write_text(j.dumps(squad))
+    result = runner.invoke(app, ["boost", str(styled), "--db", str(db), "--json"])
+    assert result.exit_code == 0, result.output
+    data = json.loads(result.output)
+    cdm = next(p for p in data["players"] if p["slot"] == "CDM1")
+    assert cdm["style"] == "shadow"
+    # CDM1 card has no sub-stats in DB yet (fut.gg crawl pending) -> approx tier
+    assert cdm["precision"] in ("subs", "approx")

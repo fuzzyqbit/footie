@@ -55,6 +55,7 @@ python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
 .venv/bin/fc26 upgrade squads/sample-rivals.json --budget 200K # budgeted swap suggestions
 .venv/bin/fc26 build --formation 4-2-3-1 --budget 500K # build an XI from scratch
 # tip: without --league the builder optimizes stats over chemistry - use a league filter for chem cores
+.venv/bin/fc26 boost squads/sample-rivals.json # chem-style boosted stats
 ```
 
 Design: [`docs/superpowers/specs/2026-06-10-fc26-player-db-design.md`](docs/superpowers/specs/2026-06-10-fc26-player-db-design.md).

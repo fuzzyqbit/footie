@@ -8,7 +8,7 @@ boosted exactly (capped 99) - precision tier "subs"; otherwise "approx".
 
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 
 from ..chem.styles import STYLE_BOOSTS, available_styles
 from ..errors import FC26Error
