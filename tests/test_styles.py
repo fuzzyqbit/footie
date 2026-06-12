@@ -7,7 +7,7 @@ SUB_FIELDS = set(SubStats.__dataclass_fields__)
 
 
 def test_structure_all_styles_valid():
-    assert len(STYLE_BOOSTS) >= 15
+    assert len(STYLE_BOOSTS) >= 20
     for style, levels in STYLE_BOOSTS.items():
         assert style == style.lower(), style          # slug keys
         for level, boosts in levels.items():
@@ -37,7 +37,9 @@ def test_pinned_hunter_level3():
     assert boosts["penalties"] == 6
 
 
-def test_pinned_hunter_level_scaling():
+def test_level_scaling_model_assumption():
+    # Pins the documented MODEL ASSUMPTION (L3/3, 2*L3/3), not source data.
+    # Sources confirm the 3/6/9 tier model, but none publish explicit per-level tables.
     # Scaling rule: L1 = L3 // 3, L2 = (L3 * 2) // 3
     assert STYLE_BOOSTS["hunter"][1]["acceleration"] == 2   # 6 // 3
     assert STYLE_BOOSTS["hunter"][2]["acceleration"] == 4   # (6*2) // 3

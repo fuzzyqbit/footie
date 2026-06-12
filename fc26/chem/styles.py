@@ -5,14 +5,17 @@ Source: https://footballgamingzone.com/ea-sports-fc/ea-fc-26-chemistry-styles-ex
 https://realsport101.com/article/fc-26-chemistry-styles-explained
 for "hunter" (outfield) and "wall"/"glove" (GK styles).
 
-Both sources agree on the FC 26 3/6/9 boost model: each boosted sub-stat is
-assigned a tier value (3, 6, or 9) at chem level 3. At chem level 1 and 2 the
-boost scales to 1/3 and 2/3 of the level-3 value respectively:
+Both sources confirm the FC 26 3/6/9 boost model: each boosted sub-stat is
+assigned a tier value (3, 6, or 9) at chem level 3 (see citations above).
+Per-level scaling (L1 = L3/3, L2 = 2*L3/3) is a MODEL ASSUMPTION, not published
+by the sources:
   tier 3  -> L1: +1, L2: +2, L3: +3
   tier 6  -> L1: +2, L2: +4, L3: +6
   tier 9  -> L1: +3, L2: +6, L3: +9
-This scaling rule is confirmed by multiple sources (skycoach.gg, playhub.com,
-nealguides.com).
+The 3/6/9 tier names are source-verified (skycoach.gg, playhub.com, nealguides.com),
+but the explicit per-level table is not. All L3 values divide cleanly (every value
+is 3, 6, or 9), suggesting the scaling is correct. Verify in-game before trusting
+L1/L2 numbers; L3 numbers are safe (matched against source data).
 
 Spot-verification (hunter):
   footballgamingzone: +6 Acceleration, +6 Sprint Speed, +3 Attacking Positioning,
@@ -305,9 +308,9 @@ STYLE_BOOSTS: dict[str, dict[int, dict[str, int]]] = {
     # --- GK styles ---
     # GK-specific sub-stats (Diving, Handling, Kicking, Reflexes, GK Positioning)
     # have no SubStats field. Only acceleration/sprint_speed are encoded where
-    # the source lists them. Styles with zero SubStats-mappable fields are included
-    # as empty dicts at each level (present in STYLE_BOOSTS so available_styles()
-    # lists them, but they provide no sub-stat boosts in the current model).
+    # the source lists them. Styles with zero SubStats-mappable fields are OMITTED
+    # entirely from STYLE_BOOSTS (see wall/glove omission below ~line 330).
+    # They are documented here for reference but cannot be stored in the current SubStats model.
 
     "gk_basic": _expand({
         # +3 Diving, +3 Handling, +3 Kicking, +3 Acceleration, +3 Positioning
