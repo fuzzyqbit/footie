@@ -98,5 +98,7 @@ strength, aggression}.
 ## Success criteria
 
 - `fc26 boost` on a styled copy of the sample squad shows believable boosted faces
-  with correct chem gating, and exact sub-level boosts for the two fut.gg cards.
+  with correct chem gating, and exact sub-level boosts for fut.gg-crawled cards
+  (verified live with Rodri PTG: shadow at chem 3, sub-exact, cap-99 observed;
+  additional cards gain the subs tier as they are added via `fc26 add`).
 - Old squad files load unchanged; the full pre-existing suite passes untouched.
