@@ -91,3 +91,25 @@ def test_resolve_cards_reports_all_missing_ids(tmp_path):
     message = str(exc.value)
     assert "rb--base" in message and "st--base" in message   # all missing, not just first
     assert "gk--base" not in message
+
+
+def test_lineup_slot_accepts_style_object(tmp_path):
+    squad = _write_squad(tmp_path / "s.json",
+                         overrides={"ST": {"id": "st--base", "style": "hunter"}})
+    lineup = load_lineup(squad)
+    assert dict(lineup.slots)["ST"] == "st--base"
+    assert lineup.styles == {"ST": "hunter"}
+
+
+def test_lineup_unknown_style_lists_available(tmp_path):
+    squad = _write_squad(tmp_path / "s.json",
+                         overrides={"ST": {"id": "st--base", "style": "zoomzoom"}})
+    with pytest.raises(LineupError) as exc:
+        load_lineup(squad)
+    assert "zoomzoom" in str(exc.value)
+    assert "hunter" in str(exc.value)
+
+
+def test_lineup_plain_string_slots_have_no_styles(tmp_path):
+    lineup = load_lineup(_write_squad(tmp_path / "s.json"))
+    assert lineup.styles == {}

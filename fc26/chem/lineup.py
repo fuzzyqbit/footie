@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from ..db import CardRepository
 from ..errors import FC26Error
 from ..models import Card
 from .formations import FORMATIONS
+from .styles import available_styles
 
 
 class LineupError(FC26Error):
@@ -28,6 +29,7 @@ class Lineup:
     formation: str
     slots: tuple[tuple[str, str], ...]   # (slot_key, card_id) in formation order
     manager: Manager | None = None
+    styles: dict[str, str] = field(default_factory=dict)
 
 
 def load_lineup(path: Path | str) -> Lineup:
@@ -54,7 +56,28 @@ def load_lineup(path: Path | str) -> Lineup:
     if extra:
         errors.append(f"unknown slots for {formation}: {', '.join(extra)}")
 
-    ids = [xi[slot] for slot in expected if slot in xi]
+    # Normalize slot values: string -> id, dict -> {"id": ..., "style": ...}
+    # Collect ids for duplicate checking and styles for the Lineup field.
+    slot_ids: dict[str, str] = {}
+    slot_styles: dict[str, str] = {}
+    for slot, value in xi.items():
+        if isinstance(value, dict):
+            slot_ids[slot] = value["id"]
+            raw_style = value.get("style")
+            if raw_style is not None:
+                slot_styles[slot] = str(raw_style).lower()
+        else:
+            slot_ids[slot] = value
+
+    # Validate styles
+    valid = available_styles()
+    for slot, style in slot_styles.items():
+        if style not in valid:
+            errors.append(
+                f"unknown style {style!r} for slot {slot} - available: {', '.join(valid)}"
+            )
+
+    ids = [slot_ids[slot] for slot in expected if slot in slot_ids]
     duplicates = sorted({i for i in ids if ids.count(i) > 1})
     if duplicates:
         errors.append(f"duplicate cards across slots: {', '.join(duplicates)}")
@@ -73,8 +96,9 @@ def load_lineup(path: Path | str) -> Lineup:
     return Lineup(
         name=data.get("name", path.stem),
         formation=formation,
-        slots=tuple((slot, xi[slot]) for slot in expected),
+        slots=tuple((slot, slot_ids[slot]) for slot in expected),
         manager=manager,
+        styles=slot_styles,
     )
 
 
