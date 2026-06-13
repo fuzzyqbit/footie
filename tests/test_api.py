@@ -162,3 +162,60 @@ def test_list_cards_negative_limit_rejected(client):
     r = client.get("/api/cards?limit=-1")
     assert r.status_code == 400
     assert r.json()["ok"] is False
+
+
+def test_list_squads(client):
+    r = client.get("/api/squads")
+    assert r.status_code == 200
+    body = r.json()
+    assert body["ok"] is True
+    squads = body["data"]
+    assert len(squads) == 1
+    assert squads[0]["name"] == "test-squad"
+
+
+def test_get_squad_by_name(client):
+    r = client.get("/api/squads/test-squad")
+    assert r.status_code == 200
+    data = r.json()["data"]
+    assert data["formation"] == "4-2-3-1"
+
+
+def test_get_squad_not_found(client):
+    r = client.get("/api/squads/no-such-squad")
+    assert r.status_code == 404
+    assert r.json()["ok"] is False
+
+
+def test_get_squad_path_traversal(client):
+    r = client.get("/api/squads/dotdot..evil")
+    assert r.status_code == 400
+    assert r.json()["ok"] is False
+
+
+def test_put_squad_valid(client):
+    new_squad = {
+        "name": "New Squad",
+        "formation": "4-2-3-1",
+        "starting_xi": {slot: f"{slot.lower()}-test" for slot in SLOTS_4231},
+    }
+    r = client.put("/api/squads/new-squad", json=new_squad)
+    assert r.status_code == 200
+    body = r.json()
+    assert body["ok"] is True
+    assert body["data"]["name"] == "new-squad"
+
+
+def test_put_squad_invalid_formation(client):
+    bad = {"formation": "bad", "starting_xi": {}}
+    r = client.put("/api/squads/my-squad", json=bad)
+    assert r.status_code == 400
+    body = r.json()
+    assert body["ok"] is False
+    assert "unknown formation" in body["error"]
+
+
+def test_put_squad_path_traversal_rejected(client):
+    r = client.put("/api/squads/dotdot..evil", json=VALID_SQUAD)
+    assert r.status_code == 400
+    assert r.json()["ok"] is False

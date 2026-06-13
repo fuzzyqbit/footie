@@ -122,4 +122,34 @@ def create_app(db_path: Path, squads_dir: Path) -> FastAPI:
             raise HTTPException(status_code=404, detail=f"card {card_id!r} not found")
         return _ok(card_to_dict(card))
 
+    @app.get("/api/squads")
+    async def list_squads() -> dict:
+        files = sorted(squads_dir.glob("*.json"))
+        return _ok([{"name": f.stem, "path": str(f)} for f in files])
+
+    @app.get("/api/squads/{name}")
+    async def get_squad(name: str) -> dict:
+        stem = _safe_stem(name)
+        if stem is None:
+            raise HTTPException(status_code=400, detail=f"invalid squad name {name!r}")
+        path = squads_dir / f"{stem}.json"
+        if not path.exists():
+            raise HTTPException(status_code=404, detail=f"squad {name!r} not found")
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise HTTPException(status_code=500, detail=f"cannot read squad: {exc}") from exc
+        return _ok(data)
+
+    @app.put("/api/squads/{name}")
+    async def put_squad(name: str, request: Request) -> dict:
+        stem = _safe_stem(name)
+        if stem is None:
+            raise HTTPException(status_code=400, detail=f"invalid squad name {name!r}")
+        body = await request.json()
+        lineup_from_dict(body, name=stem)   # raises LineupError (-> 400) if invalid
+        path = squads_dir / f"{stem}.json"
+        path.write_text(json.dumps(body, indent=2), encoding="utf-8")
+        return _ok({"name": stem, "path": str(path)})
+
     return app
