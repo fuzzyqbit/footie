@@ -147,3 +147,18 @@ def test_get_card_unknown_id(client):
     body = r.json()
     assert body["ok"] is False
     assert body["error"] is not None
+
+
+def test_list_cards_invalid_min_ovr_returns_envelope(client):
+    r = client.get("/api/cards?min_ovr=abc")
+    assert r.status_code == 422
+    body = r.json()
+    assert body["ok"] is False
+    assert body["error"] is not None
+    assert "data" in body
+
+
+def test_list_cards_negative_limit_rejected(client):
+    r = client.get("/api/cards?limit=-1")
+    assert r.status_code == 400
+    assert r.json()["ok"] is False

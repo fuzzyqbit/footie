@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
@@ -26,6 +27,12 @@ from ..db import CardRepository, card_to_dict
 from ..errors import FC26Error
 
 _SAFE_NAME_RE = re.compile(r"^[a-zA-Z0-9_-]+$")
+
+_SORT_KEYS = {
+    "ovr": lambda c: c.ovr,
+    "pac": lambda c: c.face.pac or 0,
+    "name": lambda c: c.player_name.lower(),
+}
 
 
 def _ok(data: Any) -> dict:
@@ -65,11 +72,13 @@ def create_app(db_path: Path, squads_dir: Path) -> FastAPI:
     async def _generic_error(request: Request, exc: Exception) -> JSONResponse:
         return JSONResponse(status_code=500, content=_err("internal server error"))
 
-    _SORT_KEYS = {
-        "ovr": lambda c: c.ovr,
-        "pac": lambda c: c.face.pac or 0,
-        "name": lambda c: c.player_name.lower(),
-    }
+    @app.exception_handler(RequestValidationError)
+    async def _validation_error(request: Request, exc: RequestValidationError) -> JSONResponse:
+        msg = "; ".join(
+            f"{'.'.join(str(loc) for loc in e['loc'])}: {e['msg']}"
+            for e in exc.errors()
+        )
+        return JSONResponse(status_code=422, content=_err(msg))
 
     @app.get("/api/cards")
     async def list_cards(
@@ -84,6 +93,10 @@ def create_app(db_path: Path, squads_dir: Path) -> FastAPI:
     ) -> dict:
         if sort not in _SORT_KEYS:
             raise FC26Error(f"unknown sort key {sort!r} (use: ovr, pac, name)")
+        if limit < 1:
+            raise FC26Error("limit must be >= 1")
+        if offset < 0:
+            raise FC26Error("offset must be >= 0")
         repo = CardRepository(db_path)
         cards = list(repo.search(search) if search else repo.find_all())
         if pos:
