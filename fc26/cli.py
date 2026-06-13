@@ -431,3 +431,17 @@ def boost(
             console.print(f"[yellow]warn:[/yellow] {card.id}: styled but 0 chem - style has no effect")
     if any_approx:
         console.print("[dim]≈ approximate faces - add cards via `fc26 add <fut.gg URL>` for sub-level precision[/dim]")
+
+
+@app.command()
+def serve(
+    port: int = typer.Option(8026, "--port", help="Port to listen on"),
+    db: Path = DB_OPTION,
+    squads: Path = typer.Option(Path("squads"), "--squads", help="Squad files directory"),
+) -> None:
+    """Start the FC 26 API server on 127.0.0.1 (local only)."""
+    import uvicorn
+    from .api.app import create_app
+
+    api = create_app(db_path=db, squads_dir=squads)
+    uvicorn.run(api, host="127.0.0.1", port=port)

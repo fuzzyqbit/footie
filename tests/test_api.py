@@ -330,5 +330,9 @@ def test_get_meta(client):
 
 def test_serve_command_exists():
     from fc26.cli import app as typer_app
-    command_names = [cmd.name for cmd in typer_app.registered_commands]
-    assert "serve" in command_names
+    # typer stores name=None when derived from callback; check callback names too
+    names = {
+        cmd.name or (cmd.callback.__name__ if cmd.callback else None)
+        for cmd in typer_app.registered_commands
+    }
+    assert "serve" in names
