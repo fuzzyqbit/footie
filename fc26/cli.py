@@ -436,12 +436,13 @@ def boost(
 @app.command()
 def serve(
     port: int = typer.Option(8026, "--port", help="Port to listen on"),
+    host: str = typer.Option("0.0.0.0", "--host", help="Host to bind (0.0.0.0 = all interfaces)"),
     db: Path = DB_OPTION,
     squads: Path = typer.Option(Path("squads"), "--squads", help="Squad files directory"),
 ) -> None:
-    """Start the FC 26 API server on 127.0.0.1 (local only)."""
+    """Start the FC 26 API server (no auth — local network only)."""
     import uvicorn
     from .api.app import create_app
 
     api = create_app(db_path=db, squads_dir=squads)
-    uvicorn.run(api, host="127.0.0.1", port=port)
+    uvicorn.run(api, host=host, port=port)
