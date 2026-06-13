@@ -126,6 +126,15 @@ def test_list_cards_bad_sort(client):
     assert "sort" in body["error"].lower()
 
 
+def test_list_cards_version_filter(client):
+    r = client.get("/api/cards?version=base")
+    assert r.status_code == 200
+    assert r.json()["data"]["total"] == 11
+    r2 = client.get("/api/cards?version=tots")
+    assert r2.status_code == 200
+    assert r2.json()["data"]["total"] == 0
+
+
 def test_get_card_by_id(client):
     r = client.get("/api/cards/gk-test")
     assert r.status_code == 200
