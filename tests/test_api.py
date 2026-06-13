@@ -219,3 +219,44 @@ def test_put_squad_path_traversal_rejected(client):
     r = client.put("/api/squads/dotdot..evil", json=VALID_SQUAD)
     assert r.status_code == 400
     assert r.json()["ok"] is False
+
+
+def test_post_chem_valid_squad(client):
+    r = client.post("/api/chem", json=VALID_SQUAD)
+    assert r.status_code == 200
+    data = r.json()["data"]
+    # All same club+nation+league -> 33/33
+    assert data["team_total"] == 33
+    assert len(data["players"]) == 11
+
+
+def test_post_chem_invalid_squad(client):
+    r = client.post("/api/chem", json={"formation": "bad", "starting_xi": {}})
+    assert r.status_code == 400
+    assert r.json()["ok"] is False
+
+
+def test_post_chem_missing_card(client):
+    bad_squad = {
+        "formation": "4-2-3-1",
+        "starting_xi": {slot: "no-such-card" for slot in SLOTS_4231},
+    }
+    r = client.post("/api/chem", json=bad_squad)
+    assert r.status_code == 400
+    assert r.json()["ok"] is False
+
+
+def test_post_boost_valid_squad(client):
+    r = client.post("/api/boost", json=VALID_SQUAD)
+    assert r.status_code == 200
+    data = r.json()["data"]
+    assert "players" in data
+    assert "team_chem" in data
+    assert len(data["players"]) == 11
+    assert data["team_chem"] == 33
+
+
+def test_post_boost_invalid_squad(client):
+    r = client.post("/api/boost", json={"formation": "bad", "starting_xi": {}})
+    assert r.status_code == 400
+    assert r.json()["ok"] is False

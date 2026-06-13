@@ -152,4 +152,27 @@ def create_app(db_path: Path, squads_dir: Path) -> FastAPI:
         path.write_text(json.dumps(body, indent=2), encoding="utf-8")
         return _ok({"name": stem, "path": str(path)})
 
+    @app.post("/api/chem")
+    async def post_chem(request: Request) -> dict:
+        body = await request.json()
+        lineup = lineup_from_dict(body)
+        repo = CardRepository(db_path)
+        slot_cards = resolve_cards(lineup, repo)
+        report = compute_chemistry(lineup, slot_cards)
+        return _ok(asdict(report))
+
+    @app.post("/api/boost")
+    async def post_boost(request: Request) -> dict:
+        body = await request.json()
+        lineup = lineup_from_dict(body)
+        repo = CardRepository(db_path)
+        slot_cards = resolve_cards(lineup, repo)
+        report = compute_chemistry(lineup, slot_cards)
+        chem_by_slot = {p.slot: p.chem for p in report.players}
+        results = [
+            asdict(boosted_stats(card, lineup.styles.get(slot), chem_by_slot.get(slot, 0)))
+            for slot, card in slot_cards.items()
+        ]
+        return _ok({"players": results, "team_chem": report.team_total})
+
     return app
