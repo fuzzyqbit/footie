@@ -336,3 +336,105 @@ def test_serve_command_exists():
         for cmd in typer_app.registered_commands
     }
     assert "serve" in names
+
+
+# ---------------------------------------------------------------------------
+# Task 9: Envelope contract + error path tests
+# ---------------------------------------------------------------------------
+
+def test_every_ok_response_has_envelope(client):
+    """All GET endpoints return {ok, data, error} envelope."""
+    routes = [
+        "/api/cards",
+        "/api/cards/gk-test",
+        "/api/squads",
+        "/api/squads/test-squad",
+        "/api/meta",
+    ]
+    for route in routes:
+        r = client.get(route)
+        assert r.status_code == 200, f"route {route} returned {r.status_code}"
+        body = r.json()
+        assert set(body.keys()) == {"ok", "data", "error"}, f"bad envelope on {route}"
+        assert body["ok"] is True
+        assert body["error"] is None
+
+
+def test_error_response_has_envelope(client):
+    r = client.get("/api/cards/no-such-card")
+    assert r.status_code == 404
+    body = r.json()
+    assert set(body.keys()) == {"ok", "data", "error"}
+    assert body["ok"] is False
+    assert body["data"] is None
+    assert isinstance(body["error"], str)
+
+
+def test_put_squad_persists_to_disk(client, tmp_squads):
+    new_squad = {
+        "name": "Saved Squad",
+        "formation": "4-2-3-1",
+        "starting_xi": {slot: f"{slot.lower()}-test" for slot in SLOTS_4231},
+    }
+    put_r = client.put("/api/squads/saved-squad", json=new_squad)
+    assert put_r.status_code == 200
+    get_r = client.get("/api/squads/saved-squad")
+    assert get_r.status_code == 200
+    assert get_r.json()["data"]["name"] == "Saved Squad"
+
+
+def test_list_cards_league_filter_alias(client):
+    """league filter is alias-aware: English Premier League == Premier League."""
+    r = client.get("/api/cards?league=English%20Premier%20League")
+    assert r.status_code == 200
+    data = r.json()["data"]
+    assert data["total"] == 11
+
+
+# ---------------------------------------------------------------------------
+# Task 10: Real-DB CI guard tests
+# ---------------------------------------------------------------------------
+
+from pathlib import Path as _Path
+
+_REAL_DB = _Path("data/players.json")
+_REAL_SQUADS = _Path("squads")
+
+
+@pytest.fixture
+def real_client():
+    if not _REAL_DB.exists():
+        pytest.skip("real DB not present")
+    return TestClient(create_app(_REAL_DB, _REAL_SQUADS))
+
+
+@pytest.mark.live
+def test_real_cards_pagination(real_client):
+    """GET /api/cards returns at least 2400 cards from the live DB."""
+    r = real_client.get("/api/cards?limit=10&offset=0")
+    assert r.status_code == 200
+    data = r.json()["data"]
+    assert data["total"] >= 2400
+    assert len(data["cards"]) == 10
+
+
+@pytest.mark.live
+def test_real_chem_sample_squad(real_client):
+    """POST /api/chem on the committed sample squad returns 33/33."""
+    squad_path = _REAL_SQUADS / "sample-rivals.json"
+    if not squad_path.exists():
+        pytest.skip("sample-rivals.json not present")
+    import json as _json
+    squad = _json.loads(squad_path.read_text(encoding="utf-8"))
+    r = real_client.post("/api/chem", json=squad)
+    assert r.status_code == 200
+    assert r.json()["data"]["team_total"] == 33
+
+
+@pytest.mark.live
+def test_real_meta_has_leagues_and_styles(real_client):
+    r = real_client.get("/api/meta")
+    assert r.status_code == 200
+    data = r.json()["data"]
+    assert len(data["leagues"]) > 5
+    assert "hunter" in data["styles"]
