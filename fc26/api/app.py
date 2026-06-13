@@ -175,4 +175,65 @@ def create_app(db_path: Path, squads_dir: Path) -> FastAPI:
         ]
         return _ok({"players": results, "team_chem": report.team_total})
 
+    @app.post("/api/upgrade")
+    async def post_upgrade(request: Request) -> dict:
+        body = await request.json()
+        squad_data = body.get("squad") or {}
+        budget_str = str(body.get("budget", "0"))
+        swaps = int(body.get("swaps", 3))
+        lineup = lineup_from_dict(squad_data)
+        repo = CardRepository(db_path)
+        slot_cards = resolve_cards(lineup, repo)
+        budget = parse_budget(budget_str)
+        pool = repo.find_all()
+        plan = find_upgrades(lineup, slot_cards, pool, budget=budget, max_swaps=swaps)
+        return _ok(asdict(plan))
+
+    @app.post("/api/build")
+    async def post_build(request: Request) -> dict:
+        body = await request.json()
+        formation = str(body.get("formation", ""))
+        budget_str = str(body.get("budget", "0"))
+        league = body.get("league")
+        budget = parse_budget(budget_str)
+        repo = CardRepository(db_path)
+        pool = repo.find_all()
+        result = build_squad(formation, pool, budget=budget, league=league)
+        report = compute_chemistry(result.lineup, result.slot_cards)
+        squad_dict: dict = {
+            "name": result.lineup.name or "built-squad",
+            "formation": result.lineup.formation,
+            "starting_xi": {slot: card_id for slot, card_id in result.lineup.slots},
+        }
+        if result.lineup.manager:
+            squad_dict["manager"] = {
+                "league": result.lineup.manager.league,
+                "nation": result.lineup.manager.nation,
+            }
+        xi = [
+            {"slot": slot, **card_to_dict(card)}
+            for slot, card in result.slot_cards.items()
+        ]
+        return _ok({
+            "formation": result.lineup.formation,
+            "seed_cost": result.seed_cost,
+            "total_cost": result.total_cost,
+            "team_chem": report.team_total,
+            "xi": xi,
+            "squad": squad_dict,
+        })
+
+    @app.get("/api/meta")
+    async def get_meta() -> dict:
+        repo = CardRepository(db_path)
+        all_cards = repo.find_all()
+        leagues = sorted({c.league for c in all_cards if c.league})
+        versions = sorted({c.version for c in all_cards})
+        return _ok({
+            "formations": {name: list(slots) for name, slots in FORMATIONS.items()},
+            "styles": list(available_styles()),
+            "leagues": leagues,
+            "versions": versions,
+        })
+
     return app

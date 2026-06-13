@@ -260,3 +260,75 @@ def test_post_boost_invalid_squad(client):
     r = client.post("/api/boost", json={"formation": "bad", "starting_xi": {}})
     assert r.status_code == 400
     assert r.json()["ok"] is False
+
+
+def test_post_upgrade_valid(client):
+    body = {"squad": VALID_SQUAD, "budget": "50K", "swaps": 2}
+    r = client.post("/api/upgrade", json=body)
+    assert r.status_code == 200
+    data = r.json()["data"]
+    assert "swaps" in data
+    assert "spent" in data
+    assert "budget" in data
+
+
+def test_post_upgrade_bad_budget(client):
+    body = {"squad": VALID_SQUAD, "budget": "not-a-budget", "swaps": 1}
+    r = client.post("/api/upgrade", json=body)
+    assert r.status_code == 400
+    assert r.json()["ok"] is False
+
+
+def test_post_upgrade_invalid_squad(client):
+    body = {"squad": {"formation": "bad", "starting_xi": {}}, "budget": "50K"}
+    r = client.post("/api/upgrade", json=body)
+    assert r.status_code == 400
+    assert r.json()["ok"] is False
+
+
+def test_post_build_valid(client):
+    body = {"formation": "4-2-3-1", "budget": "200K"}
+    r = client.post("/api/build", json=body)
+    assert r.status_code == 200
+    data = r.json()["data"]
+    assert data["formation"] == "4-2-3-1"
+    assert "seed_cost" in data
+    assert "total_cost" in data
+    assert "team_chem" in data
+    assert "xi" in data
+    assert "squad" in data
+    assert len(data["xi"]) == 11
+
+
+def test_post_build_unknown_formation(client):
+    body = {"formation": "9-1", "budget": "100K"}
+    r = client.post("/api/build", json=body)
+    assert r.status_code == 400
+    assert r.json()["ok"] is False
+
+
+def test_post_build_bad_budget(client):
+    body = {"formation": "4-2-3-1", "budget": "nope"}
+    r = client.post("/api/build", json=body)
+    assert r.status_code == 400
+    assert r.json()["ok"] is False
+
+
+def test_get_meta(client):
+    r = client.get("/api/meta")
+    assert r.status_code == 200
+    data = r.json()["data"]
+    assert "formations" in data
+    assert "4-2-3-1" in data["formations"]
+    assert "styles" in data
+    assert "hunter" in data["styles"]
+    assert "leagues" in data
+    assert "Premier League" in data["leagues"]
+    assert "versions" in data
+    assert "base" in data["versions"]
+
+
+def test_serve_command_exists():
+    from fc26.cli import app as typer_app
+    command_names = [cmd.name for cmd in typer_app.registered_commands]
+    assert "serve" in command_names
