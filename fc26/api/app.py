@@ -65,4 +65,48 @@ def create_app(db_path: Path, squads_dir: Path) -> FastAPI:
     async def _generic_error(request: Request, exc: Exception) -> JSONResponse:
         return JSONResponse(status_code=500, content=_err("internal server error"))
 
+    _SORT_KEYS = {
+        "ovr": lambda c: c.ovr,
+        "pac": lambda c: c.face.pac or 0,
+        "name": lambda c: c.player_name.lower(),
+    }
+
+    @app.get("/api/cards")
+    async def list_cards(
+        search: str | None = None,
+        pos: str | None = None,
+        version: str | None = None,
+        league: str | None = None,
+        min_ovr: int | None = None,
+        sort: str = "ovr",
+        limit: int = 50,
+        offset: int = 0,
+    ) -> dict:
+        if sort not in _SORT_KEYS:
+            raise FC26Error(f"unknown sort key {sort!r} (use: ovr, pac, name)")
+        repo = CardRepository(db_path)
+        cards = list(repo.search(search) if search else repo.find_all())
+        if pos:
+            wanted = pos.upper()
+            cards = [c for c in cards if c.position == wanted or wanted in c.alt_positions]
+        if version:
+            cards = [c for c in cards if c.version.lower() == version.lower()]
+        if league:
+            wanted_lg = canonical_league(league)
+            cards = [c for c in cards
+                     if c.league is not None and canonical_league(c.league) == wanted_lg]
+        if min_ovr is not None:
+            cards = [c for c in cards if c.ovr >= min_ovr]
+        reverse = sort != "name"
+        cards.sort(key=_SORT_KEYS[sort], reverse=reverse)
+        total = len(cards)
+        return _ok({"total": total, "cards": [card_to_dict(c) for c in cards[offset:offset + limit]]})
+
+    @app.get("/api/cards/{card_id}")
+    async def get_card(card_id: str) -> dict:
+        card = CardRepository(db_path).find_by_id(card_id)
+        if card is None:
+            raise HTTPException(status_code=404, detail=f"card {card_id!r} not found")
+        return _ok(card_to_dict(card))
+
     return app
