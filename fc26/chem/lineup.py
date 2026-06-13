@@ -32,13 +32,11 @@ class Lineup:
     styles: dict[str, str] = field(default_factory=dict)
 
 
-def load_lineup(path: Path | str) -> Lineup:
-    path = Path(path)
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        raise LineupError(f"cannot read squad file {path}: {exc}") from exc
+def lineup_from_dict(data: dict, name: str = "inline") -> Lineup:
+    """Parse a squad dict (same shape as squad JSON files) into a Lineup.
 
+    Raises LineupError listing ALL problems found.
+    """
     errors: list[str] = []
     formation = data.get("formation", "")
     if formation not in FORMATIONS:
@@ -94,12 +92,21 @@ def load_lineup(path: Path | str) -> Lineup:
         )
 
     return Lineup(
-        name=data.get("name", path.stem),
+        name=data.get("name", name),
         formation=formation,
         slots=tuple((slot, slot_ids[slot]) for slot in expected),
         manager=manager,
         styles=slot_styles,
     )
+
+
+def load_lineup(path: Path | str) -> Lineup:
+    path = Path(path)
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise LineupError(f"cannot read squad file {path}: {exc}") from exc
+    return lineup_from_dict(data, name=path.stem)
 
 
 def resolve_cards(lineup: Lineup, repo: CardRepository) -> dict[str, Card]:

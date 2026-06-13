@@ -113,3 +113,37 @@ def test_lineup_unknown_style_lists_available(tmp_path):
 def test_lineup_plain_string_slots_have_no_styles(tmp_path):
     lineup = load_lineup(_write_squad(tmp_path / "s.json"))
     assert lineup.styles == {}
+
+
+from fc26.chem.lineup import lineup_from_dict
+
+
+def test_lineup_from_dict_valid():
+    data = {
+        "name": "My Squad",
+        "formation": "4-2-3-1",
+        "starting_xi": {
+            "GK": "gk-1", "RB": "rb-1", "CB1": "cb1-1", "CB2": "cb2-1",
+            "LB": "lb-1", "CDM1": "cdm1-1", "CDM2": "cdm2-1", "CAM": "cam-1",
+            "RW": "rw-1", "LW": "lw-1", "ST": "st-1",
+        },
+    }
+    lineup = lineup_from_dict(data)
+    assert lineup.name == "My Squad"
+    assert lineup.formation == "4-2-3-1"
+    assert len(lineup.slots) == 11
+
+
+def test_lineup_from_dict_invalid_formation():
+    data = {"formation": "bad", "starting_xi": {}}
+    with pytest.raises(LineupError, match="unknown formation"):
+        lineup_from_dict(data)
+
+
+def test_lineup_from_dict_missing_slots():
+    data = {
+        "formation": "4-2-3-1",
+        "starting_xi": {"GK": "gk-1"},
+    }
+    with pytest.raises(LineupError, match="missing slots"):
+        lineup_from_dict(data)
