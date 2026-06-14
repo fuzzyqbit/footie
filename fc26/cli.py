@@ -12,6 +12,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
+from .builder.advise import advise_squad
 from .builder.boost import boosted_stats
 from .builder.build import build_squad
 from .builder.market import parse_budget
@@ -468,6 +469,52 @@ def chem(
         breakdown.add_row(t.kind, t.name, str(t.count), str(t.points), hint)
     console.print(breakdown)
     for warning in report.warnings:
+        console.print(f"[yellow]warn:[/yellow] {warning}")
+
+
+@app.command()
+def advise(
+    squad_file: Path = typer.Argument(..., help="Path to a squad JSON file"),
+    db: Path = DB_OPTION,
+    json: bool = JSON_FLAG,
+) -> None:
+    """Strategy tips: chem leverage, out-of-position, weak slots, best chem styles."""
+    try:
+        lineup = load_lineup(squad_file)
+        slot_cards = resolve_cards(lineup, CardRepository(db))
+    except FC26Error as exc:
+        _fail(str(exc))
+    advice = advise_squad(lineup, slot_cards)
+    if json:
+        typer.echo(json_lib.dumps(asdict(advice), ensure_ascii=False, indent=2))
+        return
+    console.print(f"[bold]Advice — {advice.formation} · chem {advice.team_chem}/33[/bold]")
+    for line in advice.summary:
+        console.print(f"• {line}")
+    if advice.out_of_position:
+        console.print("[bold]Out of position[/bold]")
+        for n in advice.out_of_position:
+            console.print(f"  {n.slot}: {n.player_name} — {n.reason}")
+    if advice.tier_leverage:
+        table = Table("Kind", "Group", "Have", "Pts", "To next")
+        for lv in advice.tier_leverage[:8]:
+            table.add_row(lv.kind, lv.name, str(lv.count), str(lv.points), f"+{lv.needed}")
+        console.print("[bold]Chem leverage[/bold]")
+        console.print(table)
+    if advice.weakest_slots:
+        table = Table("Slot", "Player", "Pos", "Meta")
+        for n in advice.weakest_slots:
+            table.add_row(n.slot, n.player_name, n.position, f"{n.meta:.0f}")
+        console.print("[bold]Weakest slots[/bold]")
+        console.print(table)
+    picks = [s for s in advice.style_advice if s.recommended_style]
+    if picks:
+        table = Table("Slot", "Player", "Style", "+Meta")
+        for s in picks:
+            table.add_row(s.slot, s.player_name, s.recommended_style, f"+{s.meta_gain:.1f}")
+        console.print("[bold]Best chem styles[/bold]")
+        console.print(table)
+    for warning in advice.warnings:
         console.print(f"[yellow]warn:[/yellow] {warning}")
 
 

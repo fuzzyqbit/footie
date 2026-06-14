@@ -609,6 +609,56 @@ def test_plan_real_db_ci_guard():
     assert all(b < a for b, a in zip(scores, scores[1:]))
 
 
+def test_advise_command_table(upgrade_db, squad_file):
+    result = runner.invoke(app, ["advise", str(squad_file), "--db", str(upgrade_db)])
+    assert result.exit_code == 0, result.output
+    assert "Advice" in result.output
+    assert "33/33" in result.output
+    assert "Best chem styles" in result.output
+
+
+def test_advise_command_json(upgrade_db, squad_file):
+    result = runner.invoke(app, ["advise", str(squad_file), "--db", str(upgrade_db), "--json"])
+    assert result.exit_code == 0
+    data = json.loads(result.output)
+    assert data["team_chem"] == 33
+    assert len(data["style_advice"]) == 11
+    assert data["tier_leverage"]            # distinct clubs/nations sit short of next tier
+    assert data["out_of_position"] == []
+
+
+def test_advise_command_lineup_error_is_clean(upgrade_db, tmp_path):
+    bad = tmp_path / "bad.json"
+    bad.write_text('{"formation": "9-9-9", "starting_xi": {}}')
+    result = runner.invoke(app, ["advise", str(bad), "--db", str(upgrade_db)])
+    assert result.exit_code == 1
+    assert "unknown formation" in result.output
+    assert "Traceback" not in result.output
+
+
+def test_advise_command_missing_card_is_clean(upgrade_db, squad_file):
+    squad = json.loads(squad_file.read_text())
+    squad["starting_xi"]["ST"] = "nobody--base"
+    squad_file.write_text(json.dumps(squad))
+    result = runner.invoke(app, ["advise", str(squad_file), "--db", str(upgrade_db)])
+    assert result.exit_code == 1
+    assert "nobody--base" in result.output
+
+
+def test_advise_real_db_ci_guard():
+    from pathlib import Path
+
+    sample = Path("squads/sample-rivals.json")
+    db = Path("data/players.json")
+    if not sample.exists() or not db.exists():
+        pytest.skip("sample squad or real DB not present")
+    result = runner.invoke(app, ["advise", str(sample), "--db", str(db), "--json"])
+    assert result.exit_code == 0, result.output
+    data = json.loads(result.output)
+    assert len(data["style_advice"]) == 11
+    assert "team_chem" in data
+
+
 def test_boost_command_table(chem_db, squad_file, tmp_path):
     import json as j
 
