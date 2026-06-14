@@ -15,6 +15,7 @@ from rich.table import Table
 from .builder.boost import boosted_stats
 from .builder.build import build_squad
 from .builder.market import parse_budget
+from .builder.plan import plan_for_squad, plan_from_scratch
 from .builder.upgrade import find_upgrades
 from .chem.engine import compute_chemistry
 from .chem.lineup import load_lineup, resolve_cards
@@ -341,6 +342,100 @@ def build(
         write.write_text(json_lib.dumps(payload, ensure_ascii=False, indent=2) + "\n",
                          encoding="utf-8")
         console.print(f"built squad written to {write}")
+
+
+@app.command()
+def plan(
+    squad_file: Path | None = typer.Argument(None, help="Squad JSON for upgrade-mode planning"),
+    formation: str | None = typer.Option(None, "--formation", help="Build-mode formation, e.g. 4-2-3-1"),
+    budget: str = typer.Option(..., "--budget", help="Total budget cap, e.g. 500K"),
+    league: str | None = typer.Option(None, "--league", help="Build-mode: restrict pool to one league"),
+    swaps: int = typer.Option(3, "--swaps", help="Upgrade-mode: max swaps to suggest"),
+    write: Path | None = typer.Option(None, "--write", help="Save the final squad to a NEW file"),
+    db: Path = DB_OPTION,
+    json: bool = JSON_FLAG,
+) -> None:
+    """Ordered acquisition plan: what to buy now, then the budgeted upgrade path with ROI."""
+    if squad_file is not None and formation is not None:
+        _fail("pass either a squad file (upgrade mode) or --formation (build mode), not both")
+    if squad_file is None and formation is None:
+        _fail("give a squad file (upgrade mode) or --formation (build mode)")
+    if write is not None and squad_file is not None and write.resolve() == squad_file.resolve():
+        _fail("--write must target a NEW file, not the input")
+    lineup = None
+    try:
+        coins = parse_budget(budget)
+        repo = CardRepository(db)
+        pool = repo.find_all()
+        if squad_file is not None:
+            lineup = load_lineup(squad_file)
+            slot_cards = resolve_cards(lineup, repo)
+            acq = plan_for_squad(lineup, slot_cards, pool, budget=coins, max_swaps=swaps)
+        else:
+            acq = plan_from_scratch(formation, pool, budget=coins, league=league)
+    except FC26Error as exc:
+        _fail(str(exc))
+
+    if json:
+        typer.echo(json_lib.dumps(asdict(acq), ensure_ascii=False, indent=2))
+    else:
+        if acq.seed:
+            seed_table = Table("Slot", "Player", "Version", "Price")
+            for sb in acq.seed:
+                seed_table.add_row(sb.slot, sb.player_name, sb.version, str(sb.price))
+            console.print("[bold]Buy now — starting XI[/bold]")
+            console.print(seed_table)
+            console.print(f"seed cost {acq.seed_cost}")
+        if acq.steps:
+            path = Table("#", "Slot", "Out", "In", "Net", "Spent", "Left",
+                         "Score", "Chem", "ROI/1k")
+            for st in acq.steps:
+                roi = "free" if st.roi is None else f"{st.roi * 1000:.1f}"
+                path.add_row(
+                    str(st.index), st.slot,
+                    f"{st.out_name} ({st.out_version})",
+                    f"{st.in_name} ({st.in_version})",
+                    str(st.net_cost), str(st.cumulative_spent), str(st.remaining),
+                    f"{st.score_after:.1f}", str(st.chem_after), roi,
+                )
+            console.print("[bold]Upgrade path[/bold]")
+            console.print(path)
+        else:
+            console.print("no upgrades found within budget")
+        console.print(
+            f"total cost {acq.total_spent} of {acq.budget} | squad score "
+            f"{acq.base_score:.1f} → {acq.final_score:.1f} | "
+            f"chem {acq.base_chem} → {acq.final_chem}"
+        )
+        for warning in acq.warnings:
+            console.print(f"[yellow]warn:[/yellow] {warning}")
+
+    if write is not None:
+        if lineup is not None:
+            final_ids = {slot: card_id for slot, card_id in lineup.slots}
+            name = f"{lineup.name} (planned)"
+            order = [slot for slot, _ in lineup.slots]
+        else:
+            final_ids = {sb.slot: sb.card_id for sb in acq.seed}
+            name = f"Planned {acq.formation}"
+            order = [sb.slot for sb in acq.seed]
+        for st in acq.steps:
+            final_ids[st.slot] = st.in_id
+        payload: dict = {
+            "name": name,
+            "formation": acq.formation,
+            "starting_xi": {slot: final_ids[slot] for slot in order},
+        }
+        if lineup is not None and lineup.manager is not None:
+            manager: dict = {}
+            if lineup.manager.league:
+                manager["league"] = lineup.manager.league
+            if lineup.manager.nation:
+                manager["nation"] = lineup.manager.nation
+            payload["manager"] = manager
+        write.write_text(json_lib.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+                         encoding="utf-8")
+        console.print(f"plan squad written to {write}")
 
 
 @app.command()

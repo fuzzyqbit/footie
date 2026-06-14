@@ -491,6 +491,124 @@ def test_build_command_real_db_ci_guard():
     assert len(set(names)) == 11
 
 
+def test_plan_build_mode_table(upgrade_db):
+    result = runner.invoke(app, ["plan", "--formation", "4-2-3-1", "--budget", "200K",
+                                 "--db", str(upgrade_db)])
+    assert result.exit_code == 0, result.output
+    assert "Buy now" in result.output
+    assert "total cost" in result.output
+
+
+def test_plan_build_mode_json(upgrade_db):
+    result = runner.invoke(app, ["plan", "--formation", "4-2-3-1", "--budget", "200K",
+                                 "--db", str(upgrade_db), "--json"])
+    assert result.exit_code == 0
+    data = json.loads(result.output)
+    assert data["mode"] == "build"
+    assert len(data["seed"]) == 11
+    assert data["total_spent"] <= 200_000
+    # the strong tots ST should appear as an ordered buy
+    assert any(s["in_id"] == "upgrade--tots" for s in data["steps"])
+
+
+def test_plan_upgrade_mode_json(upgrade_db, squad_file):
+    result = runner.invoke(app, ["plan", str(squad_file), "--budget", "100K",
+                                 "--db", str(upgrade_db), "--json"])
+    assert result.exit_code == 0, result.output
+    data = json.loads(result.output)
+    assert data["mode"] == "upgrade"
+    assert data["seed"] == []
+    assert data["steps"][0]["in_id"] == "upgrade--tots"
+    assert data["total_spent"] <= 100_000
+    assert data["steps"][0]["cumulative_spent"] == data["steps"][0]["net_cost"]
+
+
+def test_plan_upgrade_mode_table(upgrade_db, squad_file):
+    result = runner.invoke(app, ["plan", str(squad_file), "--budget", "100K",
+                                 "--db", str(upgrade_db)])
+    assert result.exit_code == 0, result.output
+    assert "Upgrade" in result.output
+    assert "squad score" in result.output
+
+
+def test_plan_write_produces_loadable_squad(upgrade_db, squad_file, tmp_path):
+    out = tmp_path / "planned.json"
+    result = runner.invoke(app, ["plan", str(squad_file), "--budget", "100K",
+                                 "--db", str(upgrade_db), "--write", str(out)])
+    assert result.exit_code == 0, result.output
+    saved = json.loads(out.read_text())
+    assert saved["starting_xi"]["ST"] == "upgrade--tots"
+    chem = runner.invoke(app, ["chem", str(out), "--db", str(upgrade_db)])
+    assert chem.exit_code == 0, chem.output
+
+
+def test_plan_build_mode_write(upgrade_db, tmp_path):
+    out = tmp_path / "planned-build.json"
+    result = runner.invoke(app, ["plan", "--formation", "4-2-3-1", "--budget", "200K",
+                                 "--db", str(upgrade_db), "--write", str(out)])
+    assert result.exit_code == 0, result.output
+    saved = json.loads(out.read_text())
+    assert len(saved["starting_xi"]) == 11
+    chem = runner.invoke(app, ["chem", str(out), "--db", str(upgrade_db)])
+    assert chem.exit_code == 0, chem.output
+
+
+def test_plan_write_refuses_overwriting_input(upgrade_db, squad_file):
+    result = runner.invoke(app, ["plan", str(squad_file), "--budget", "100K",
+                                 "--db", str(upgrade_db), "--write", str(squad_file)])
+    assert result.exit_code == 1
+    assert "NEW file" in result.output
+
+
+def test_plan_mode_conflict_is_clean(upgrade_db, squad_file):
+    result = runner.invoke(app, ["plan", str(squad_file), "--formation", "4-2-3-1",
+                                 "--budget", "100K", "--db", str(upgrade_db)])
+    assert result.exit_code == 1
+    assert "not both" in result.output
+
+
+def test_plan_requires_a_mode(upgrade_db):
+    result = runner.invoke(app, ["plan", "--budget", "100K", "--db", str(upgrade_db)])
+    assert result.exit_code == 1
+    assert "mode" in result.output.lower()
+
+
+def test_plan_bad_budget_clean(upgrade_db):
+    result = runner.invoke(app, ["plan", "--formation", "4-2-3-1", "--budget", "lots",
+                                 "--db", str(upgrade_db)])
+    assert result.exit_code == 1
+    assert "cannot parse budget" in result.output
+    assert "Traceback" not in result.output
+
+
+def test_plan_infeasible_build_budget_clean(upgrade_db):
+    result = runner.invoke(app, ["plan", "--formation", "4-2-3-1", "--budget", "1000",
+                                 "--db", str(upgrade_db)])
+    assert result.exit_code == 1
+    assert "budget too small" in result.output
+    assert "Traceback" not in result.output
+
+
+def test_plan_real_db_ci_guard():
+    from pathlib import Path
+
+    db = Path("data/players.json")
+    if not db.exists():
+        pytest.skip("real DB not present")
+    result = runner.invoke(app, ["plan", "--formation", "4-2-3-1", "--budget", "300K",
+                                 "--db", str(db), "--json"])
+    assert result.exit_code == 0, result.output
+    data = json.loads(result.output)
+    assert data["mode"] == "build"
+    assert data["total_spent"] <= 300_000
+    assert len(data["seed"]) == 11
+    names = [sb["player_name"] for sb in data["seed"]]
+    assert len(set(names)) == 11
+    # every suggested buy strictly improves the squad score (monotonic ledger)
+    scores = [data["base_score"]] + [st["score_after"] for st in data["steps"]]
+    assert all(b < a for b, a in zip(scores, scores[1:]))
+
+
 def test_boost_command_table(chem_db, squad_file, tmp_path):
     import json as j
 
