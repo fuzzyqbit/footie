@@ -77,10 +77,11 @@ export default function UpgradePage() {
           <input
             id="upgrade-budget"
             type="text"
-            placeholder="e.g. 500K"
+            inputMode="numeric"
+            placeholder="e.g. 500K or 5M"
             value={budget}
             onChange={e => setBudget(e.target.value)}
-            className="bg-card border border-border rounded px-3 py-1.5 text-sm text-white placeholder-muted w-28 focus:outline-none focus:border-gold"
+            className="bg-card border border-border rounded px-3 py-1.5 text-sm text-white placeholder-muted w-36 focus:outline-none focus:border-gold"
           />
         </div>
 

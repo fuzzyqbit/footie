@@ -1,19 +1,11 @@
 import type { Card, ChemReport } from '../types'
+import { faceKeys } from '../faceLabels'
 
 interface Props {
   slot: string | null
   card: Card | null
   chemReport: ChemReport | null
 }
-
-const FACE_KEYS: Array<[keyof Card['face'], string]> = [
-  ['pac', 'PAC'],
-  ['sho', 'SHO'],
-  ['pas', 'PAS'],
-  ['dri', 'DRI'],
-  ['def_', 'DEF'],
-  ['phy', 'PHY'],
-]
 
 function formatPrice(price: number | null): string {
   if (price == null) return '—'
@@ -50,7 +42,7 @@ export default function SidePanel({ slot, card, chemReport }: Props) {
       </div>
 
       <div className="grid grid-cols-2 gap-1.5">
-        {FACE_KEYS.map(([key, label]) => (
+        {faceKeys(card.position).map(([key, label]) => (
           <div key={key} className="flex justify-between text-xs bg-navy rounded px-2 py-1">
             <span className="text-muted">{label}</span>
             <span className="text-white font-medium">{card.face[key] ?? '—'}</span>

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 from ..errors import FC26Error
 from ..ingest.futbin import parse_price
 
@@ -13,7 +15,12 @@ class BudgetError(FC26Error):
 
 
 def parse_budget(raw: str) -> int:
-    coins = parse_price(raw)
+    # Users type big budgets in many shapes ("5 000 000", "5 M", "$5M", "5m coins").
+    # Strip whitespace, a currency symbol, and a trailing "coins"/"coin" word, then
+    # defer to parse_price (handles K/M units, comma grouping, plain integers).
+    normalized = re.sub(r"\s+", "", raw or "").lstrip("$£€")
+    normalized = re.sub(r"coins?$", "", normalized, flags=re.IGNORECASE)
+    coins = parse_price(normalized)
     if coins is None:
         raise BudgetError(f"cannot parse budget {raw!r} (use forms like 100K, 1.2M, 50000)")
     return coins

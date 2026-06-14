@@ -567,6 +567,8 @@ def boost(
                       cell("pac"), cell("sho"), cell("pas"),
                       cell("dri"), cell("def_"), cell("phy"))
     console.print(table)
+    if any(card.position == "GK" for _, card, _, _ in results):
+        console.print("[dim]GK row: PAC/SHO/PAS/DRI/DEF/PHY columns hold DIV/HAN/KIC/REF/SPD/POS[/dim]")
     console.print(f"team chemistry: {report.team_total}/33")
     for slot, card, style, r in results:
         if style and chem_by_slot[slot] == 0:

@@ -44,6 +44,16 @@ def test_parse_budget_forms():
         parse_budget("garbage")
 
 
+def test_parse_budget_tolerates_millions_typed_loosely():
+    # Forms a user with a big bank actually types for "5 million coins".
+    assert parse_budget("5 000 000") == 5_000_000
+    assert parse_budget("5,000,000") == 5_000_000
+    assert parse_budget("5 M") == 5_000_000
+    assert parse_budget("5m") == 5_000_000
+    assert parse_budget("$5M") == 5_000_000
+    assert parse_budget("5M coins") == 5_000_000
+
+
 def test_resale_and_net_cost_with_five_percent_tax():
     assert resale_value(100_000) == 95_000
     assert resale_value(None) == 0

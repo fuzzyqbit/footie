@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Card } from '../types'
+import { faceKeys } from '../faceLabels'
 
 interface Props {
   card: Card
@@ -11,15 +12,6 @@ function formatPrice(price: number | null): string {
   if (price >= 1_000) return `${(price / 1_000).toFixed(0)}K`
   return String(price)
 }
-
-const FACE_KEYS: Array<[keyof Card['face'], string]> = [
-  ['pac', 'PAC'],
-  ['sho', 'SHO'],
-  ['pas', 'PAS'],
-  ['dri', 'DRI'],
-  ['def_', 'DEF'],
-  ['phy', 'PHY'],
-]
 
 export default function CardTile({ card }: Props) {
   const [expanded, setExpanded] = useState(false)
@@ -40,7 +32,7 @@ export default function CardTile({ card }: Props) {
 
       {expanded && (
         <div className="mt-2 pt-2 border-t border-border grid grid-cols-3 gap-1">
-          {FACE_KEYS.map(([key, label]) => (
+          {faceKeys(card.position).map(([key, label]) => (
             <div key={key} className="flex justify-between text-xs">
               <span className="text-muted">{label}</span>
               <span className="text-white">{card.face[key] ?? '—'}</span>

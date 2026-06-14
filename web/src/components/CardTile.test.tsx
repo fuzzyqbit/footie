@@ -32,3 +32,14 @@ test('shows null price as —', () => {
   render(<CardTile card={{ ...MOCK_CARD, price: null }} />)
   expect(screen.getByText('—')).toBeInTheDocument()
 })
+
+test('GK card shows goalkeeper stat labels, not outfield ones', async () => {
+  const user = userEvent.setup()
+  const gk = { ...MOCK_CARD, player_name: 'Alisson', position: 'GK' }
+  render(<CardTile card={gk} />)
+  await user.click(screen.getByText('Alisson'))
+  expect(screen.getByText('DIV')).toBeInTheDocument()
+  expect(screen.getByText('HAN')).toBeInTheDocument()
+  expect(screen.queryByText('PAC')).not.toBeInTheDocument()
+  expect(screen.queryByText('SHO')).not.toBeInTheDocument()
+})
