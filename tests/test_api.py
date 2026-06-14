@@ -349,6 +349,12 @@ def test_post_build_valid(client):
     assert "xi" in data
     assert "squad" in data
     assert len(data["xi"]) == 11
+    # squad.starting_xi (what the web Pitch renders) must be the SAME XI as the
+    # returned xi table, not the cheaper seed lineup. Regression guard.
+    xi_ids = sorted(p["id"] for p in data["xi"])
+    sx = data["squad"]["starting_xi"]
+    squad_ids = sorted(v if isinstance(v, str) else v["id"] for v in sx.values())
+    assert squad_ids == xi_ids
 
 
 def test_post_build_unknown_formation(client):

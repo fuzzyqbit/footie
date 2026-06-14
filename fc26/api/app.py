@@ -204,7 +204,7 @@ def create_app(db_path: Path, squads_dir: Path, web_dir: Path | None = None) -> 
         squad_dict: dict = {
             "name": result.lineup.name or "built-squad",
             "formation": result.lineup.formation,
-            "starting_xi": {slot: card_id for slot, card_id in result.lineup.slots},
+            "starting_xi": {slot: card.id for slot, card in result.slot_cards.items()},
         }
         if result.lineup.manager:
             squad_dict["manager"] = {
