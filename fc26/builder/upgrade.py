@@ -14,9 +14,10 @@ from ..chem.formations import slot_position
 from ..chem.lineup import Lineup
 from ..models import Card, slugify
 from .market import net_cost, resale_value
-from .meta import CHEM_WEIGHT, meta_score
+from .meta import CHEM_WEIGHT, RATING_CHEM_WEIGHT, meta_score
 
 DEFAULT_MAX_SWAPS = 3
+DEFAULT_OBJECTIVE = "meta"
 
 
 @dataclass(frozen=True)
@@ -63,9 +64,18 @@ def _same_player(name_a: str, name_b: str) -> bool:
     return slug_b.startswith(slug_a + "-") or slug_a.startswith(slug_b + "-")
 
 
-def _squad_state(lineup: Lineup, slot_cards: dict[str, Card]) -> tuple[float, int]:
-    """(composite score, team chem) for a candidate XI."""
+def _squad_state(
+    lineup: Lineup, slot_cards: dict[str, Card], objective: str = DEFAULT_OBJECTIVE
+) -> tuple[float, int]:
+    """(composite score, team chem) for a candidate XI.
+
+    objective="meta": pace-meta-weighted faces + CHEM_WEIGHT * chem.
+    objective="rating": raw squad OVR + RATING_CHEM_WEIGHT * chem (chem breaks ties).
+    """
     chem = compute_chemistry(lineup, slot_cards).team_total
+    if objective == "rating":
+        ovr_total = sum(slot_cards[s].ovr for s, _ in lineup.slots)
+        return ovr_total + RATING_CHEM_WEIGHT * chem, chem
     meta_total = 0.0
     for slot_key, _card_id in lineup.slots:
         score = meta_score(slot_cards[slot_key], slot_position(slot_key))
@@ -81,16 +91,17 @@ def find_upgrades(
     *,
     budget: int,
     max_swaps: int = DEFAULT_MAX_SWAPS,
+    objective: str = DEFAULT_OBJECTIVE,
 ) -> UpgradePlan:
     warnings: list[str] = []
     current = dict(slot_cards)
-    score_before, chem_before = _squad_state(lineup, current)
+    score_before, chem_before = _squad_state(lineup, current, objective)
     remaining = budget
     swaps: list[Swap] = []
     swapped_slots: set[str] = set()
 
     for _round in range(max_swaps):
-        base_score, base_chem = _squad_state(lineup, current)
+        base_score, base_chem = _squad_state(lineup, current, objective)
         best: Swap | None = None
         best_card: Card | None = None
         for slot_key, _card_id in lineup.slots:
@@ -119,7 +130,7 @@ def find_upgrades(
                 if candidate_meta is None:
                     continue
                 trial = {**current, slot_key: candidate}
-                trial_score, trial_chem = _squad_state(lineup, trial)
+                trial_score, trial_chem = _squad_state(lineup, trial, objective)
                 delta = trial_score - base_score
                 if delta <= 0:
                     continue
@@ -149,7 +160,7 @@ def find_upgrades(
         remaining -= best.net_cost
         swaps.append(best)
 
-    score_after, chem_after = _squad_state(lineup, current)
+    score_after, chem_after = _squad_state(lineup, current, objective)
     return UpgradePlan(
         swaps=tuple(swaps), spent=budget - remaining, budget=budget,
         score_before=score_before, score_after=score_after,

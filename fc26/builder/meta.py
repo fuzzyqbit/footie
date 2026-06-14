@@ -11,6 +11,12 @@ from ..models import Card
 
 CHEM_WEIGHT = 3.0   # squad_score = sum(meta) + CHEM_WEIGHT * team_chem
 
+# "rating" objective: maximise raw squad OVR; chem only breaks ties so a
+# higher-rated XI always wins but chem is preferred among equal-OVR options.
+RATING_CHEM_WEIGHT = 0.1
+
+VALID_OBJECTIVES = ("meta", "rating")
+
 # position -> (pac, sho, pas, dri, def_, phy); each row sums to 1.0
 META_WEIGHTS: dict[str, tuple[float, float, float, float, float, float]] = {
     "ST":  (.30, .35, .05, .20, .00, .10),

@@ -50,6 +50,7 @@ def build_squad(
     budget: int,
     league: str | None = None,
     name: str | None = None,
+    objective: str = "meta",
 ) -> BuildResult:
     if formation not in FORMATIONS:
         available = ", ".join(sorted(FORMATIONS))
@@ -97,7 +98,8 @@ def build_squad(
 
     # --- improve: existing greedy engine over the remaining budget ---
     improve = find_upgrades(lineup, seed, candidates,
-                            budget=budget - seed_cost, max_swaps=BUILD_MAX_SWAPS)
+                            budget=budget - seed_cost, max_swaps=BUILD_MAX_SWAPS,
+                            objective=objective)
     by_id = {c.id: c for c in candidates}
     final = dict(seed)
     for swap in improve.swaps:

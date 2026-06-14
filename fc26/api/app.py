@@ -195,10 +195,11 @@ def create_app(db_path: Path, squads_dir: Path, web_dir: Path | None = None) -> 
         formation = str(body.get("formation", ""))
         budget_str = str(body.get("budget", "0"))
         league = body.get("league")
+        objective = str(body.get("objective", "meta"))
         budget = parse_budget(budget_str)
         repo = CardRepository(db_path)
         pool = repo.find_all()
-        result = build_squad(formation, pool, budget=budget, league=league)
+        result = build_squad(formation, pool, budget=budget, league=league, objective=objective)
         report = compute_chemistry(result.lineup, result.slot_cards)
         squad_dict: dict = {
             "name": result.lineup.name or "built-squad",
