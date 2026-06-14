@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme {
+  --color-pitch: #1a3a1a;
+  --color-navy: #0f0f1a;
+  --color-card: #16213e;
+  --color-card-hover: #1e2d4a;
+  --color-gold: #e2b714;
+  --color-chem: #4caf50;
+  --color-muted: #aaaaaa;
+  --color-border: #2a2a3a;
+}
