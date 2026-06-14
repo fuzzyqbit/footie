@@ -68,6 +68,57 @@ VALID_SQUAD = {
 }
 
 
+@pytest.fixture
+def tmp_web(tmp_path):
+    web = tmp_path / "dist"
+    (web / "assets").mkdir(parents=True)
+    (web / "index.html").write_text("<!doctype html><title>FC26 SPA</title>", encoding="utf-8")
+    (web / "assets" / "app.js").write_text("console.log('app')", encoding="utf-8")
+    return web
+
+
+def test_spa_serves_index_at_root(tmp_db, tmp_squads, tmp_web):
+    client = TestClient(create_app(tmp_db, tmp_squads, web_dir=tmp_web))
+    r = client.get("/")
+    assert r.status_code == 200
+    assert "FC26 SPA" in r.text
+
+
+def test_spa_falls_back_to_index_for_client_routes(tmp_db, tmp_squads, tmp_web):
+    client = TestClient(create_app(tmp_db, tmp_squads, web_dir=tmp_web))
+    r = client.get("/squads")          # React Router client route, not a file
+    assert r.status_code == 200
+    assert "FC26 SPA" in r.text
+
+
+def test_spa_serves_real_static_assets(tmp_db, tmp_squads, tmp_web):
+    client = TestClient(create_app(tmp_db, tmp_squads, web_dir=tmp_web))
+    r = client.get("/assets/app.js")
+    assert r.status_code == 200
+    assert "console.log" in r.text
+
+
+def test_api_routes_win_over_spa(tmp_db, tmp_squads, tmp_web):
+    client = TestClient(create_app(tmp_db, tmp_squads, web_dir=tmp_web))
+    r = client.get("/api/cards")
+    assert r.status_code == 200
+    assert r.json()["ok"] is True
+
+
+def test_unknown_api_path_is_json_404_not_spa(tmp_db, tmp_squads, tmp_web):
+    client = TestClient(create_app(tmp_db, tmp_squads, web_dir=tmp_web))
+    r = client.get("/api/bogus")
+    assert r.status_code == 404
+    assert r.json()["ok"] is False
+    assert "FC26 SPA" not in r.text
+
+
+def test_no_spa_mount_when_web_dir_absent(tmp_db, tmp_squads, tmp_path):
+    client = TestClient(create_app(tmp_db, tmp_squads, web_dir=tmp_path / "nodist"))
+    assert client.get("/").status_code == 404        # no SPA served
+    assert client.get("/api/cards").status_code == 200   # API unaffected
+
+
 def test_create_app_returns_fastapi(tmp_path):
     from fastapi import FastAPI
     squads_dir = tmp_path / "squads"

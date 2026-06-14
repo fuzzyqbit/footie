@@ -581,10 +581,20 @@ def serve(
     host: str = typer.Option("0.0.0.0", "--host", help="Host to bind (0.0.0.0 = all interfaces)"),
     db: Path = DB_OPTION,
     squads: Path = typer.Option(Path("squads"), "--squads", help="Squad files directory"),
+    web: Path = typer.Option(Path("web/dist"), "--web", help="Built SPA dir to serve (skipped if absent)"),
 ) -> None:
-    """Start the FC 26 API server (no auth — local network only)."""
+    """Start the FC 26 API server (no auth — local network only).
+
+    If the built SPA exists (default web/dist), it is served from the same
+    origin so one process hosts both the API and the frontend.
+    """
     import uvicorn
     from .api.app import create_app
 
-    api = create_app(db_path=db, squads_dir=squads)
+    api = create_app(db_path=db, squads_dir=squads, web_dir=web)
+    if web.is_dir() and (web / "index.html").is_file():
+        console.print(f"serving SPA from {web} at http://{host}:{port}/")
+    else:
+        console.print(f"[yellow]note:[/yellow] no built SPA at {web} — API only "
+                      f"(run `npm run build` in web/ to enable the UI)")
     uvicorn.run(api, host=host, port=port)

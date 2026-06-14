@@ -11,7 +11,7 @@ from typing import Any
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from ..builder.boost import boosted_stats
@@ -50,7 +50,7 @@ def _safe_stem(name: str) -> str | None:
     return name
 
 
-def create_app(db_path: Path, squads_dir: Path) -> FastAPI:
+def create_app(db_path: Path, squads_dir: Path, web_dir: Path | None = None) -> FastAPI:
     app = FastAPI(title="FC 26 API")
 
     app.add_middleware(
@@ -235,5 +235,21 @@ def create_app(db_path: Path, squads_dir: Path) -> FastAPI:
             "leagues": leagues,
             "versions": versions,
         })
+
+    # Serve the built SPA (web/dist) as a single-page app. Registered AFTER the
+    # /api routes so those match first; unmatched /api/* stays a JSON 404. Any
+    # other unknown path falls back to index.html for client-side routing.
+    if web_dir is not None and (web_dir / "index.html").is_file():
+        root = web_dir.resolve()
+        index_html = root / "index.html"
+
+        @app.get("/{full_path:path}")
+        async def serve_spa(full_path: str) -> FileResponse:
+            if full_path == "api" or full_path.startswith("api/"):
+                raise HTTPException(status_code=404, detail=f"{full_path!r} not found")
+            candidate = (root / full_path).resolve()
+            if candidate.is_file() and root in candidate.parents:
+                return FileResponse(candidate)
+            return FileResponse(index_html)
 
     return app
