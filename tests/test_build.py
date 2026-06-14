@@ -75,6 +75,25 @@ def test_build_missing_slot_candidate_errors():
         build_squad("4-2-3-1", pool, budget=50_000)
 
 
+def test_build_rating_objective_prefers_higher_ovr():
+    # Same slot, same price, both affordable: a high-OVR / plain-face card vs a
+    # lower-OVR / elite-face card. meta scores faces (picks the elite-face one);
+    # rating scores raw OVR (picks the 99). Proves the objective actually steers.
+    high_ovr = Card(id="hi--base", player_name="HiOvr", version="base", ovr=99,
+                    position="ST", face=FACE, price=20_000,
+                    club="CH", nation="NH", league="Premier League")
+    high_face = Card(id="hf--base", player_name="HiFace", version="base", ovr=85,
+                     position="ST", face=GOOD, price=20_000,
+                     club="CF", nation="NF", league="Premier League")
+    pool = _basic_pool() + (high_ovr, high_face)
+
+    rating = build_squad("4-2-3-1", pool, budget=40_000, objective="rating")
+    assert rating.slot_cards["ST"].id == "hi--base"
+
+    meta = build_squad("4-2-3-1", pool, budget=40_000, objective="meta")
+    assert meta.slot_cards["ST"].id == "hf--base"
+
+
 def test_build_excludes_unpriced_and_faceless_cards():
     pool = _basic_pool() + (
         Card(id="free--base", player_name="Freebie", version="base", ovr=99,
