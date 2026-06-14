@@ -6,6 +6,7 @@ export interface BuildParams {
   formation: string
   budget: string
   league?: string
+  objective?: string
 }
 
 export function useBuild() {

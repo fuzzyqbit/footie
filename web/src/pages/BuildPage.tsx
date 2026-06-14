@@ -23,6 +23,7 @@ export default function BuildPage() {
   const [formation, setFormation] = useState('4-2-3-1')
   const [budget, setBudget] = useState('')
   const [league, setLeague] = useState('')
+  const [objective, setObjective] = useState('meta')
   const [buildError, setBuildError] = useState<string | null>(null)
 
   const [builtSquad, setBuiltSquad] = useState<SquadFile | null>(null)
@@ -59,6 +60,7 @@ export default function BuildPage() {
         formation,
         budget,
         league: league || undefined,
+        objective,
       })
       setBuiltSquad(result.squad)
       setChemReport(null)
@@ -137,6 +139,19 @@ export default function BuildPage() {
           >
             <option value="">Any</option>
             {(meta?.leagues ?? []).map(l => <option key={l} value={l}>{l}</option>)}
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="objective-select" className="text-muted text-xs uppercase tracking-wider">Optimise for</label>
+          <select
+            id="objective-select"
+            value={objective}
+            onChange={e => setObjective(e.target.value)}
+            className="bg-card border border-border rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-gold"
+          >
+            <option value="meta">Meta (pace + chem)</option>
+            <option value="rating">Rating (max OVR)</option>
           </select>
         </div>
 
