@@ -2,8 +2,12 @@
 
 from __future__ import annotations
 
+import asyncio
+import contextlib
 import json
+import logging
 import re
+import time
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any
@@ -25,6 +29,10 @@ from ..chem.lineup import lineup_from_dict, resolve_cards
 from ..chem.styles import available_styles
 from ..db import CardRepository, card_to_dict
 from ..errors import FC26Error
+from ..ingest.refresh import DEFAULT_MIN_OVR, refresh_data
+from ..ingest.web import fetch_html
+
+_log = logging.getLogger("fc26.refresh")
 
 _SAFE_NAME_RE = re.compile(r"^[a-zA-Z0-9_-]+$")
 
@@ -50,8 +58,59 @@ def _safe_stem(name: str) -> str | None:
     return name
 
 
-def create_app(db_path: Path, squads_dir: Path, web_dir: Path | None = None) -> FastAPI:
-    app = FastAPI(title="FC 26 API")
+async def _refresh_loop(db_path: Path, interval_hours: float, min_ovr: int) -> None:
+    """Re-scrape the live pool every `interval_hours` while the server runs.
+
+    Runs the blocking scrape in a worker thread so request handling is never
+    stalled. Any failure (network, futbin layout change) is logged and the loop
+    keeps going; the on-disk db is left untouched on a hard failure because
+    upsert merges rather than truncating.
+    """
+    interval = max(interval_hours, 0.0) * 3600
+    while True:
+        await asyncio.sleep(interval)
+        _log.info("auto-refresh starting (min_ovr=%s)", min_ovr)
+        try:
+            repo = CardRepository(db_path)
+            result = await asyncio.to_thread(
+                refresh_data, repo,
+                min_ovr=min_ovr, fetch_html=fetch_html, sleep=time.sleep,
+            )
+            _log.info(
+                "auto-refresh done: %s new, %s updated, %s enriched",
+                result.expand.new, result.expand.merged, len(result.enrich.enriched),
+            )
+        except asyncio.CancelledError:
+            raise
+        except Exception:
+            _log.exception("auto-refresh failed; keeping existing data")
+
+
+def create_app(
+    db_path: Path,
+    squads_dir: Path,
+    web_dir: Path | None = None,
+    *,
+    auto_refresh: bool = False,
+    refresh_interval_hours: float = 24.0,
+    refresh_min_ovr: int = DEFAULT_MIN_OVR,
+) -> FastAPI:
+    @contextlib.asynccontextmanager
+    async def _lifespan(_app: FastAPI):
+        task: asyncio.Task | None = None
+        if auto_refresh:
+            task = asyncio.create_task(
+                _refresh_loop(db_path, refresh_interval_hours, refresh_min_ovr)
+            )
+        try:
+            yield
+        finally:
+            if task is not None:
+                task.cancel()
+                with contextlib.suppress(asyncio.CancelledError):
+                    await task
+
+    app = FastAPI(title="FC 26 API", lifespan=_lifespan)
 
     app.add_middleware(
         CORSMiddleware,

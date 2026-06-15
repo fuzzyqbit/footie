@@ -26,6 +26,7 @@ from .ingest.enrich import enrich_cards
 from .ingest.expand import expand_cards
 from .ingest.fcratings import fetch_top100
 from .ingest.futgg import fetch_futgg_card
+from .ingest.refresh import DEFAULT_MIN_OVR, refresh_data
 from .ingest.seed import seed_cards
 from .ingest.web import fetch_html
 from .models import Card
@@ -230,6 +231,37 @@ def expand(
         console.print(f"[yellow]failed:[/yellow] {failure}")
     if result.seen == 0:
         _fail("nothing ingested")
+
+
+@app.command()
+def refresh(
+    min_ovr: int = typer.Option(DEFAULT_MIN_OVR, "--min-ovr",
+                                help="Re-scrape all cards at or above this rating"),
+    limit: int | None = typer.Option(None, "--limit", help="Cap player-page enrich fetches"),
+    db: Path = DB_OPTION,
+) -> None:
+    """Refresh the card pool: bulk-expand the live FUT pool, then enrich it.
+
+    Same pipeline the server's daily auto-refresh runs. Writes merge into the
+    existing db, so a partial scrape never wipes data.
+    """
+    repo = CardRepository(db)
+    try:
+        result = refresh_data(
+            repo,
+            min_ovr=min_ovr,
+            fetch_html=fetch_html,
+            sleep=time.sleep,
+            on_progress=console.print,
+            enrich_limit=limit,
+        )
+    except FC26Error as exc:
+        _fail(str(exc))
+    console.print(
+        f"refresh done: {result.expand.new} new, {result.expand.merged} updated, "
+        f"{len(result.enrich.enriched)} enriched, "
+        f"{len(result.expand.failed_pages)} failed pages"
+    )
 
 
 @app.command()
@@ -584,16 +616,30 @@ def serve(
     db: Path = DB_OPTION,
     squads: Path = typer.Option(Path("squads"), "--squads", help="Squad files directory"),
     web: Path = typer.Option(Path("web/dist"), "--web", help="Built SPA dir to serve (skipped if absent)"),
+    auto_refresh: bool = typer.Option(True, "--auto-refresh/--no-auto-refresh",
+                                      help="Re-scrape the live card pool on a schedule while serving"),
+    refresh_interval_hours: float = typer.Option(24.0, "--refresh-interval-hours",
+                                                 help="Hours between auto-refreshes"),
+    refresh_min_ovr: int = typer.Option(DEFAULT_MIN_OVR, "--refresh-min-ovr",
+                                        help="Lowest OVR to re-scrape on auto-refresh"),
 ) -> None:
     """Start the FC 26 API server (no auth — local network only).
 
     If the built SPA exists (default web/dist), it is served from the same
-    origin so one process hosts both the API and the frontend.
+    origin so one process hosts both the API and the frontend. With
+    --auto-refresh (default on) the card pool re-scrapes every
+    --refresh-interval-hours; the live API picks up new data with no restart.
     """
     import uvicorn
     from .api.app import create_app
 
-    api = create_app(db_path=db, squads_dir=squads, web_dir=web)
+    api = create_app(db_path=db, squads_dir=squads, web_dir=web,
+                     auto_refresh=auto_refresh,
+                     refresh_interval_hours=refresh_interval_hours,
+                     refresh_min_ovr=refresh_min_ovr)
+    if auto_refresh:
+        console.print(f"auto-refresh: every {refresh_interval_hours}h "
+                      f"(min_ovr {refresh_min_ovr})")
     if web.is_dir() and (web / "index.html").is_file():
         console.print(f"serving SPA from {web} at http://{host}:{port}/")
     else:
