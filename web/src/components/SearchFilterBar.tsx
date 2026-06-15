@@ -88,6 +88,30 @@ export default function SearchFilterBar({ params, onChange }: Props) {
       />
 
       <select
+        aria-label="Stat filter"
+        value={params.stat ?? ''}
+        onChange={e => onChange({ ...params, stat: e.target.value || undefined, offset: 0 })}
+        className="bg-card border border-border rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-gold"
+      >
+        <option value="">Stat ≥</option>
+        {STAT_SORTS.map(({ key, out, gk }) => (
+          <option key={key} value={key}>{params.pos === 'GK' ? gk : out}</option>
+        ))}
+      </select>
+
+      <input
+        type="number"
+        aria-label="Min stat"
+        placeholder="Min"
+        min={1}
+        max={99}
+        disabled={!params.stat}
+        value={params.stat_min ?? ''}
+        onChange={e => onChange({ ...params, stat_min: e.target.value ? Number(e.target.value) : undefined, offset: 0 })}
+        className="bg-card border border-border rounded px-3 py-1.5 text-sm text-white placeholder-muted w-20 focus:outline-none focus:border-gold disabled:opacity-40"
+      />
+
+      <select
         aria-label="Sort"
         value={params.sort ?? 'ovr'}
         onChange={e => onChange({ ...params, sort: e.target.value, offset: 0 })}

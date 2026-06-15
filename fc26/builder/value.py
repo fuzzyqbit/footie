@@ -46,6 +46,7 @@ def value_picks(
     min_ovr: int = DEFAULT_MIN_OVR,
     max_price: int | None = DEFAULT_MAX_PRICE,
     pos: str | None = None,
+    positions: frozenset[str] | None = None,
     limit: int = 30,
     per_tier: int | None = None,
 ) -> list[ValuePick]:
@@ -65,6 +66,10 @@ def value_picks(
         if max_price is not None and card.price > max_price:
             continue
         if wanted and card.position != wanted and wanted not in card.alt_positions:
+            continue
+        if positions is not None and not (
+            card.position in positions or positions.intersection(card.alt_positions)
+        ):
             continue
         quality, best_pos = _quality(card)
         value = quality * 1000.0 / card.price

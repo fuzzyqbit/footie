@@ -8,6 +8,8 @@ export interface CardParams {
   version?: string
   league?: string
   min_ovr?: number
+  stat?: string
+  stat_min?: number
   sort?: string
   limit?: number
   offset?: number
@@ -20,6 +22,10 @@ function buildQs(params: CardParams): string {
   if (params.version) qs.set('version', params.version)
   if (params.league) qs.set('league', params.league)
   if (params.min_ovr != null) qs.set('min_ovr', String(params.min_ovr))
+  if (params.stat && params.stat_min != null) {
+    qs.set('stat', params.stat)
+    qs.set('stat_min', String(params.stat_min))
+  }
   if (params.sort) qs.set('sort', params.sort)
   if (params.limit != null) qs.set('limit', String(params.limit))
   if (params.offset != null) qs.set('offset', String(params.offset))

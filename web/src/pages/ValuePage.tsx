@@ -1,10 +1,28 @@
+import { useState } from 'react'
 import { useValue } from '../api/value'
+import { useSquads } from '../api/squads'
 import CardTile from '../components/CardTile'
 import SkeletonGrid from '../components/SkeletonGrid'
 
+const POSITIONS = ['GK', 'CB', 'RB', 'LB', 'CDM', 'CM', 'CAM', 'RM', 'LM', 'RW', 'LW', 'ST', 'CF']
+
 export default function ValuePage() {
-  const { data, isPending, error } = useValue({ per_tier: 6, limit: 120 })
+  const [pos, setPos] = useState('')
+  const [maxPrice, setMaxPrice] = useState<number | undefined>(50000)
+  const [squad, setSquad] = useState('')
+
+  const { data: squads } = useSquads()
+  const { data, isPending, error } = useValue({
+    per_tier: 6,
+    limit: 120,
+    pos: pos || undefined,
+    max_price: maxPrice,
+    squad: squad || undefined,
+  })
   const picks = data?.picks ?? []
+
+  const inputCls =
+    'bg-card border border-border rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-gold'
 
   return (
     <div>
@@ -12,6 +30,28 @@ export default function ValuePage() {
       <p className="text-muted text-sm mb-4">
         Best bargains at each rating tier — cheap, underrated cards by rating-per-coin.
       </p>
+
+      <div className="flex flex-wrap gap-3 mb-4">
+        <select aria-label="Position" value={pos} onChange={e => setPos(e.target.value)} className={inputCls}>
+          <option value="">All positions</option>
+          {POSITIONS.map(p => <option key={p} value={p}>{p}</option>)}
+        </select>
+
+        <select aria-label="Squad" value={squad} onChange={e => setSquad(e.target.value)} className={inputCls}>
+          <option value="">Any squad</option>
+          {(squads ?? []).map(s => <option key={s.name} value={s.name}>For: {s.name}</option>)}
+        </select>
+
+        <input
+          type="number"
+          aria-label="Max price"
+          placeholder="Max price"
+          min={1}
+          value={maxPrice ?? ''}
+          onChange={e => setMaxPrice(e.target.value ? Number(e.target.value) : undefined)}
+          className={`${inputCls} w-32 placeholder-muted`}
+        />
+      </div>
 
       {error && (
         <div className="text-red-400 bg-red-900/20 border border-red-800 rounded p-3 mb-4">

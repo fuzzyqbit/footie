@@ -63,5 +63,14 @@ def test_per_tier_keeps_best_bargain_per_rating():
     assert [p.card.ovr for p in picks] == [88, 87]
 
 
+def test_positions_filter_matches_primary_or_alt():
+    st = _card(1, ovr=86, price=2_000, position="ST")
+    cb = _card(2, ovr=86, price=1_000, position="CB", alt=("CDM",))
+    gk = _card(3, ovr=86, price=500, position="GK")
+    picks = value_picks([st, cb, gk], positions=frozenset({"CDM", "ST"}))
+    ids = {p.card.id for p in picks}
+    assert ids == {"p1--base", "p2--base"}   # GK excluded
+
+
 def test_default_max_price_is_cheap_ceiling():
     assert DEFAULT_MAX_PRICE == 50_000

@@ -41,6 +41,10 @@ _log = logging.getLogger("fc26.refresh")
 
 _SAFE_NAME_RE = re.compile(r"^[a-zA-Z0-9_-]+$")
 
+# public sort/filter key -> Card.face attribute
+_FACE_ATTR = {"pac": "pac", "sho": "sho", "pas": "pas",
+              "dri": "dri", "def": "def_", "phy": "phy"}
+
 _SORT_KEYS = {
     "ovr": lambda c: c.ovr,
     "pac": lambda c: c.face.pac or 0,
@@ -157,6 +161,8 @@ def create_app(
         version: str | None = None,
         league: str | None = None,
         min_ovr: int | None = None,
+        stat: str | None = None,
+        stat_min: int | None = None,
         sort: str = "ovr",
         limit: int = 50,
         offset: int = 0,
@@ -165,6 +171,10 @@ def create_app(
             raise FC26Error(
                 f"unknown sort key {sort!r} "
                 "(use: ovr, pac, sho, pas, dri, def, phy, name)"
+            )
+        if stat is not None and stat not in _FACE_ATTR:
+            raise FC26Error(
+                f"unknown stat {stat!r} (use: pac, sho, pas, dri, def, phy)"
             )
         if limit < 1:
             raise FC26Error("limit must be >= 1")
@@ -183,6 +193,10 @@ def create_app(
                      if c.league is not None and canonical_league(c.league) == wanted_lg]
         if min_ovr is not None:
             cards = [c for c in cards if c.ovr >= min_ovr]
+        if stat is not None and stat_min is not None:
+            attr = _FACE_ATTR[stat]
+            cards = [c for c in cards
+                     if (v := getattr(c.face, attr)) is not None and v >= stat_min]
         reverse = sort != "name"
         cards.sort(key=_SORT_KEYS[sort], reverse=reverse)
         total = len(cards)
@@ -322,11 +336,31 @@ def create_app(
             return _ok(empty)
         return _ok(parsed)
 
+    def _squad_positions(name: str, repo: CardRepository) -> frozenset[str]:
+        stem = _safe_stem(name)
+        if stem is None:
+            raise HTTPException(status_code=400, detail=f"invalid squad name {name!r}")
+        path = squads_dir / f"{stem}.json"
+        if not path.exists():
+            raise HTTPException(status_code=404, detail=f"squad {name!r} not found")
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise HTTPException(status_code=500, detail=f"cannot read squad: {exc}") from exc
+        out: set[str] = set()
+        for card_id in (data.get("starting_xi") or {}).values():
+            card = repo.find_by_id(card_id) if isinstance(card_id, str) else None
+            if card is not None:
+                out.add(card.position)
+                out.update(card.alt_positions)
+        return frozenset(out)
+
     @app.get("/api/value")
     async def get_value(
         min_ovr: int = VALUE_MIN_OVR,
         max_price: int = DEFAULT_MAX_PRICE,
         pos: str | None = None,
+        squad: str | None = None,
         limit: int = 30,
         per_tier: int | None = None,
     ) -> dict:
@@ -337,9 +371,10 @@ def create_app(
         if per_tier is not None and per_tier < 1:
             raise FC26Error("per_tier must be >= 1")
         repo = CardRepository(db_path)
+        positions = _squad_positions(squad, repo) if squad else None
         picks = value_picks(
             repo.find_all(), min_ovr=min_ovr, max_price=max_price,
-            pos=pos, limit=limit, per_tier=per_tier,
+            pos=pos, positions=positions, limit=limit, per_tier=per_tier,
         )
         return _ok({
             "picks": [

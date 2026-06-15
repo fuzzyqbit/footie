@@ -185,6 +185,31 @@ def test_list_cards_sort_by_face_stat(client):
         assert r.json()["ok"] is True
 
 
+def test_list_cards_min_stat_filter(client):
+    # seed cards all have dri=80; threshold 85 drops them, 80 keeps them
+    r0 = client.get("/api/cards?stat=dri&stat_min=85")
+    assert r0.json()["data"]["total"] == 0
+    r1 = client.get("/api/cards?stat=dri&stat_min=80")
+    assert r1.json()["data"]["total"] > 0
+
+
+def test_list_cards_bad_stat(client):
+    r = client.get("/api/cards?stat=nope&stat_min=80")
+    assert r.status_code == 400
+
+
+def test_value_squad_filters_to_squad_positions(client):
+    # test-squad's XI positions come from the seed pool (GK,RB,CB,LB,CDM,CAM,RW,LW,ST)
+    r = client.get("/api/value?squad=test-squad")
+    assert r.status_code == 200
+    assert r.json()["ok"] is True
+
+
+def test_value_unknown_squad_404(client):
+    r = client.get("/api/value?squad=does-not-exist")
+    assert r.status_code == 404
+
+
 def test_list_cards_version_filter(client):
     r = client.get("/api/cards?version=base")
     assert r.status_code == 200
