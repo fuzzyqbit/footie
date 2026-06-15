@@ -38,28 +38,65 @@ acquisition plans for both **Ultimate Team (FUT)** and **Career Mode**.
 
 ## The `fc26` program
 
-The playbook now has a companion CLI: a player-card database seeded from the
-crawled docs, with live ingest from fut.gg and fcratings.
+The playbook has a companion CLI **and web app**: a player-card database seeded
+from the crawled docs, with live ingest from fut.gg and fcratings, squad-building
+and chemistry tools, an acquisition planner, a strategy advisor, and live
+Objectives / SBC trackers.
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
+
+# --- data: seed + ingest ---
 .venv/bin/fc26 seed                          # one-time: docs → data/players.json
 .venv/bin/fc26 add <fut.gg card URL>         # add a special card
 .venv/bin/fc26 sync                          # refresh fcratings top-100
 .venv/bin/fc26 enrich                        # backfill league/nation/face stats
-.venv/bin/fc26 expand --min-ovr 87           # bulk-ingest live FUT cards + prices (futbin)
+.venv/bin/fc26 expand --min-ovr 87           # bulk-ingest live FUT cards + prices
+.venv/bin/fc26 refresh --min-ovr 87          # expand + enrich in one pass (loopable)
+.venv/bin/fc26 refresh-objectives            # scrape fut.gg objectives → data/objectives.json
+.venv/bin/fc26 refresh-sbcs                  # scrape fut.gg SBC hub → data/sbcs.json
+
+# --- query ---
 .venv/bin/fc26 search "rodri"
 .venv/bin/fc26 list --pos ST --sort pac
 .venv/bin/fc26 show kylian-mbappe--base
-.venv/bin/fc26 chem squads/sample-rivals.json # chemistry for a lineup file
+
+# --- squad tools ---
+.venv/bin/fc26 chem squads/sample-rivals.json                  # chemistry for a lineup file
+.venv/bin/fc26 boost squads/sample-rivals.json                 # chem-style boosted stats
 .venv/bin/fc26 upgrade squads/sample-rivals.json --budget 200K # budgeted swap suggestions
-.venv/bin/fc26 build --formation 4-2-3-1 --budget 500K # build an XI from scratch
+.venv/bin/fc26 build --formation 4-2-3-1 --budget 500K         # build an XI from scratch
 # tip: without --league the builder optimizes stats over chemistry - use a league filter for chem cores
-.venv/bin/fc26 boost squads/sample-rivals.json # chem-style boosted stats
+
+# --- planning + advice ---
+.venv/bin/fc26 plan squads/sample-rivals.json --budget 500K    # ordered acquisition plan w/ ROI
+.venv/bin/fc26 advise squads/sample-rivals.json                # chem leverage, weak slots, best styles
+
+# --- web app ---
+.venv/bin/fc26 serve --port 8026             # one-origin API + React UI at http://localhost:8026
 ```
 
+### Web app
+
+`fc26 serve` static-serves the built React SPA (`web/dist`) alongside the API on a
+single origin. Build the UI first with `cd web && npm install && npm run build`.
+Pages:
+
+- **Cards** — searchable/filterable card browser.
+- **Squads** — saved lineups with chemistry.
+- **Build** — build an XI from a formation + budget.
+- **Upgrade** — budgeted swap suggestions for a squad.
+- **Latest** — newest cards added to the pool.
+- **Value** — best stat-per-coin cards.
+- **Flagged** — your watchlist.
+- **Compare** — side-by-side card stats.
+- **Objectives** — unlockable reward players matched from the fut.gg objectives
+  hub, with the real task text inline.
+- **SBCs** — best SBCs to do, scraped from the fut.gg SBC hub: cheapest-solution
+  cost + pack/player reward, ranked so cheap repeatable pack & upgrade SBCs surface
+  first.
+
 Design: [`docs/superpowers/specs/2026-06-10-fc26-player-db-design.md`](docs/superpowers/specs/2026-06-10-fc26-player-db-design.md).
-Coming next: acquisition planner, strategy advisor.
 
 ## Quick-start TL;DR
 
