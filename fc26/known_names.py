@@ -27,6 +27,9 @@ KNOWN_NAMES: dict[str, str] = {
     "vini jr": "vinicius jose de oliveira",
     "vini": "vinicius jose de oliveira",
     "vinicius jr": "vinicius jose de oliveira",
+    # Icons stored under birth/short names in the data
+    "kaka": "dos santos leite",
+    "roberto carlos": "da silva rocha",
 }
 
 
