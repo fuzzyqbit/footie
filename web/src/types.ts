@@ -128,3 +128,13 @@ export interface UpdateInfo {
   updated_count: number
   new_cards: Card[]
 }
+
+export interface ValuePick extends Card {
+  best_pos: string
+  quality: number
+  value: number
+}
+
+export interface ValueResponse {
+  picks: ValuePick[]
+}

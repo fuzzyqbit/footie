@@ -5,6 +5,7 @@ import SquadsPage from './pages/SquadsPage'
 import BuildPage from './pages/BuildPage'
 import UpgradePage from './pages/UpgradePage'
 import UpdatesPage from './pages/UpdatesPage'
+import ValuePage from './pages/ValuePage'
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/build" element={<BuildPage />} />
           <Route path="/upgrade" element={<UpgradePage />} />
           <Route path="/updates" element={<UpdatesPage />} />
+          <Route path="/value" element={<ValuePage />} />
         </Routes>
       </main>
     </div>

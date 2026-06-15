@@ -141,6 +141,18 @@ export const handlers = [
       },
       error: null,
     })),
+
+  http.get('http://localhost:8026/api/value', () =>
+    HttpResponse.json({
+      ok: true,
+      data: {
+        picks: [
+          { ...MOCK_CARD, best_pos: 'ST', quality: 88, value: 17.6 },
+          { ...MOCK_HAALAND, best_pos: 'ST', quality: 90, value: 9.0 },
+        ],
+      },
+      error: null,
+    })),
 ]
 
 export const server = setupServer(...handlers)

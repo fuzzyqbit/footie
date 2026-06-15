@@ -415,6 +415,28 @@ def test_get_updates_reads_manifest(client, tmp_db):
     assert len(data["new_cards"]) == 1
 
 
+def test_get_value_returns_ranked_picks(client):
+    # seeded cards are ovr 85 @ 10_000 coins — all clear the defaults
+    r = client.get("/api/value")
+    assert r.status_code == 200
+    picks = r.json()["data"]["picks"]
+    assert len(picks) == 11
+    values = [p["value"] for p in picks]
+    assert values == sorted(values, reverse=True)   # best bargain first
+    assert all({"best_pos", "quality", "value"} <= p.keys() for p in picks)
+
+
+def test_get_value_min_ovr_filters(client):
+    r = client.get("/api/value?min_ovr=90")
+    assert r.status_code == 200
+    assert r.json()["data"]["picks"] == []          # nothing >= 90 in seed pool
+
+
+def test_get_value_rejects_bad_limit(client):
+    r = client.get("/api/value?limit=0")
+    assert r.status_code == 400
+
+
 def test_serve_command_exists():
     from fc26.cli import app as typer_app
     # typer stores name=None when derived from callback; check callback names too

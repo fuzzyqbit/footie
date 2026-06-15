@@ -21,6 +21,7 @@ from ..builder.boost import boosted_stats
 from ..builder.build import build_squad
 from ..builder.market import parse_budget
 from ..builder.upgrade import find_upgrades
+from ..builder.value import DEFAULT_MAX_PRICE, DEFAULT_MIN_OVR as VALUE_MIN_OVR, value_picks
 from ..chem.aliases import canonical_league
 from ..chem.engine import compute_chemistry
 from ..chem.formations import FORMATIONS
@@ -312,6 +313,33 @@ def create_app(
         except (OSError, json.JSONDecodeError):
             return _ok(empty)
         return _ok(parsed)
+
+    @app.get("/api/value")
+    async def get_value(
+        min_ovr: int = VALUE_MIN_OVR,
+        max_price: int = DEFAULT_MAX_PRICE,
+        pos: str | None = None,
+        limit: int = 30,
+    ) -> dict:
+        if limit < 1:
+            raise FC26Error("limit must be >= 1")
+        if max_price < 1:
+            raise FC26Error("max_price must be >= 1")
+        repo = CardRepository(db_path)
+        picks = value_picks(
+            repo.find_all(), min_ovr=min_ovr, max_price=max_price, pos=pos, limit=limit
+        )
+        return _ok({
+            "picks": [
+                {
+                    **card_to_dict(p.card),
+                    "best_pos": p.best_pos,
+                    "quality": round(p.quality, 1),
+                    "value": round(p.value, 2),
+                }
+                for p in picks
+            ]
+        })
 
     # Serve the built SPA (web/dist) as a single-page app. Registered AFTER the
     # /api routes so those match first; unmatched /api/* stays a JSON 404. Any

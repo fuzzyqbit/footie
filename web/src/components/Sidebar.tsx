@@ -6,6 +6,7 @@ const LINKS = [
   { to: '/build', label: 'Build' },
   { to: '/upgrade', label: 'Upgrade' },
   { to: '/updates', label: 'Latest' },
+  { to: '/value', label: 'Value' },
 ]
 
 export default function Sidebar() {
