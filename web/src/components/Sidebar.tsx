@@ -9,6 +9,7 @@ const LINKS = [
   { to: '/updates', label: 'Latest' },
   { to: '/value', label: 'Value' },
   { to: '/watchlist', label: 'Flagged' },
+  { to: '/compare', label: 'Compare' },
 ]
 
 export default function Sidebar() {
