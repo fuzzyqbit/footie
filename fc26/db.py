@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from .errors import DatabaseError
+from .known_names import alias_targets, fold
 from .merge import merge_cards
 from .models import Card, FaceStats, SubStats, validate_card
 
@@ -65,14 +66,19 @@ class CardRepository:
         return None
 
     def search(self, text: str) -> tuple[Card, ...]:
-        needle = text.lower()
-        return tuple(
-            card
-            for card in self.find_all()
-            if needle in card.player_name.lower()
-            or needle in (card.club or "").lower()
-            or needle in card.version.lower()
-        )
+        needle = fold(text)
+        extras = alias_targets(needle)
+        result = []
+        for card in self.find_all():
+            name = fold(card.player_name)
+            if (
+                needle in name
+                or needle in fold(card.club or "")
+                or needle in fold(card.version)
+                or any(t in name for t in extras)
+            ):
+                result.append(card)
+        return tuple(result)
 
     # NOTE: each upsert re-reads and rewrites the whole file - fine for
     # interactive use and one-shot seeds (n~150); revisit if the DB grows.
