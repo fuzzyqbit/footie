@@ -11,6 +11,7 @@ const LINKS = [
   { to: '/watchlist', label: 'Flagged' },
   { to: '/compare', label: 'Compare' },
   { to: '/objectives', label: 'Objectives' },
+  { to: '/sbcs', label: 'SBCs' },
 ]
 
 export default function Sidebar() {

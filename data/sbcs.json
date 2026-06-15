@@ -1,0 +1,954 @@
+[
+  {
+    "slug": "26-639-premium-mixed-leagues-upgrade",
+    "name": "Premium Mixed Leagues Upgrade",
+    "category": "upgrades",
+    "description": "Complete the Premium Mixed Leagues Upgrade themed challenges to earn a reward.",
+    "cost": 0,
+    "cost_complete": true,
+    "cost_pc": 0,
+    "reward_packs": [
+      "Prime Gold Players Pack",
+      "Jumbo Gold Pack",
+      "Prime Electrum Players Pack",
+      "Small Prime Gold Players Pack",
+      "Small Rare Gold Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-639-premium-mixed-leagues-upgrade/"
+  },
+  {
+    "slug": "26-638-mixed-leagues-upgrade",
+    "name": "Mixed Leagues Upgrade",
+    "category": "upgrades",
+    "description": "Complete the Mixed Leagues Upgrade themed challenges to earn a reward.",
+    "cost": 0,
+    "cost_complete": true,
+    "cost_pc": 0,
+    "reward_packs": [
+      "Small Rare Gold Players Pack",
+      "Small Prime Silver Players Pack",
+      "Small Electrum Players Pack",
+      "Electrum Players Pack",
+      "Premium Mixed Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-638-mixed-leagues-upgrade/"
+  },
+  {
+    "slug": "26-1036-daily-silver-upgrade",
+    "name": "Daily Silver Upgrade",
+    "category": "upgrades",
+    "description": "Earn a Premium Silver Players Pack!",
+    "cost": 200,
+    "cost_complete": true,
+    "cost_pc": 200,
+    "reward_packs": [
+      "Premium Silver Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 7,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-1036-daily-silver-upgrade/"
+  },
+  {
+    "slug": "26-1035-daily-bronze-upgrade",
+    "name": "Daily Bronze Upgrade",
+    "category": "upgrades",
+    "description": "Earn a Premium Bronze Players Pack!",
+    "cost": 200,
+    "cost_complete": true,
+    "cost_pc": 950,
+    "reward_packs": [
+      "Premium Bronze Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 7,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-1035-daily-bronze-upgrade/"
+  },
+  {
+    "slug": "26-1038-daily-rare-gold-upgrade",
+    "name": "Daily Rare Gold Upgrade",
+    "category": "upgrades",
+    "description": "Earn a pack containing 5 Rare Gold Player Items, rated 78 or lower.",
+    "cost": 1750,
+    "cost_complete": true,
+    "cost_pc": 1750,
+    "reward_packs": [
+      "5x Max. 78 Rare Gold Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 7,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-1038-daily-rare-gold-upgrade/"
+  },
+  {
+    "slug": "26-7-gold-upgrade",
+    "name": "Gold Upgrade",
+    "category": "upgrades",
+    "description": "Exchange Gold Items for rewards.",
+    "cost": 2200,
+    "cost_complete": true,
+    "cost_pc": 12800,
+    "reward_packs": [
+      "x2 Rare Gold Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-7-gold-upgrade/"
+  },
+  {
+    "slug": "26-6-silver-upgrade",
+    "name": "Silver Upgrade",
+    "category": "upgrades",
+    "description": "Exchange Silver Items for rewards.",
+    "cost": 2200,
+    "cost_complete": true,
+    "cost_pc": 12800,
+    "reward_packs": [
+      "x3 Common Gold Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-6-silver-upgrade/"
+  },
+  {
+    "slug": "26-5-bronze-upgrade",
+    "name": "Bronze Upgrade",
+    "category": "upgrades",
+    "description": "Exchange Bronze Items for rewards.",
+    "cost": 2200,
+    "cost_complete": true,
+    "cost_pc": 12800,
+    "reward_packs": [
+      "x2 Silver Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-5-bronze-upgrade/"
+  },
+  {
+    "slug": "26-1070-1-of-3-83-player-pick",
+    "name": "1 of 3 83+ Player Pick",
+    "category": "upgrades",
+    "description": "Earn 1 of 3 Rare Gold Player Items, rated 83 or higher.",
+    "cost": 2300,
+    "cost_complete": true,
+    "cost_pc": 2700,
+    "reward_packs": [],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-1070-1-of-3-83-player-pick/"
+  },
+  {
+    "slug": "26-1084-1-of-3-83-summer-tournament-nations-player-pick",
+    "name": "1 of 3 83+ Summer Tournament Nations Player Pick",
+    "category": "upgrades",
+    "description": "Earn 1 of 3 Rare Gold Player Items, rated 83 or higher, from nations qualified to the Summer Tournament.",
+    "cost": 2600,
+    "cost_complete": true,
+    "cost_pc": 2600,
+    "reward_packs": [],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-1084-1-of-3-83-summer-tournament-nations-player-pick/"
+  },
+  {
+    "slug": "26-1039-provisions-upgrade",
+    "name": "Provisions Upgrade",
+    "category": "upgrades",
+    "description": "Earn a pack containing 15 Common Gold Player Items and 25 Rare Gold Player items, rated 80 or lower. ",
+    "cost": 2750,
+    "cost_complete": true,
+    "cost_pc": 2600,
+    "reward_packs": [
+      "Provisions Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 7,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-1039-provisions-upgrade/"
+  },
+  {
+    "slug": "26-1091-5x-77-upgrade",
+    "name": "5x 77+ Upgrade",
+    "category": "upgrades",
+    "description": "Earn a pack containing 5 Rare Gold Player Items, rated 77 or higher.",
+    "cost": 2950,
+    "cost_complete": true,
+    "cost_pc": 3050,
+    "reward_packs": [
+      "5x 77+ Rare Gold Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-1091-5x-77-upgrade/"
+  },
+  {
+    "slug": "26-1071-2x-84-upgrade",
+    "name": "2x 84+ Upgrade",
+    "category": "upgrades",
+    "description": "Earn a pack containing 2 Rare Gold Player Items, rated 84 or higher.",
+    "cost": 3900,
+    "cost_complete": true,
+    "cost_pc": 3900,
+    "reward_packs": [
+      "2x 84+ Rare Gold Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-1071-2x-84-upgrade/"
+  },
+  {
+    "slug": "26-1088-10x-84-upgrade",
+    "name": "10x 84+ Upgrade",
+    "category": "upgrades",
+    "description": "Earn a pack containing 10 Rare Gold Player Items, rated 84 or higher.",
+    "cost": 4800,
+    "cost_complete": true,
+    "cost_pc": 9550,
+    "reward_packs": [
+      "10x 84+ Rare Gold Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 3,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-1088-10x-84-upgrade/"
+  },
+  {
+    "slug": "26-1014-3x-87-90-upgrade",
+    "name": "3x 87-90 Upgrade",
+    "category": "upgrades",
+    "description": "Earn a pack containing 3 Rare Gold Player Items, rated between 87 and 90.",
+    "cost": 5750,
+    "cost_complete": true,
+    "cost_pc": 6050,
+    "reward_packs": [
+      "3x 87-90 Rare Gold Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 3,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-1014-3x-87-90-upgrade/"
+  },
+  {
+    "slug": "26-1045-4-of-10-82-player-pick",
+    "name": "4 of 10 82+ Player Pick",
+    "category": "upgrades",
+    "description": "Earn 4 of 10 Rare Gold Player Items, rated 82 or higher.",
+    "cost": 5900,
+    "cost_complete": true,
+    "cost_pc": 6100,
+    "reward_packs": [
+      "Silver Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 3,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-1045-4-of-10-82-player-pick/"
+  },
+  {
+    "slug": "26-1079-5x-87-upgrade",
+    "name": "5x 87+ Upgrade",
+    "category": "upgrades",
+    "description": "Earn a pack containing 5 Rare Gold Player Items, rated 87 or higher.",
+    "cost": 6200,
+    "cost_complete": true,
+    "cost_pc": 13500,
+    "reward_packs": [
+      "5x 87+ Rare Gold Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 3,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-1079-5x-87-upgrade/"
+  },
+  {
+    "slug": "26-1017-84-totw-upgrade",
+    "name": "84+ TOTW Upgrade",
+    "category": "upgrades",
+    "description": "Earn a pack containing a TOTW Player Item from TOTW 1 to 30, rated 84 or higher.",
+    "cost": 6600,
+    "cost_complete": true,
+    "cost_pc": 6050,
+    "reward_packs": [
+      "84+ TOTW 1-30 Player Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-1017-84-totw-upgrade/"
+  },
+  {
+    "slug": "26-1037-daily-common-gold-upgrade",
+    "name": "Daily Common Gold Upgrade",
+    "category": "upgrades",
+    "description": "Earn a pack containing 11 Gold Player Items (10 Common, 1 Rare).",
+    "cost": 6900,
+    "cost_complete": true,
+    "cost_pc": 6550,
+    "reward_packs": [
+      "11x Gold Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 7,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-1037-daily-common-gold-upgrade/"
+  },
+  {
+    "slug": "26-1085-1-of-3-path-to-glory-player-pick",
+    "name": "1 of 3 Path to Glory Player Pick",
+    "category": "upgrades",
+    "description": "Earn 1 of 3 Path to Glory Player Items.",
+    "cost": 23800,
+    "cost_complete": true,
+    "cost_pc": 49100,
+    "reward_packs": [],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 1,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-1085-1-of-3-path-to-glory-player-pick/"
+  },
+  {
+    "slug": "26-1089-10x-85-summer-tournament-nations-upgrade",
+    "name": "10x 85+ Summer Tournament Nations Upgrade",
+    "category": "upgrades",
+    "description": "Earn a pack containing 10 Rare Gold Player Items, rated 85 or higher, from nations qualified to the Summer Tournament.",
+    "cost": 33400,
+    "cost_complete": true,
+    "cost_pc": 60500,
+    "reward_packs": [
+      "10x 85+ Summer Tournament Nations Pack",
+      "x2 Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 5,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-1089-10x-85-summer-tournament-nations-upgrade/"
+  },
+  {
+    "slug": "26-1095-89-summer-tournament-historical-nations-upgrade",
+    "name": "89+ Summer Tournament Historical Nations Upgrade",
+    "category": "upgrades",
+    "description": "Earn a pack containing 1 Icon or Hero Player Item, rated 89 or higher, from nations qualified to the Summer Tournament from any of the previous Campaigns released until 17th of April.",
+    "cost": 37650,
+    "cost_complete": true,
+    "cost_pc": 59150,
+    "reward_packs": [
+      "89+ Summer Tournament Historical Pack",
+      "x2 Players Pack",
+      "Small Electrum Players Pack",
+      "Electrum Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-1095-89-summer-tournament-historical-nations-upgrade/"
+  },
+  {
+    "slug": "26-1082-1-of-3-91-tots-summer-nations-or-uefa-winners",
+    "name": "1 of 3 91+ TOTS Summer Nations or UEFA Winners",
+    "category": "upgrades",
+    "description": "Earn 1 of 3 TOTS Player Items from nations qualified to the Summer Tournament or UEFA Winners Player Items, rated 91 or higher.",
+    "cost": 91450,
+    "cost_complete": true,
+    "cost_pc": 103150,
+    "reward_packs": [
+      "x2 Players Pack",
+      "Small Electrum Players Pack",
+      "Electrum Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 3,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-1082-1-of-3-91-tots-summer-nations-or-uefa-winners/"
+  },
+  {
+    "slug": "26-1077-1-of-4-90-encore-icon-player-pick",
+    "name": "1 of 4 90+ Encore Icon Player Pick",
+    "category": "upgrades",
+    "description": "Earn 1 of 4 Time Warp, TOTY, Future Stars, FUT Birthday or Trophy Titans Icon Player Items, rated 90 or higher.",
+    "cost": 94450,
+    "cost_complete": true,
+    "cost_pc": 103600,
+    "reward_packs": [
+      "x2 Players Pack",
+      "Small Electrum Players Pack",
+      "Small Gold Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 1,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-1077-1-of-4-90-encore-icon-player-pick/"
+  },
+  {
+    "slug": "26-1103-100-players-upgrade",
+    "name": "100 Players Upgrade",
+    "category": "upgrades",
+    "description": "Earn 100 Rare Gold Player Items, with 1 guaranteed to be 88 or higher and 50 to be rated Max 80 OVR.",
+    "cost": 35950,
+    "cost_complete": true,
+    "cost_pc": 49050,
+    "reward_packs": [
+      "100 Rare Gold Players Pack",
+      "x2 Players Pack",
+      "Small Electrum Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-1103-100-players-upgrade/"
+  },
+  {
+    "slug": "26-1080-1-of-3-93-uefa-winners-tots-player-pick",
+    "name": "1 of 3 93+ UEFA Winners & TOTS Player Pick",
+    "category": "upgrades",
+    "description": "Earn 1 of 3 UEFA Winners, TOTS or TOTS Breakthrough Player Items, rated 93 or higher.",
+    "cost": 83800,
+    "cost_complete": true,
+    "cost_pc": 113150,
+    "reward_packs": [
+      "Premium Gold Pack",
+      "Jumbo Gold Pack",
+      "Electrum Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/upgrades/26-1080-1-of-3-93-uefa-winners-tots-player-pick/"
+  },
+  {
+    "slug": "26-1101-path-to-glory-challenge-4",
+    "name": "Path To Glory Challenge 4",
+    "category": "challenges",
+    "description": "Complete this challenge to earn a reward.",
+    "cost": 0,
+    "cost_complete": true,
+    "cost_pc": 0,
+    "reward_packs": [
+      "Mega Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/challenges/26-1101-path-to-glory-challenge-4/"
+  },
+  {
+    "slug": "26-1081-throwback-marquee-matchups",
+    "name": "Throwback Marquee Matchups",
+    "category": "challenges",
+    "description": "Complete challenges featuring clubs from some of last year's key matchups!",
+    "cost": 0,
+    "cost_complete": true,
+    "cost_pc": 0,
+    "reward_packs": [
+      "Mega Pack",
+      "Gold Players Pack",
+      "Jumbo Premium Gold Pack",
+      "Premium Gold Players Pack",
+      "Prime Electrum Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/challenges/26-1081-throwback-marquee-matchups/"
+  },
+  {
+    "slug": "26-838-bafana-bafanas-dream-south-africa-10",
+    "name": "Bafana Bafana's Dream: South Africa '10",
+    "category": "challenges",
+    "description": "Complete these challenges themed around South Africa 2010's national team to earn Xavi Future Stars ICON Personal Loan for 7 Days and other Pack rewards.",
+    "cost": 0,
+    "cost_complete": true,
+    "cost_pc": 0,
+    "reward_packs": [
+      "Gold Starting XI Pack",
+      "7x 84+ Rare Gold Players Pack",
+      "Gold Players Pack",
+      "3x 85+ Rare Gold Players Pack"
+    ],
+    "reward_player_ea_ids": [
+      67119399
+    ],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/challenges/26-838-bafana-bafanas-dream-south-africa-10/"
+  },
+  {
+    "slug": "26-1100-martin-baturina",
+    "name": "Martin Baturina",
+    "category": "players",
+    "description": "Earn a Showdown Martin Baturina from the match-up between England and Croatia.",
+    "cost": 43050,
+    "cost_complete": true,
+    "cost_pc": 44850,
+    "reward_packs": [],
+    "reward_player_ea_ids": [
+      84148922
+    ],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/players/26-1100-martin-baturina/"
+  },
+  {
+    "slug": "26-1099-tino-livramento",
+    "name": "Tino Livramento",
+    "category": "players",
+    "description": "Earn a Showdown Tino Livramento from the match-up between England and Croatia.",
+    "cost": 43050,
+    "cost_complete": true,
+    "cost_pc": 44850,
+    "reward_packs": [],
+    "reward_player_ea_ids": [
+      67370982
+    ],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/players/26-1099-tino-livramento/"
+  },
+  {
+    "slug": "26-1096-tim-payne",
+    "name": "Tim Payne",
+    "category": "players",
+    "description": "Earn a special National Pride Tim Payne.",
+    "cost": 43050,
+    "cost_complete": true,
+    "cost_pc": 44850,
+    "reward_packs": [],
+    "reward_player_ea_ids": [
+      50541009
+    ],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/players/26-1096-tim-payne/"
+  },
+  {
+    "slug": "26-1083-lucas-paqueta",
+    "name": "Lucas Paquetá",
+    "category": "players",
+    "description": "Earn a special Path to Glory Lucas Paquetá.",
+    "cost": 63750,
+    "cost_complete": true,
+    "cost_pc": 74350,
+    "reward_packs": [],
+    "reward_player_ea_ids": [
+      84120007
+    ],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/players/26-1083-lucas-paqueta/"
+  },
+  {
+    "slug": "26-1078-noussair-mazraoui",
+    "name": "Noussair Mazraoui",
+    "category": "players",
+    "description": "Earn a special Path to Glory Noussair Mazraoui",
+    "cost": 77950,
+    "cost_complete": true,
+    "cost_pc": 90650,
+    "reward_packs": [
+      "x2 Players Pack",
+      "Small Electrum Players Pack",
+      "Electrum Players Pack"
+    ],
+    "reward_player_ea_ids": [
+      50568049
+    ],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/players/26-1078-noussair-mazraoui/"
+  },
+  {
+    "slug": "26-1073-chris-richards",
+    "name": "Chris Richards",
+    "category": "players",
+    "description": "Earn a special National Pride Chris Richards.",
+    "cost": 152500,
+    "cost_complete": true,
+    "cost_pc": 193050,
+    "reward_packs": [
+      "Small Electrum Players Pack",
+      "Small Gold Players Pack",
+      "Electrum Players Pack",
+      "Premium Electrum Players Pack"
+    ],
+    "reward_player_ea_ids": [
+      67359818
+    ],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/players/26-1073-chris-richards/"
+  },
+  {
+    "slug": "26-1072-ferran-torres",
+    "name": "Ferran Torres",
+    "category": "players",
+    "description": "Earn a special Path to Glory Ferran Torres",
+    "cost": 299200,
+    "cost_complete": true,
+    "cost_pc": 329900,
+    "reward_packs": [
+      "x2 Players Pack",
+      "Electrum Players Pack",
+      "Premium Electrum Players Pack"
+    ],
+    "reward_player_ea_ids": [
+      67350325
+    ],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/players/26-1072-ferran-torres/"
+  },
+  {
+    "slug": "26-1054-martin-odegaard",
+    "name": "Martin Ødegaard",
+    "category": "players",
+    "description": "Earn a special Path to Glory Martin Ødegaard.",
+    "cost": 313000,
+    "cost_complete": true,
+    "cost_pc": 339800,
+    "reward_packs": [
+      "Jumbo Gold Pack",
+      "Jumbo Premium Gold Pack"
+    ],
+    "reward_player_ea_ids": [
+      100885961
+    ],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/players/26-1054-martin-odegaard/"
+  },
+  {
+    "slug": "26-1086-pedro-neto",
+    "name": "Pedro Neto",
+    "category": "players",
+    "description": "Earn a special Path to Glory Pedro Neto.",
+    "cost": 498950,
+    "cost_complete": true,
+    "cost_pc": 575200,
+    "reward_packs": [
+      "Small Electrum Players Pack",
+      "Electrum Players Pack",
+      "Premium Electrum Players Pack",
+      "Prime Electrum Players Pack"
+    ],
+    "reward_player_ea_ids": [
+      84124696
+    ],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/players/26-1086-pedro-neto/"
+  },
+  {
+    "slug": "26-1052-cody-gakpo",
+    "name": "Cody Gakpo",
+    "category": "players",
+    "description": "Earn a special Path to Glory Cody Gakpo",
+    "cost": 543800,
+    "cost_complete": true,
+    "cost_pc": 611050,
+    "reward_packs": [
+      "Jumbo Gold Pack",
+      "Premium Electrum Players Pack",
+      "Prime Electrum Players Pack"
+    ],
+    "reward_player_ea_ids": [
+      84128596
+    ],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/players/26-1052-cody-gakpo/"
+  },
+  {
+    "slug": "26-1097-alexis-mac-allister",
+    "name": "Alexis Mac Allister",
+    "category": "players",
+    "description": "Earn a special Path to Glory Alexis Mac Allister.",
+    "cost": 582100,
+    "cost_complete": true,
+    "cost_pc": 673400,
+    "reward_packs": [
+      "Electrum Players Pack",
+      "Premium Gold Pack",
+      "Gold Players Pack",
+      "Premium Electrum Players Pack",
+      "Premium Mixed Players Pack",
+      "Prime Mixed Players Pack",
+      "Prime Electrum Players Pack",
+      "Small Rare Mixed Players Pack"
+    ],
+    "reward_player_ea_ids": [
+      84125917
+    ],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/players/26-1097-alexis-mac-allister/"
+  },
+  {
+    "slug": "26-1098-alexia-putellas",
+    "name": "Alexia Putellas",
+    "category": "players",
+    "description": "Celebrate Alexia Putellas's legacy with a Premium SBC Version!",
+    "cost": 1134050,
+    "cost_complete": true,
+    "cost_pc": 1300000,
+    "reward_packs": [
+      "Premium Gold Pack",
+      "Small Gold Players Pack",
+      "Premium Electrum Players Pack",
+      "Gold Players Pack",
+      "Small Prime Gold Players Pack",
+      "Jumbo Premium Gold Pack",
+      "Small Rare Mixed Players Pack",
+      "Prime Electrum Players Pack",
+      "Prime Mixed Players Pack"
+    ],
+    "reward_player_ea_ids": [
+      151222147
+    ],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/players/26-1098-alexia-putellas/"
+  },
+  {
+    "slug": "26-1053-nemanja-vidic",
+    "name": "Nemanja Vidić",
+    "category": "icons",
+    "description": "Earn a special eCL Champion Icon Nemanja Vidić, inspired by the 2026 eChampions League winner Anders Vejrgang.",
+    "cost": 659600,
+    "cost_complete": true,
+    "cost_pc": 714200,
+    "reward_packs": [
+      "Electrum Players Pack",
+      "Jumbo Gold Pack",
+      "Premium Electrum Players Pack",
+      "Prime Electrum Players Pack"
+    ],
+    "reward_player_ea_ids": [
+      67249465
+    ],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/icons/26-1053-nemanja-vidic/"
+  },
+  {
+    "slug": "26-1062-86-ovr-token-swap",
+    "name": "86 OVR Token Swap",
+    "category": "swaps",
+    "description": "Exchange 8 Player Items rated 86 OVR exactly to earn 15 FoF Tokens.",
+    "cost": 6950,
+    "cost_complete": true,
+    "cost_pc": 7000,
+    "reward_packs": [],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 1,
+    "source_url": "https://www.fut.gg/sbc/swaps/26-1062-86-ovr-token-swap/"
+  },
+  {
+    "slug": "26-1061-85-ovr-token-swap",
+    "name": "85 OVR Token Swap",
+    "category": "swaps",
+    "description": "Exchange 8 Player Items rated 85 OVR exactly to earn 10 FoF Tokens.",
+    "cost": 7200,
+    "cost_complete": true,
+    "cost_pc": 7950,
+    "reward_packs": [],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 1,
+    "source_url": "https://www.fut.gg/sbc/swaps/26-1061-85-ovr-token-swap/"
+  },
+  {
+    "slug": "26-1063-87-ovr-token-swap",
+    "name": "87 OVR Token Swap",
+    "category": "swaps",
+    "description": "Exchange 7 Player Items rated 87 OVR exactly to earn 30 FoF Tokens.",
+    "cost": 8100,
+    "cost_complete": true,
+    "cost_pc": 8350,
+    "reward_packs": [],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 1,
+    "source_url": "https://www.fut.gg/sbc/swaps/26-1063-87-ovr-token-swap/"
+  },
+  {
+    "slug": "26-1064-88-ovr-token-swap",
+    "name": "88 OVR Token Swap",
+    "category": "swaps",
+    "description": "Exchange 5 Player Items rated 88 OVR exactly to earn 40 FoF Tokens.",
+    "cost": 11100,
+    "cost_complete": true,
+    "cost_pc": 15000,
+    "reward_packs": [],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 1,
+    "source_url": "https://www.fut.gg/sbc/swaps/26-1064-88-ovr-token-swap/"
+  },
+  {
+    "slug": "26-1065-89-ovr-token-swap",
+    "name": "89 OVR Token Swap",
+    "category": "swaps",
+    "description": "Exchange 5 Player Items rated 89 OVR exactly to earn 50 FoF Tokens.",
+    "cost": 22800,
+    "cost_complete": true,
+    "cost_pc": 32000,
+    "reward_packs": [],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 1,
+    "source_url": "https://www.fut.gg/sbc/swaps/26-1065-89-ovr-token-swap/"
+  },
+  {
+    "slug": "26-1060-84-ovr-token-swap",
+    "name": "84 OVR Token Swap",
+    "category": "swaps",
+    "description": "Exchange 18 Player Items rated 84 OVR exactly to earn 10 FoF Tokens.",
+    "cost": 22950,
+    "cost_complete": true,
+    "cost_pc": 13500,
+    "reward_packs": [
+      "x2 Rare Gold Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 1,
+    "source_url": "https://www.fut.gg/sbc/swaps/26-1060-84-ovr-token-swap/"
+  },
+  {
+    "slug": "26-1059-83-ovr-token-swap",
+    "name": "83 OVR Token Swap",
+    "category": "swaps",
+    "description": "Exchange 22 Player Items rated 83 OVR exactly to earn 10 FoF Tokens.",
+    "cost": 29000,
+    "cost_complete": true,
+    "cost_pc": 16500,
+    "reward_packs": [
+      "x2 Rare Gold Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 1,
+    "source_url": "https://www.fut.gg/sbc/swaps/26-1059-83-ovr-token-swap/"
+  },
+  {
+    "slug": "26-1066-90-ovr-token-swap",
+    "name": "90 OVR Token Swap",
+    "category": "swaps",
+    "description": "Exchange 5 Player Items rated 90 OVR exactly to earn 60 FoF Tokens.",
+    "cost": 66050,
+    "cost_complete": true,
+    "cost_pc": 48000,
+    "reward_packs": [],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 1,
+    "source_url": "https://www.fut.gg/sbc/swaps/26-1066-90-ovr-token-swap/"
+  },
+  {
+    "slug": "26-1067-91-ovr-token-swap",
+    "name": "91 OVR Token Swap",
+    "category": "swaps",
+    "description": "Exchange 5 Player Items rated 91 OVR exactly to earn 75 FoF Tokens.",
+    "cost": 72500,
+    "cost_complete": true,
+    "cost_pc": 78000,
+    "reward_packs": [],
+    "reward_player_ea_ids": [],
+    "repeatable": true,
+    "number_of_repeats": 1,
+    "source_url": "https://www.fut.gg/sbc/swaps/26-1067-91-ovr-token-swap/"
+  },
+  {
+    "slug": "26-1-intro-to-sbcs",
+    "name": "Intro to SBCs",
+    "category": "foundations",
+    "description": "Complete these OVR-based challenges to earn rewards.",
+    "cost": 2050,
+    "cost_complete": true,
+    "cost_pc": 13500,
+    "reward_packs": [
+      "83+ Rare Gold Player Pack",
+      "Bronze Pack",
+      "Silver Pack",
+      "Gold Pack",
+      "x2 Rare Gold Players Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/foundations/26-1-intro-to-sbcs/"
+  },
+  {
+    "slug": "26-4-intro-to-challenge-sbcs",
+    "name": "Intro to Challenge SBCs",
+    "category": "foundations",
+    "description": "Complete these Puzzle-based challenges to earn rewards.",
+    "cost": 2600,
+    "cost_complete": true,
+    "cost_pc": 14700,
+    "reward_packs": [
+      "Rare Mega Pack",
+      "Gold Pack",
+      "Premium Gold Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/foundations/26-4-intro-to-challenge-sbcs/"
+  },
+  {
+    "slug": "26-2-intro-to-player-sbcs",
+    "name": "Intro to Player SBCs",
+    "category": "foundations",
+    "description": "Complete these Player-based challenges to earn rewards.",
+    "cost": 4350,
+    "cost_complete": true,
+    "cost_pc": 18300,
+    "reward_packs": [
+      "Small Rare Bronze Players Pack",
+      "Silver Pack",
+      "Gold Pack",
+      "Jumbo Bronze Pack"
+    ],
+    "reward_player_ea_ids": [
+      50588538
+    ],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/foundations/26-2-intro-to-player-sbcs/"
+  },
+  {
+    "slug": "26-3-intro-to-upgrade-sbcs",
+    "name": "Intro to Upgrade SBCs",
+    "category": "foundations",
+    "description": "Complete these Upgrade-based challenges to earn rewards.",
+    "cost": 5600,
+    "cost_complete": true,
+    "cost_pc": 27100,
+    "reward_packs": [
+      "Mega Pack",
+      "Premium Silver Players Pack",
+      "Gold Pack",
+      "Premium Gold Pack"
+    ],
+    "reward_player_ea_ids": [],
+    "repeatable": false,
+    "number_of_repeats": 0,
+    "source_url": "https://www.fut.gg/sbc/foundations/26-3-intro-to-upgrade-sbcs/"
+  }
+]

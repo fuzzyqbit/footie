@@ -9,6 +9,7 @@ import ValuePage from './pages/ValuePage'
 import WatchlistPage from './pages/WatchlistPage'
 import ComparePage from './pages/ComparePage'
 import ObjectivesPage from './pages/ObjectivesPage'
+import SbcsPage from './pages/SbcsPage'
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/watchlist" element={<WatchlistPage />} />
           <Route path="/compare" element={<ComparePage />} />
           <Route path="/objectives" element={<ObjectivesPage />} />
+          <Route path="/sbcs" element={<SbcsPage />} />
         </Routes>
       </main>
     </div>

@@ -367,6 +367,19 @@ def create_app(
         cards.sort(key=lambda c: c["ovr"], reverse=True)
         return _ok({"cards": cards})
 
+    @app.get("/api/sbcs")
+    async def get_sbcs() -> dict:
+        """Best SBCs to do, scraped from the fut.gg SBC hub (data/sbcs.json):
+        cheapest-solution cost + pack/player rewards, ranked best-first."""
+        sbc_path = db_path.parent / "sbcs.json"
+        if not sbc_path.exists():
+            return _ok({"sbcs": []})
+        try:
+            entries = json.loads(sbc_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return _ok({"sbcs": []})
+        return _ok({"sbcs": entries})
+
     @app.get("/api/updates")
     async def get_updates() -> dict:
         empty = {"refreshed_at": None, "new_count": 0, "updated_count": 0, "new_cards": []}

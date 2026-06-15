@@ -29,6 +29,7 @@ from .ingest.fcratings import fetch_top100
 from .ingest.futgg import fetch_futgg_card
 from .ingest.objectives import write_objectives
 from .ingest.refresh import DEFAULT_INTERVAL_HOURS, DEFAULT_MIN_OVR, jittered_sleep, refresh_data
+from .ingest.sbc import write_sbcs
 from .ingest.seed import seed_cards
 from .ingest.web import fetch_html
 from .models import Card
@@ -285,6 +286,25 @@ def refresh_objectives(
     console.print(
         f"matched {len(records)} objective cards "
         f"({with_tasks} with task text) → {out}"
+    )
+
+
+@app.command(name="refresh-sbcs")
+def refresh_sbcs(
+    out: Path = typer.Option(Path("data/sbcs.json"), "--out",
+                             help="Path to write the SBCs JSON"),
+) -> None:
+    """Scrape the fut.gg SBC hub (cost + pack/player rewards), ranked best-first."""
+    try:
+        records = write_sbcs(out)
+    except FC26Error as exc:
+        _fail(str(exc))
+    except httpx.HTTPError as exc:
+        _fail(f"fut.gg fetch failed: {exc}")
+    with_cost = sum(1 for r in records if r["cost"])
+    console.print(
+        f"scraped {len(records)} SBCs "
+        f"({with_cost} with a cheapest-solution cost) → {out}"
     )
 
 
