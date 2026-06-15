@@ -341,6 +341,31 @@ def create_app(
             "versions": versions,
         })
 
+    @app.get("/api/objectives")
+    async def get_objectives() -> dict:
+        """Cards that are unlockable objective rewards, matched from the
+        fut.gg objectives hub (data/objectives.json) to the live card pool."""
+        obj_path = db_path.parent / "objectives.json"
+        if not obj_path.exists():
+            return _ok({"cards": []})
+        try:
+            entries = json.loads(obj_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return _ok({"cards": []})
+        by_id = {c.id: c for c in CardRepository(db_path).find_all()}
+        cards = []
+        for entry in entries:
+            card = by_id.get(entry.get("card_id"))
+            if card is None:
+                continue
+            cards.append({
+                **card_to_dict(card),
+                "objective": entry.get("objective"),
+                "objective_url": entry.get("source_url"),
+            })
+        cards.sort(key=lambda c: c["ovr"], reverse=True)
+        return _ok({"cards": cards})
+
     @app.get("/api/updates")
     async def get_updates() -> dict:
         empty = {"refreshed_at": None, "new_count": 0, "updated_count": 0, "new_cards": []}
