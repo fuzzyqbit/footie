@@ -6,6 +6,7 @@ import BuildPage from './pages/BuildPage'
 import UpgradePage from './pages/UpgradePage'
 import UpdatesPage from './pages/UpdatesPage'
 import ValuePage from './pages/ValuePage'
+import WatchlistPage from './pages/WatchlistPage'
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
           <Route path="/upgrade" element={<UpgradePage />} />
           <Route path="/updates" element={<UpdatesPage />} />
           <Route path="/value" element={<ValuePage />} />
+          <Route path="/watchlist" element={<WatchlistPage />} />
         </Routes>
       </main>
     </div>

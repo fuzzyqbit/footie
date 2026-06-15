@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { Card } from '../types'
 import { faceKeys } from '../faceLabels'
+import { useIsWatched, toggleWatch } from '../watchlist'
 
 interface Props {
   card: Card
@@ -15,6 +16,7 @@ function formatPrice(price: number | null): string {
 
 export default function CardTile({ card }: Props) {
   const [expanded, setExpanded] = useState(false)
+  const watched = useIsWatched(card.id)
 
   return (
     <div
@@ -41,6 +43,20 @@ export default function CardTile({ card }: Props) {
           </div>
         </div>
         <div className="text-chem text-sm font-medium">{formatPrice(card.price)}</div>
+        <button
+          type="button"
+          aria-label={watched ? 'Remove from watchlist' : 'Add to watchlist'}
+          aria-pressed={watched}
+          onClick={e => {
+            e.stopPropagation()
+            toggleWatch(card)
+          }}
+          className={`shrink-0 text-lg leading-none transition-colors ${
+            watched ? 'text-gold' : 'text-muted hover:text-white'
+          }`}
+        >
+          {watched ? '★' : '☆'}
+        </button>
       </div>
 
       {expanded && (
