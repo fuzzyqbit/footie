@@ -2,211 +2,566 @@
   {
     "card_id": "alistair-johnston--national-pride",
     "player_name": "Alistair Johnston",
-    "objective": "Campaign",
-    "source_url": "https://www.fut.gg/objectives/campaign/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/campaign/",
+    "tasks": []
   },
   {
     "card_id": "auston-trusty--national-pride",
     "player_name": "Auston Trusty",
-    "objective": "Usa",
-    "source_url": "https://www.fut.gg/objectives/north-america/900-usa"
+    "objective": "USA",
+    "source_url": "https://www.fut.gg/objectives/north-america/900-usa",
+    "tasks": [
+      "Lead the Stars and Stripes to success by scoring and assisting with American players. All rewards are Untradeable.",
+      "Play 5 matches while having Min. 4 American players in your starting 11 in any FUT game mode.",
+      "Win 3 separate matches while having min. 4 American players in your starting 11 in any FUT game mode.",
+      "Assist with a through ball in 3 separate matches while having Min. 1 American player in your starting 11 in any FUT game mode.",
+      "Score at least 1 Low Driven Shot goal while having Min. 1 American player in your starting 11 in any UT game mode.",
+      "Play 1 match while having min. 1 American player in your starting 11 in any FUT game mode."
+    ]
   },
   {
     "card_id": "brenden-aaronson--fantasy-fpl",
     "player_name": "Brenden Aaronson",
-    "objective": "Campaign",
-    "source_url": "https://www.fut.gg/objectives/campaign/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/campaign/",
+    "tasks": []
   },
   {
     "card_id": "brenden-aaronson--national-pride",
     "player_name": "Brenden Aaronson",
-    "objective": "Campaign",
-    "source_url": "https://www.fut.gg/objectives/campaign/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/campaign/",
+    "tasks": []
   },
   {
     "card_id": "callum-mccowatt--national-pride",
     "player_name": "Callum McCowatt",
     "objective": "New Zealand",
-    "source_url": "https://www.fut.gg/objectives/asia-oceania/924-new-zealand"
+    "source_url": "https://www.fut.gg/objectives/asia-oceania/924-new-zealand",
+    "tasks": [
+      "Represent New Zealand by completing the objectives with Kiwis! All rewards are Untradeable.",
+      "Score 2 goals using a New Zealand Players in any UT game mode.",
+      "Play 3 matches while having min. 1 New Zealand player in your starting 11 in any UT game mode.",
+      "Assist in 3 separate matches while having min. 1 New Zealand player in your starting 11 in any UT game mode.",
+      "Score a goal in any UT game mode using a player from New Zealand."
+    ]
   },
   {
     "card_id": "chris-wood--national-pride",
     "player_name": "Chris Wood",
-    "objective": "Asia Oceania",
-    "source_url": "https://www.fut.gg/objectives/asia-oceania/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/asia-oceania/",
+    "tasks": [
+      "Rise to the challenge and complete objectives using players from the Asia and Oceania regions! All rewards are Untradeable.",
+      "Complete these objectives using Saudi Arabian players highlighting their speed and finishing abilities. All rewards are Untradeable.",
+      "Lead your squad with Korean players and complete match challenges through pace and clinical finishing. All rewards are Untradeable.",
+      "Complete these objectives using Japanese players highlighting their technique and attacking precision. All rewards are Untradeable.",
+      "Complete all Asia + Oceania Journey of Nations objectives to earn additional rewards! All rewards are Untradeable.",
+      "Complete the Asia & Oceania Journey of Nations objectives by representing teams from across the region! All rewards are Untradeable.",
+      "Represent New Zealand by completing the objectives with Kiwis! All rewards are Untradeable.",
+      "Take the field with Australian players and showcase your finishing and defensive strength! All rewards are Untradeable.",
+      "Relive Cahill’s stunning strike by completing match objectives with Australian players in this objective! All rewards are Untradeable."
+    ]
+  },
+  {
+    "card_id": "chris-wood--national-pride",
+    "player_name": "Chris Wood",
+    "objective": "New Zealand",
+    "source_url": "https://www.fut.gg/objectives/asia-oceania/924-new-zealand",
+    "tasks": [
+      "Represent New Zealand by completing the objectives with Kiwis! All rewards are Untradeable.",
+      "Score 2 goals using a New Zealand Players in any UT game mode.",
+      "Play 3 matches while having min. 1 New Zealand player in your starting 11 in any UT game mode.",
+      "Assist in 3 separate matches while having min. 1 New Zealand player in your starting 11 in any UT game mode.",
+      "Score a goal in any UT game mode using a player from New Zealand."
+    ]
   },
   {
     "card_id": "christian-pulisic--base",
     "player_name": "Christian Pulisic",
-    "objective": "Usa",
-    "source_url": "https://www.fut.gg/objectives/north-america/900-usa"
+    "objective": "USA",
+    "source_url": "https://www.fut.gg/objectives/north-america/900-usa",
+    "tasks": [
+      "Lead the Stars and Stripes to success by scoring and assisting with American players. All rewards are Untradeable.",
+      "Play 5 matches while having Min. 4 American players in your starting 11 in any FUT game mode.",
+      "Win 3 separate matches while having min. 4 American players in your starting 11 in any FUT game mode.",
+      "Assist with a through ball in 3 separate matches while having Min. 1 American player in your starting 11 in any FUT game mode.",
+      "Score at least 1 Low Driven Shot goal while having Min. 1 American player in your starting 11 in any UT game mode.",
+      "Play 1 match while having min. 1 American player in your starting 11 in any FUT game mode."
+    ]
   },
   {
     "card_id": "derrick-etienne-jr--national-pride",
     "player_name": "Derrick Etienne Jr.",
-    "objective": "North America",
-    "source_url": "https://www.fut.gg/objectives/north-america/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/north-america/",
+    "tasks": [
+      "Complete all North America Journey of Nations objectives to earn additional rewards! All rewards are untradeable.",
+      "Lead the Stars and Stripes to success by scoring and assisting with American players. All rewards are Untradeable.",
+      "Complete the North America & CONCACAF themed Journey of Nations objectives by representing teams from the region! All rewards are untradeable.",
+      "Honour Clint Dempsey’s legacy by scoring goals and creating chances in this objective! All rewards are Untradeable.",
+      "Showcase El Tri’s pride by completing objectives using Mexican players, focusing on attacking flair and defensive strength! All rewards are Untradeable.",
+      "Embrace street style creativity and work as a team in this Rush based objective! All rewards are Untradeable.",
+      "Represent Canada by completing objectives with Canadian players! All rewards are Untradeable.",
+      "Step into the moment of Rafael Márquez's unforgettable knockout header in this objective! All rewards are Untradeable.",
+      "Represent North America by completing match objectives with players from the USA, Canada, and Mexico. All rewards are Untradeable.",
+      "Relive Brazil’s '94 victory on American soil by winning a final, honouring their legendary championship run in the USA! All rewards are Untradeable."
+    ]
+  },
+  {
+    "card_id": "derrick-etienne-jr--national-pride",
+    "player_name": "Derrick Etienne Jr.",
+    "objective": "Haiti/Panama",
+    "source_url": "https://www.fut.gg/objectives/north-america/895-haitipanama",
+    "tasks": [
+      "Complete the North America & CONCACAF themed Journey of Nations objectives by representing teams from the region! All rewards are untradeable.",
+      "Play 1 match while having Min. 1 North American Player in your starting 11 in any UT game mode.",
+      "Score 2 goals while having Min. 1 North American or CONCACAF Player in your starting 11 in any UT game mode.",
+      "Score 3 goals while having Min. 2 North American Players in your starting 11 in any UT game mode.",
+      "Score 1 goal in any UT game mode."
+    ]
   },
   {
     "card_id": "evelyne-viens--national-pride",
     "player_name": "Évelyne Viens",
-    "objective": "Campaign",
-    "source_url": "https://www.fut.gg/objectives/campaign/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/campaign/",
+    "tasks": []
   },
   {
     "card_id": "heung-min-son--premium-world-tour",
     "player_name": "Heung Min Son",
-    "objective": "Republic Of Korea",
-    "source_url": "https://www.fut.gg/objectives/asia-oceania/928-republic-of-korea"
+    "objective": "Republic of Korea",
+    "source_url": "https://www.fut.gg/objectives/asia-oceania/928-republic-of-korea",
+    "tasks": [
+      "Lead your squad with Korean players and complete match challenges through pace and clinical finishing. All rewards are Untradeable.",
+      "Assist with a cross and win while having Min. 4 Korea Republic (South Korea) players in your starting 11 in any FUT game mode.",
+      "Assist 5 goals using a player with min. 83 PAS while having min. 4 Korea Republic (South Korea) players in your starting 11 in any UT game mode.",
+      "Score a Finesse goal using a South Korean player in 3 separate matches while having min. 1 Korea Republic (South Korea) player in your starting 11 in any FUT game mode.",
+      "Score 3 goals while having min. 1 Korea Republic (South Korea) player in your starting 11 in any UT game mode.",
+      "Assist 1 goal with a CAM while having min. 1 of any Asia + Oceania player in your starting 11 in any FUT game mode."
+    ]
   },
   {
     "card_id": "jaedyn-shaw--national-pride",
     "player_name": "Jaedyn Shaw",
-    "objective": "Campaign",
-    "source_url": "https://www.fut.gg/objectives/campaign/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/campaign/",
+    "tasks": []
   },
   {
     "card_id": "jordan-bos--national-pride",
     "player_name": "Jordan Bos",
     "objective": "Australia",
-    "source_url": "https://www.fut.gg/objectives/asia-oceania/925-australia"
+    "source_url": "https://www.fut.gg/objectives/asia-oceania/925-australia",
+    "tasks": [
+      "Take the field with Australian players and showcase your finishing and defensive strength! All rewards are Untradeable.",
+      "Keep a Clean Sheet while having Min. 4 Australian players in your starting 11 in any FUT game mode.",
+      "Win 3 separate matches while having Min. 4 Australian players in your starting 11 in any FUT game mode.",
+      "Assist in 5 separate matches using an Australian player in any FUT game mode.",
+      "Score 1 Low Driven goal while having min. 1 Australian player in your starting 11 in any UT game mode.",
+      "Assist 1 goal while having Min. 1 of any Asia + Oceania player in your starting 11 in any FUT game mode."
+    ]
   },
   {
     "card_id": "jordyn-huitema--national-pride",
     "player_name": "Jordyn Huitema",
-    "objective": "Campaign",
-    "source_url": "https://www.fut.gg/objectives/campaign/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/campaign/",
+    "tasks": []
   },
   {
     "card_id": "jose-cordoba--national-pride",
     "player_name": "José Córdoba",
-    "objective": "North America",
-    "source_url": "https://www.fut.gg/objectives/north-america/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/north-america/",
+    "tasks": [
+      "Complete all North America Journey of Nations objectives to earn additional rewards! All rewards are untradeable.",
+      "Lead the Stars and Stripes to success by scoring and assisting with American players. All rewards are Untradeable.",
+      "Complete the North America & CONCACAF themed Journey of Nations objectives by representing teams from the region! All rewards are untradeable.",
+      "Honour Clint Dempsey’s legacy by scoring goals and creating chances in this objective! All rewards are Untradeable.",
+      "Showcase El Tri’s pride by completing objectives using Mexican players, focusing on attacking flair and defensive strength! All rewards are Untradeable.",
+      "Embrace street style creativity and work as a team in this Rush based objective! All rewards are Untradeable.",
+      "Represent Canada by completing objectives with Canadian players! All rewards are Untradeable.",
+      "Step into the moment of Rafael Márquez's unforgettable knockout header in this objective! All rewards are Untradeable.",
+      "Represent North America by completing match objectives with players from the USA, Canada, and Mexico. All rewards are Untradeable.",
+      "Relive Brazil’s '94 victory on American soil by winning a final, honouring their legendary championship run in the USA! All rewards are Untradeable."
+    ]
+  },
+  {
+    "card_id": "jose-cordoba--national-pride",
+    "player_name": "José Córdoba",
+    "objective": "Haiti/Panama",
+    "source_url": "https://www.fut.gg/objectives/north-america/895-haitipanama",
+    "tasks": [
+      "Complete the North America & CONCACAF themed Journey of Nations objectives by representing teams from the region! All rewards are untradeable.",
+      "Play 1 match while having Min. 1 North American Player in your starting 11 in any UT game mode.",
+      "Score 2 goals while having Min. 1 North American or CONCACAF Player in your starting 11 in any UT game mode.",
+      "Score 3 goals while having Min. 2 North American Players in your starting 11 in any UT game mode.",
+      "Score 1 goal in any UT game mode."
+    ]
   },
   {
     "card_id": "junya-ito--national-pride",
     "player_name": "Junya Ito",
     "objective": "Japan",
-    "source_url": "https://www.fut.gg/objectives/asia-oceania/927-japan"
+    "source_url": "https://www.fut.gg/objectives/asia-oceania/927-japan",
+    "tasks": [
+      "Complete these objectives using Japanese players highlighting their technique and attacking precision. All rewards are Untradeable.",
+      "Score at least 2 goals in a single match while winning and having Min. 4 Japanese players in your starting 11 in any FUT game mode.",
+      "Assist 5 goals using a player with min. 86 Dribbling while having min. 1 Japanese player in your starting 11 in any UT game mode.",
+      "Concede 2 goals or less in 5 separate matches while having Min. 4 Japanese players in your starting 11 in any UT game mode.",
+      "Score a Chip shot while having min. 1 Japanese player in your starting 11 in any UT game mode.",
+      "Play 1 match while having Min. 1 Asia + Oceania player in your starting 11 in any FUT game mode."
+    ]
   },
   {
     "card_id": "kaoru-mitoma--national-pride",
     "player_name": "Kaoru Mitoma",
-    "objective": "Asia Oceania",
-    "source_url": "https://www.fut.gg/objectives/asia-oceania/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/asia-oceania/",
+    "tasks": [
+      "Rise to the challenge and complete objectives using players from the Asia and Oceania regions! All rewards are Untradeable.",
+      "Complete these objectives using Saudi Arabian players highlighting their speed and finishing abilities. All rewards are Untradeable.",
+      "Lead your squad with Korean players and complete match challenges through pace and clinical finishing. All rewards are Untradeable.",
+      "Complete these objectives using Japanese players highlighting their technique and attacking precision. All rewards are Untradeable.",
+      "Complete all Asia + Oceania Journey of Nations objectives to earn additional rewards! All rewards are Untradeable.",
+      "Complete the Asia & Oceania Journey of Nations objectives by representing teams from across the region! All rewards are Untradeable.",
+      "Represent New Zealand by completing the objectives with Kiwis! All rewards are Untradeable.",
+      "Take the field with Australian players and showcase your finishing and defensive strength! All rewards are Untradeable.",
+      "Relive Cahill’s stunning strike by completing match objectives with Australian players in this objective! All rewards are Untradeable."
+    ]
+  },
+  {
+    "card_id": "kaoru-mitoma--national-pride",
+    "player_name": "Kaoru Mitoma",
+    "objective": "Japan",
+    "source_url": "https://www.fut.gg/objectives/asia-oceania/927-japan",
+    "tasks": [
+      "Complete these objectives using Japanese players highlighting their technique and attacking precision. All rewards are Untradeable.",
+      "Score at least 2 goals in a single match while winning and having Min. 4 Japanese players in your starting 11 in any FUT game mode.",
+      "Assist 5 goals using a player with min. 86 Dribbling while having min. 1 Japanese player in your starting 11 in any UT game mode.",
+      "Concede 2 goals or less in 5 separate matches while having Min. 4 Japanese players in your starting 11 in any UT game mode.",
+      "Score a Chip shot while having min. 1 Japanese player in your starting 11 in any UT game mode.",
+      "Play 1 match while having Min. 1 Asia + Oceania player in your starting 11 in any FUT game mode."
+    ]
   },
   {
     "card_id": "liam-millar--national-pride",
     "player_name": "Liam Millar",
     "objective": "Street Soccer",
-    "source_url": "https://www.fut.gg/objectives/north-america/898-street-soccer"
+    "source_url": "https://www.fut.gg/objectives/north-america/898-street-soccer",
+    "tasks": [
+      "Embrace street style creativity and work as a team in this Rush based objective! All rewards are Untradeable.",
+      "Win by at least 2 goals in Rush while using a North American player.",
+      "Assist 5 goals in Rush as a team while using a North American player.",
+      "Score 7 goals in Rush as a team while using a North American player.",
+      "Win 1 match in Rush while using a North America player."
+    ]
   },
   {
     "card_id": "manuel-neuer--player-moments",
     "player_name": "Manuel Neuer",
-    "objective": "Milestones",
-    "source_url": "https://www.fut.gg/objectives/milestones/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/milestones/",
+    "tasks": [
+      "Complete the TOTS Milestone Objective group to earn pack and celebration rewards! All rewards are untradeable.",
+      "Complete this challenge to earn an EVO consumable themed around defense. All rewards are untradeable.",
+      "Complete this challenge to earn an EVO consumable themed around passing. All rewards are untradeable.",
+      "Complete this objective to earn Milestone Manuel Neuer. All rewards are untradeable.",
+      "Use different tactical approaches to score and earn EVO Consumables. All rewards are untradeable.",
+      "Pick your corner and find victory to earn a Low Driven Shot+ Evolution applicable to any player (excluding WTSS) with Max. 90 OVR.",
+      "Hold a strong defensive backline to earn an Intercept+ Evolution applicable to any player (excluding WTSS) with Max. 90 OVR.",
+      "Show off your finishing skills to earn a Quick Step+ Evolution applicable to any player (excluding WTSS) with Max. 90 OVR.",
+      "Master the art of the Finesse Shot and earn a Finesse Shot+ Evolution applicable to any player (excluding WTSS) with Max. 90 OVR.",
+      "Complete Moments, earn Stars, seek greatness! All rewards are Untradeable.",
+      "Squad up and complete bonuses alongside other players as you try to reign supreme in Rush!",
+      "Assemble a squad with First Owned (acquired from packs, objectives and SBCs) players and complete these Milestones!",
+      "Tally up your assists and become an Assist expert!",
+      "Generate that winning feeling in Ultimate Team Live Events! All rewards are Untradeable.",
+      "Build your way up to become a Squad Building expert!",
+      "Wheel and deal your way to Transfer Market Mastery!",
+      "Team up with Friends to embark on the Co-op journey!",
+      "Draft your path to greatness!",
+      "Show everyone you have what it takes to be the Golden G.O.A.T!",
+      "Beat your Rivals to prove you are the G.O.A.T!",
+      "Keep battling over the year to prove you are a Squad Battles Master!"
+    ]
+  },
+  {
+    "card_id": "manuel-neuer--player-moments",
+    "player_name": "Manuel Neuer",
+    "objective": "Neuer the Wall",
+    "source_url": "https://www.fut.gg/objectives/milestones/762-neuer-the-wall",
+    "tasks": [
+      "Complete this objective to earn Milestone Manuel Neuer. All rewards are untradeable.",
+      "Concede less than 2 goals in 50 matches in Squad Battles on Min. Semi-Pro difficulty (or Rivals/Champions/Live Events)."
+    ]
   },
   {
     "card_id": "mohamed-toure--national-pride",
     "player_name": "Mohamed Touré",
-    "objective": "Asia Oceania",
-    "source_url": "https://www.fut.gg/objectives/asia-oceania/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/asia-oceania/",
+    "tasks": [
+      "Rise to the challenge and complete objectives using players from the Asia and Oceania regions! All rewards are Untradeable.",
+      "Complete these objectives using Saudi Arabian players highlighting their speed and finishing abilities. All rewards are Untradeable.",
+      "Lead your squad with Korean players and complete match challenges through pace and clinical finishing. All rewards are Untradeable.",
+      "Complete these objectives using Japanese players highlighting their technique and attacking precision. All rewards are Untradeable.",
+      "Complete all Asia + Oceania Journey of Nations objectives to earn additional rewards! All rewards are Untradeable.",
+      "Complete the Asia & Oceania Journey of Nations objectives by representing teams from across the region! All rewards are Untradeable.",
+      "Represent New Zealand by completing the objectives with Kiwis! All rewards are Untradeable.",
+      "Take the field with Australian players and showcase your finishing and defensive strength! All rewards are Untradeable.",
+      "Relive Cahill’s stunning strike by completing match objectives with Australian players in this objective! All rewards are Untradeable."
+    ]
+  },
+  {
+    "card_id": "mohamed-toure--national-pride",
+    "player_name": "Mohamed Touré",
+    "objective": "Australia",
+    "source_url": "https://www.fut.gg/objectives/asia-oceania/925-australia",
+    "tasks": [
+      "Take the field with Australian players and showcase your finishing and defensive strength! All rewards are Untradeable.",
+      "Keep a Clean Sheet while having Min. 4 Australian players in your starting 11 in any FUT game mode.",
+      "Win 3 separate matches while having Min. 4 Australian players in your starting 11 in any FUT game mode.",
+      "Assist in 5 separate matches using an Australian player in any FUT game mode.",
+      "Score 1 Low Driven goal while having min. 1 Australian player in your starting 11 in any UT game mode.",
+      "Assist 1 goal while having Min. 1 of any Asia + Oceania player in your starting 11 in any FUT game mode."
+    ]
   },
   {
     "card_id": "musab-al-juwair--honourable-mentions",
     "player_name": "Musab Al Juwair",
     "objective": "Saudi Arabia",
-    "source_url": "https://www.fut.gg/objectives/asia-oceania/929-saudi-arabia"
+    "source_url": "https://www.fut.gg/objectives/asia-oceania/929-saudi-arabia",
+    "tasks": [
+      "Complete these objectives using Saudi Arabian players highlighting their speed and finishing abilities. All rewards are Untradeable.",
+      "Score a goal using a player with Min. 94 PAC while having Min. 4 Saudi Arabian players in your starting 11 in any FUT game mode.",
+      "Win a match in any FUT game mode while having Min. 4 Saudi Arabian players in your starting 11, while scoring 2 or more goals and conceding no more than 1 goal.",
+      "Win 2 matches while having min. 1 Saudi Arabia player in your starting 11 in any UT game mode.",
+      "Score 1 Power shot goal while having min. 1 Saudi Arabia player in your starting 11 in any UT game mode.",
+      "Assist 1 goal with a Through Ball while having min. 1 Saudi Arabia player in your starting 11 in any FUT game mode."
+    ]
   },
   {
     "card_id": "niko-sigur--national-pride",
     "player_name": "Niko Sigur",
     "objective": "Canada",
-    "source_url": "https://www.fut.gg/objectives/north-america/899-canada"
+    "source_url": "https://www.fut.gg/objectives/north-america/899-canada",
+    "tasks": [
+      "Represent Canada by completing objectives with Canadian players! All rewards are Untradeable.",
+      "Play 5 matches while having Min. 4 Canadian players in your starting 11 in any FUT game mode.",
+      "Assist with a lobbed through ball in 3 separate matches while having Min. 1 Canadian player in your starting 11 in any FUT game mode.",
+      "Win 3 matches while having Min. 4 Canadian players in your starting 11 in any FUT game mode.",
+      "Score at least 2 Finesse goals while having min. 1 Canadian player in your starting 11 in any FUT game mode.",
+      "Assist at least 2 goals in a single match while having min. 1 Canadian player in your starting 11 in any FUT game mode."
+    ]
   },
   {
     "card_id": "obed-vargas--national-pride",
     "player_name": "Obed Vargas",
-    "objective": "Campaign",
-    "source_url": "https://www.fut.gg/objectives/campaign/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/campaign/",
+    "tasks": []
   },
   {
     "card_id": "orbelin-pineda--national-pride",
     "player_name": "Orbelín Pineda",
-    "objective": "Campaign",
-    "source_url": "https://www.fut.gg/objectives/campaign/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/campaign/",
+    "tasks": []
+  },
+  {
+    "card_id": "orbelin-pineda--national-pride",
+    "player_name": "Orbelín Pineda",
+    "objective": "Mexico",
+    "source_url": "https://www.fut.gg/objectives/north-america/897-mexico",
+    "tasks": [
+      "Showcase El Tri’s pride by completing objectives using Mexican players, focusing on attacking flair and defensive strength! All rewards are Untradeable.",
+      "Score 7 goals while having Min. 3 Mexican players in your starting 11 in any UT game mode.",
+      "Concede no more than 3 goals in single match while having Min. 1 Mexican player in your starting 11 in any UT game mode.",
+      "Play 3 matches while having Min. 3 Mexican players in your starting 11 in any UT game mode.",
+      "Win 1 match while having Min. 1 Mexican player in your starting 11 in any UT game mode."
+    ]
   },
   {
     "card_id": "reyna-reyes--national-pride",
     "player_name": "Reyna Reyes",
-    "objective": "Campaign",
-    "source_url": "https://www.fut.gg/objectives/campaign/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/campaign/",
+    "tasks": []
   },
   {
     "card_id": "saleh-al-shehri--national-pride",
     "player_name": "Saleh Al Shehri",
     "objective": "Saudi Arabia",
-    "source_url": "https://www.fut.gg/objectives/asia-oceania/929-saudi-arabia"
+    "source_url": "https://www.fut.gg/objectives/asia-oceania/929-saudi-arabia",
+    "tasks": [
+      "Complete these objectives using Saudi Arabian players highlighting their speed and finishing abilities. All rewards are Untradeable.",
+      "Score a goal using a player with Min. 94 PAC while having Min. 4 Saudi Arabian players in your starting 11 in any FUT game mode.",
+      "Win a match in any FUT game mode while having Min. 4 Saudi Arabian players in your starting 11, while scoring 2 or more goals and conceding no more than 1 goal.",
+      "Win 2 matches while having min. 1 Saudi Arabia player in your starting 11 in any UT game mode.",
+      "Score 1 Power shot goal while having min. 1 Saudi Arabia player in your starting 11 in any UT game mode.",
+      "Assist 1 goal with a Through Ball while having min. 1 Saudi Arabia player in your starting 11 in any FUT game mode."
+    ]
   },
   {
     "card_id": "santiago-gimenez--national-pride",
     "player_name": "Santiago Giménez",
-    "objective": "Campaign",
-    "source_url": "https://www.fut.gg/objectives/campaign/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/campaign/",
+    "tasks": []
   },
   {
     "card_id": "saud-abdulhamid--national-pride",
     "player_name": "Saud Abdulhamid",
-    "objective": "Asia Oceania",
-    "source_url": "https://www.fut.gg/objectives/asia-oceania/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/asia-oceania/",
+    "tasks": [
+      "Rise to the challenge and complete objectives using players from the Asia and Oceania regions! All rewards are Untradeable.",
+      "Complete these objectives using Saudi Arabian players highlighting their speed and finishing abilities. All rewards are Untradeable.",
+      "Lead your squad with Korean players and complete match challenges through pace and clinical finishing. All rewards are Untradeable.",
+      "Complete these objectives using Japanese players highlighting their technique and attacking precision. All rewards are Untradeable.",
+      "Complete all Asia + Oceania Journey of Nations objectives to earn additional rewards! All rewards are Untradeable.",
+      "Complete the Asia & Oceania Journey of Nations objectives by representing teams from across the region! All rewards are Untradeable.",
+      "Represent New Zealand by completing the objectives with Kiwis! All rewards are Untradeable.",
+      "Take the field with Australian players and showcase your finishing and defensive strength! All rewards are Untradeable.",
+      "Relive Cahill’s stunning strike by completing match objectives with Australian players in this objective! All rewards are Untradeable."
+    ]
+  },
+  {
+    "card_id": "saud-abdulhamid--national-pride",
+    "player_name": "Saud Abdulhamid",
+    "objective": "Saudi Arabia",
+    "source_url": "https://www.fut.gg/objectives/asia-oceania/929-saudi-arabia",
+    "tasks": [
+      "Complete these objectives using Saudi Arabian players highlighting their speed and finishing abilities. All rewards are Untradeable.",
+      "Score a goal using a player with Min. 94 PAC while having Min. 4 Saudi Arabian players in your starting 11 in any FUT game mode.",
+      "Win a match in any FUT game mode while having Min. 4 Saudi Arabian players in your starting 11, while scoring 2 or more goals and conceding no more than 1 goal.",
+      "Win 2 matches while having min. 1 Saudi Arabia player in your starting 11 in any UT game mode.",
+      "Score 1 Power shot goal while having min. 1 Saudi Arabia player in your starting 11 in any UT game mode.",
+      "Assist 1 goal with a Through Ball while having min. 1 Saudi Arabia player in your starting 11 in any FUT game mode."
+    ]
   },
   {
     "card_id": "sophia-wilson--national-pride",
     "player_name": "Sophia Wilson",
-    "objective": "Campaign",
-    "source_url": "https://www.fut.gg/objectives/campaign/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/campaign/",
+    "tasks": []
   },
   {
     "card_id": "sydney-collins--national-pride",
     "player_name": "Sydney Collins",
-    "objective": "Campaign",
-    "source_url": "https://www.fut.gg/objectives/campaign/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/campaign/",
+    "tasks": []
   },
   {
     "card_id": "tajon-buchanan--national-pride",
     "player_name": "Tajon Buchanan",
-    "objective": "Campaign",
-    "source_url": "https://www.fut.gg/objectives/campaign/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/campaign/",
+    "tasks": []
+  },
+  {
+    "card_id": "tajon-buchanan--national-pride",
+    "player_name": "Tajon Buchanan",
+    "objective": "Canada",
+    "source_url": "https://www.fut.gg/objectives/north-america/899-canada",
+    "tasks": [
+      "Represent Canada by completing objectives with Canadian players! All rewards are Untradeable.",
+      "Play 5 matches while having Min. 4 Canadian players in your starting 11 in any FUT game mode.",
+      "Assist with a lobbed through ball in 3 separate matches while having Min. 1 Canadian player in your starting 11 in any FUT game mode.",
+      "Win 3 matches while having Min. 4 Canadian players in your starting 11 in any FUT game mode.",
+      "Score at least 2 Finesse goals while having min. 1 Canadian player in your starting 11 in any FUT game mode.",
+      "Assist at least 2 goals in a single match while having min. 1 Canadian player in your starting 11 in any FUT game mode."
+    ]
   },
   {
     "card_id": "tani-oluwaseyi--national-pride",
     "player_name": "Tani Oluwaseyi",
-    "objective": "North America",
-    "source_url": "https://www.fut.gg/objectives/north-america/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/north-america/",
+    "tasks": [
+      "Complete all North America Journey of Nations objectives to earn additional rewards! All rewards are untradeable.",
+      "Lead the Stars and Stripes to success by scoring and assisting with American players. All rewards are Untradeable.",
+      "Complete the North America & CONCACAF themed Journey of Nations objectives by representing teams from the region! All rewards are untradeable.",
+      "Honour Clint Dempsey’s legacy by scoring goals and creating chances in this objective! All rewards are Untradeable.",
+      "Showcase El Tri’s pride by completing objectives using Mexican players, focusing on attacking flair and defensive strength! All rewards are Untradeable.",
+      "Embrace street style creativity and work as a team in this Rush based objective! All rewards are Untradeable.",
+      "Represent Canada by completing objectives with Canadian players! All rewards are Untradeable.",
+      "Step into the moment of Rafael Márquez's unforgettable knockout header in this objective! All rewards are Untradeable.",
+      "Represent North America by completing match objectives with players from the USA, Canada, and Mexico. All rewards are Untradeable.",
+      "Relive Brazil’s '94 victory on American soil by winning a final, honouring their legendary championship run in the USA! All rewards are Untradeable."
+    ]
+  },
+  {
+    "card_id": "tani-oluwaseyi--national-pride",
+    "player_name": "Tani Oluwaseyi",
+    "objective": "Canada",
+    "source_url": "https://www.fut.gg/objectives/north-america/899-canada",
+    "tasks": [
+      "Represent Canada by completing objectives with Canadian players! All rewards are Untradeable.",
+      "Play 5 matches while having Min. 4 Canadian players in your starting 11 in any FUT game mode.",
+      "Assist with a lobbed through ball in 3 separate matches while having Min. 1 Canadian player in your starting 11 in any FUT game mode.",
+      "Win 3 matches while having Min. 4 Canadian players in your starting 11 in any FUT game mode.",
+      "Score at least 2 Finesse goals while having min. 1 Canadian player in your starting 11 in any FUT game mode.",
+      "Assist at least 2 goals in a single match while having min. 1 Canadian player in your starting 11 in any FUT game mode."
+    ]
   },
   {
     "card_id": "tanner-tessmann--national-pride",
     "player_name": "Tanner Tessmann",
-    "objective": "Campaign",
-    "source_url": "https://www.fut.gg/objectives/campaign/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/campaign/",
+    "tasks": []
   },
   {
     "card_id": "timothy-weah--national-pride",
     "player_name": "Timothy Weah",
-    "objective": "Campaign",
-    "source_url": "https://www.fut.gg/objectives/campaign/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/campaign/",
+    "tasks": []
   },
   {
     "card_id": "trinity-rodman--national-pride",
     "player_name": "Trinity Rodman",
-    "objective": "Campaign",
-    "source_url": "https://www.fut.gg/objectives/campaign/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/campaign/",
+    "tasks": []
   },
   {
     "card_id": "tyler-adams--national-pride",
     "player_name": "Tyler Adams",
-    "objective": "North America",
-    "source_url": "https://www.fut.gg/objectives/north-america/"
+    "objective": "Objectives",
+    "source_url": "https://www.fut.gg/objectives/north-america/",
+    "tasks": [
+      "Complete all North America Journey of Nations objectives to earn additional rewards! All rewards are untradeable.",
+      "Lead the Stars and Stripes to success by scoring and assisting with American players. All rewards are Untradeable.",
+      "Complete the North America & CONCACAF themed Journey of Nations objectives by representing teams from the region! All rewards are untradeable.",
+      "Honour Clint Dempsey’s legacy by scoring goals and creating chances in this objective! All rewards are Untradeable.",
+      "Showcase El Tri’s pride by completing objectives using Mexican players, focusing on attacking flair and defensive strength! All rewards are Untradeable.",
+      "Embrace street style creativity and work as a team in this Rush based objective! All rewards are Untradeable.",
+      "Represent Canada by completing objectives with Canadian players! All rewards are Untradeable.",
+      "Step into the moment of Rafael Márquez's unforgettable knockout header in this objective! All rewards are Untradeable.",
+      "Represent North America by completing match objectives with players from the USA, Canada, and Mexico. All rewards are Untradeable.",
+      "Relive Brazil’s '94 victory on American soil by winning a final, honouring their legendary championship run in the USA! All rewards are Untradeable."
+    ]
+  },
+  {
+    "card_id": "tyler-adams--national-pride",
+    "player_name": "Tyler Adams",
+    "objective": "USA",
+    "source_url": "https://www.fut.gg/objectives/north-america/900-usa",
+    "tasks": [
+      "Lead the Stars and Stripes to success by scoring and assisting with American players. All rewards are Untradeable.",
+      "Play 5 matches while having Min. 4 American players in your starting 11 in any FUT game mode.",
+      "Win 3 separate matches while having min. 4 American players in your starting 11 in any FUT game mode.",
+      "Assist with a through ball in 3 separate matches while having Min. 1 American player in your starting 11 in any FUT game mode.",
+      "Score at least 1 Low Driven Shot goal while having Min. 1 American player in your starting 11 in any UT game mode.",
+      "Play 1 match while having min. 1 American player in your starting 11 in any FUT game mode."
+    ]
   }
 ]

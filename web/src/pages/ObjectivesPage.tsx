@@ -7,6 +7,7 @@ import SkeletonGrid from '../components/SkeletonGrid'
 interface ObjectiveCard extends Card {
   objective: string
   objective_url: string
+  tasks: string[]
 }
 
 export default function ObjectivesPage() {
@@ -49,8 +50,25 @@ export default function ObjectivesPage() {
                 title={`Objective: ${card.objective}`}
               >
                 <span className="truncate">{card.objective}</span>
-                <span className="shrink-0 ml-2">tasks →</span>
+                <span className="shrink-0 ml-2">open →</span>
               </a>
+              {card.tasks.length > 0 ? (
+                <ul className="mt-1 px-1 space-y-1">
+                  {card.tasks.map((task, i) => (
+                    <li
+                      key={i}
+                      className="text-xs text-muted leading-snug flex gap-1.5"
+                    >
+                      <span className="text-gold shrink-0">•</span>
+                      <span>{task}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-1 px-1 text-xs text-muted/60 italic">
+                  Tasks not listed — open the objective for details.
+                </p>
+              )}
             </div>
           ))}
         </div>

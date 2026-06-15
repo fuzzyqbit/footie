@@ -8,6 +8,7 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import NoReturn
 
+import httpx
 import typer
 from rich.console import Console
 from rich.table import Table
@@ -26,6 +27,7 @@ from .ingest.enrich import enrich_cards
 from .ingest.expand import expand_cards
 from .ingest.fcratings import fetch_top100
 from .ingest.futgg import fetch_futgg_card
+from .ingest.objectives import write_objectives
 from .ingest.refresh import DEFAULT_INTERVAL_HOURS, DEFAULT_MIN_OVR, jittered_sleep, refresh_data
 from .ingest.seed import seed_cards
 from .ingest.web import fetch_html
@@ -262,6 +264,27 @@ def refresh(
         f"refresh done: {result.expand.new} new, {result.expand.merged} updated, "
         f"{len(result.enrich.enriched)} enriched, "
         f"{len(result.expand.failed_pages)} failed pages"
+    )
+
+
+@app.command(name="refresh-objectives")
+def refresh_objectives(
+    db: Path = DB_OPTION,
+    out: Path = typer.Option(Path("data/objectives.json"), "--out",
+                             help="Path to write the objectives JSON"),
+) -> None:
+    """Scrape fut.gg objective reward players + task text, match untradeable cards."""
+    repo = CardRepository(db)
+    try:
+        records = write_objectives(out, repo)
+    except FC26Error as exc:
+        _fail(str(exc))
+    except httpx.HTTPError as exc:
+        _fail(f"fut.gg fetch failed: {exc}")
+    with_tasks = sum(1 for r in records if r["tasks"])
+    console.print(
+        f"matched {len(records)} objective cards "
+        f"({with_tasks} with task text) → {out}"
     )
 
 

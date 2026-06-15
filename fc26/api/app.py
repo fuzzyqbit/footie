@@ -362,6 +362,7 @@ def create_app(
                 **card_to_dict(card),
                 "objective": entry.get("objective"),
                 "objective_url": entry.get("source_url"),
+                "tasks": entry.get("tasks") or [],
             })
         cards.sort(key=lambda c: c["ovr"], reverse=True)
         return _ok({"cards": cards})
