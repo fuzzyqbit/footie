@@ -19,6 +19,15 @@ function slotRow(slot: string): number {
   return 3
 }
 
+// Horizontal order within a row: left-sided slots (L*) on the left, right-sided
+// (R*) on the right, centrals in between. Formation lists are stored right->left
+// (RB, CB, CB, LB), so without this the pitch renders mirror-imaged.
+function slotCol(slot: string): number {
+  if (slot.startsWith('L')) return 0
+  if (slot.startsWith('R')) return 2
+  return 1
+}
+
 export default function Pitch({ formationSlots, slotCards, chemReport, selectedSlot, onSlotClick }: Props) {
   const chemBySlot: Record<string, number> = {}
   for (const p of chemReport?.players ?? []) chemBySlot[p.slot] = p.chem
@@ -28,6 +37,9 @@ export default function Pitch({ formationSlots, slotCards, chemReport, selectedS
     const r = slotRow(slot)
     if (!rows.has(r)) rows.set(r, [])
     rows.get(r)!.push(slot)
+  }
+  for (const slots of rows.values()) {
+    slots.sort((a, b) => slotCol(a) - slotCol(b))
   }
   const sortedRows = [...rows.entries()].sort((a, b) => b[0] - a[0])
 
