@@ -68,6 +68,26 @@ export default function SearchFilterBar({ params, onChange }: Props) {
       </select>
 
       <select
+        aria-label="Nation"
+        value={params.nation ?? ''}
+        onChange={e => onChange({ ...params, nation: e.target.value || undefined, offset: 0 })}
+        className="bg-card border border-border rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-gold"
+      >
+        <option value="">All nations</option>
+        {(meta?.nations ?? []).map(n => <option key={n} value={n}>{n}</option>)}
+      </select>
+
+      <select
+        aria-label="Club"
+        value={params.club ?? ''}
+        onChange={e => onChange({ ...params, club: e.target.value || undefined, offset: 0 })}
+        className="bg-card border border-border rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-gold max-w-40"
+      >
+        <option value="">All clubs</option>
+        {(meta?.clubs ?? []).map(c => <option key={c} value={c}>{c}</option>)}
+      </select>
+
+      <select
         aria-label="Version"
         value={params.version ?? ''}
         onChange={e => onChange({ ...params, version: e.target.value || undefined, offset: 0 })}

@@ -7,6 +7,8 @@ export interface CardParams {
   pos?: string
   version?: string
   league?: string
+  nation?: string
+  club?: string
   min_ovr?: number
   stat?: string
   stat_min?: number
@@ -21,6 +23,8 @@ function buildQs(params: CardParams): string {
   if (params.pos) qs.set('pos', params.pos)
   if (params.version) qs.set('version', params.version)
   if (params.league) qs.set('league', params.league)
+  if (params.nation) qs.set('nation', params.nation)
+  if (params.club) qs.set('club', params.club)
   if (params.min_ovr != null) qs.set('min_ovr', String(params.min_ovr))
   if (params.stat && params.stat_min != null) {
     qs.set('stat', params.stat)

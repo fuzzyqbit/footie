@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useValue } from '../api/value'
 import { useSquads } from '../api/squads'
+import { useMeta } from '../api/meta'
 import CardTile from '../components/CardTile'
 import SkeletonGrid from '../components/SkeletonGrid'
 
@@ -10,14 +11,21 @@ export default function ValuePage() {
   const [pos, setPos] = useState('')
   const [maxPrice, setMaxPrice] = useState<number | undefined>(50000)
   const [squad, setSquad] = useState('')
+  const [league, setLeague] = useState('')
+  const [nation, setNation] = useState('')
+  const [club, setClub] = useState('')
 
   const { data: squads } = useSquads()
+  const { data: meta } = useMeta()
   const { data, isPending, error } = useValue({
     per_tier: 6,
     limit: 120,
     pos: pos || undefined,
     max_price: maxPrice,
     squad: squad || undefined,
+    league: league || undefined,
+    nation: nation || undefined,
+    club: club || undefined,
   })
   const picks = data?.picks ?? []
 
@@ -40,6 +48,21 @@ export default function ValuePage() {
         <select aria-label="Squad" value={squad} onChange={e => setSquad(e.target.value)} className={inputCls}>
           <option value="">Any squad</option>
           {(squads ?? []).map(s => <option key={s.name} value={s.name}>For: {s.name}</option>)}
+        </select>
+
+        <select aria-label="League" value={league} onChange={e => setLeague(e.target.value)} className={inputCls}>
+          <option value="">All leagues</option>
+          {(meta?.leagues ?? []).map(l => <option key={l} value={l}>{l}</option>)}
+        </select>
+
+        <select aria-label="Nation" value={nation} onChange={e => setNation(e.target.value)} className={inputCls}>
+          <option value="">All nations</option>
+          {(meta?.nations ?? []).map(n => <option key={n} value={n}>{n}</option>)}
+        </select>
+
+        <select aria-label="Club" value={club} onChange={e => setClub(e.target.value)} className={`${inputCls} max-w-40`}>
+          <option value="">All clubs</option>
+          {(meta?.clubs ?? []).map(c => <option key={c} value={c}>{c}</option>)}
         </select>
 
         <input

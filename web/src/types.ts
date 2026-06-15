@@ -119,6 +119,8 @@ export interface Meta {
   formations: Record<string, string[]>
   styles: string[]
   leagues: string[]
+  nations: string[]
+  clubs: string[]
   versions: string[]
 }
 

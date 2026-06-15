@@ -47,6 +47,8 @@ export const MOCK_META: Meta = {
   },
   styles: ['hunter', 'finisher', 'marksman', 'sniper'],
   leagues: ['La Liga', 'Premier League', 'Bundesliga'],
+  nations: ['France', 'Norway', 'Brazil'],
+  clubs: ['Real Madrid', 'Manchester City'],
   versions: ['base', 'totw', 'tots'],
 }
 

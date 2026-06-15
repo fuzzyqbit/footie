@@ -580,3 +580,46 @@ def test_real_meta_has_leagues_and_styles(real_client):
     data = r.json()["data"]
     assert len(data["leagues"]) > 5
     assert "hunter" in data["styles"]
+
+
+def _mixed_client(tmp_path, tmp_squads):
+    cards = [
+        _card_dict("ST", nation="Brazil", club="Club A", league="Premier League"),
+        _card_dict("RW", nation="France", club="Club B", league="La Liga"),
+    ]
+    db = tmp_path / "players.json"
+    db.write_text(json.dumps({"schema_version": 1, "cards": cards}), encoding="utf-8")
+    return TestClient(create_app(db, tmp_squads))
+
+
+def test_cards_filter_by_nation_case_insensitive(tmp_path, tmp_squads):
+    client = _mixed_client(tmp_path, tmp_squads)
+    data = client.get("/api/cards?nation=france").json()["data"]
+    assert data["total"] == 1
+    assert data["cards"][0]["nation"] == "France"
+
+
+def test_cards_filter_by_club_case_insensitive(tmp_path, tmp_squads):
+    client = _mixed_client(tmp_path, tmp_squads)
+    data = client.get("/api/cards?club=club%20a").json()["data"]
+    assert data["total"] == 1
+    assert data["cards"][0]["club"] == "Club A"
+
+
+def test_meta_lists_nations_and_clubs(tmp_path, tmp_squads):
+    client = _mixed_client(tmp_path, tmp_squads)
+    data = client.get("/api/meta").json()["data"]
+    assert data["nations"] == ["Brazil", "France"]
+    assert data["clubs"] == ["Club A", "Club B"]
+
+
+def test_value_filters_by_nation(tmp_path, tmp_squads):
+    client = _mixed_client(tmp_path, tmp_squads)
+    picks = client.get("/api/value?nation=Brazil").json()["data"]["picks"]
+    assert {p["nation"] for p in picks} == {"Brazil"}
+
+
+def test_value_filters_by_league(tmp_path, tmp_squads):
+    client = _mixed_client(tmp_path, tmp_squads)
+    picks = client.get("/api/value?league=La%20Liga").json()["data"]["picks"]
+    assert {p["league"] for p in picks} == {"La Liga"}

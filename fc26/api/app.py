@@ -160,6 +160,8 @@ def create_app(
         pos: str | None = None,
         version: str | None = None,
         league: str | None = None,
+        nation: str | None = None,
+        club: str | None = None,
         min_ovr: int | None = None,
         stat: str | None = None,
         stat_min: int | None = None,
@@ -191,6 +193,14 @@ def create_app(
             wanted_lg = canonical_league(league)
             cards = [c for c in cards
                      if c.league is not None and canonical_league(c.league) == wanted_lg]
+        if nation:
+            wanted_nat = nation.lower()
+            cards = [c for c in cards
+                     if c.nation is not None and c.nation.lower() == wanted_nat]
+        if club:
+            wanted_club = club.lower()
+            cards = [c for c in cards
+                     if c.club is not None and c.club.lower() == wanted_club]
         if min_ovr is not None:
             cards = [c for c in cards if c.ovr >= min_ovr]
         if stat is not None and stat_min is not None:
@@ -316,11 +326,15 @@ def create_app(
         repo = CardRepository(db_path)
         all_cards = repo.find_all()
         leagues = sorted({c.league for c in all_cards if c.league})
+        nations = sorted({c.nation for c in all_cards if c.nation})
+        clubs = sorted({c.club for c in all_cards if c.club})
         versions = sorted({c.version for c in all_cards})
         return _ok({
             "formations": {name: list(slots) for name, slots in FORMATIONS.items()},
             "styles": list(available_styles()),
             "leagues": leagues,
+            "nations": nations,
+            "clubs": clubs,
             "versions": versions,
         })
 
@@ -361,6 +375,9 @@ def create_app(
         max_price: int = DEFAULT_MAX_PRICE,
         pos: str | None = None,
         squad: str | None = None,
+        league: str | None = None,
+        nation: str | None = None,
+        club: str | None = None,
         limit: int = 30,
         per_tier: int | None = None,
     ) -> dict:
@@ -372,8 +389,19 @@ def create_app(
             raise FC26Error("per_tier must be >= 1")
         repo = CardRepository(db_path)
         positions = _squad_positions(squad, repo) if squad else None
+        pool = repo.find_all()
+        if league:
+            wanted_lg = canonical_league(league)
+            pool = [c for c in pool
+                    if c.league is not None and canonical_league(c.league) == wanted_lg]
+        if nation:
+            wanted_nat = nation.lower()
+            pool = [c for c in pool if c.nation is not None and c.nation.lower() == wanted_nat]
+        if club:
+            wanted_club = club.lower()
+            pool = [c for c in pool if c.club is not None and c.club.lower() == wanted_club]
         picks = value_picks(
-            repo.find_all(), min_ovr=min_ovr, max_price=max_price,
+            pool, min_ovr=min_ovr, max_price=max_price,
             pos=pos, positions=positions, limit=limit, per_tier=per_tier,
         )
         return _ok({
