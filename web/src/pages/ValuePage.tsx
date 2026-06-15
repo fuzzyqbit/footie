@@ -3,6 +3,7 @@ import { useValue } from '../api/value'
 import { useSquads } from '../api/squads'
 import { useMeta } from '../api/meta'
 import CardTile from '../components/CardTile'
+import SearchSelect from '../components/SearchSelect'
 import SkeletonGrid from '../components/SkeletonGrid'
 
 const POSITIONS = ['GK', 'CB', 'RB', 'LB', 'CDM', 'CM', 'CAM', 'RM', 'LM', 'RW', 'LW', 'ST', 'CF']
@@ -55,15 +56,11 @@ export default function ValuePage() {
           {(meta?.leagues ?? []).map(l => <option key={l} value={l}>{l}</option>)}
         </select>
 
-        <select aria-label="Nation" value={nation} onChange={e => setNation(e.target.value)} className={inputCls}>
-          <option value="">All nations</option>
-          {(meta?.nations ?? []).map(n => <option key={n} value={n}>{n}</option>)}
-        </select>
+        <SearchSelect label="Nation" placeholder="Any nation" value={nation}
+          options={meta?.nations ?? []} onChange={setNation} />
 
-        <select aria-label="Club" value={club} onChange={e => setClub(e.target.value)} className={`${inputCls} max-w-40`}>
-          <option value="">All clubs</option>
-          {(meta?.clubs ?? []).map(c => <option key={c} value={c}>{c}</option>)}
-        </select>
+        <SearchSelect label="Club" placeholder="Any club" value={club}
+          options={meta?.clubs ?? []} onChange={setClub} className="w-40" />
 
         <input
           type="number"

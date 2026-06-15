@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useMeta } from '../api/meta'
+import SearchSelect from './SearchSelect'
 import type { CardParams } from '../api/cards'
 
 interface Props {
@@ -67,25 +68,22 @@ export default function SearchFilterBar({ params, onChange }: Props) {
         {(meta?.leagues ?? []).map(l => <option key={l} value={l}>{l}</option>)}
       </select>
 
-      <select
-        aria-label="Nation"
+      <SearchSelect
+        label="Nation"
+        placeholder="Any nation"
         value={params.nation ?? ''}
-        onChange={e => onChange({ ...params, nation: e.target.value || undefined, offset: 0 })}
-        className="bg-card border border-border rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-gold"
-      >
-        <option value="">All nations</option>
-        {(meta?.nations ?? []).map(n => <option key={n} value={n}>{n}</option>)}
-      </select>
+        options={meta?.nations ?? []}
+        onChange={v => onChange({ ...params, nation: v || undefined, offset: 0 })}
+      />
 
-      <select
-        aria-label="Club"
+      <SearchSelect
+        label="Club"
+        placeholder="Any club"
         value={params.club ?? ''}
-        onChange={e => onChange({ ...params, club: e.target.value || undefined, offset: 0 })}
-        className="bg-card border border-border rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-gold max-w-40"
-      >
-        <option value="">All clubs</option>
-        {(meta?.clubs ?? []).map(c => <option key={c} value={c}>{c}</option>)}
-      </select>
+        options={meta?.clubs ?? []}
+        onChange={v => onChange({ ...params, club: v || undefined, offset: 0 })}
+        className="w-40"
+      />
 
       <select
         aria-label="Version"
