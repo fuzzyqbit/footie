@@ -8,6 +8,8 @@ existing db atomically, so a partial or failed scrape never wipes good data.
 
 from __future__ import annotations
 
+import random
+import time
 from dataclasses import dataclass
 from typing import Callable
 
@@ -16,6 +18,13 @@ from .enrich import EnrichResult, enrich_cards
 from .expand import ExpandResult, expand_cards
 
 DEFAULT_MIN_OVR = 84
+DEFAULT_INTERVAL_HOURS = 72.0   # every 3 days — gentle on the source sites
+
+
+def jittered_sleep(seconds: float) -> None:
+    """Sleep `seconds` plus 0-100% random extra, so request timing isn't a
+    fixed metronome that looks like a bot to rate-limiters."""
+    time.sleep(seconds + random.uniform(0, seconds))
 
 
 @dataclass(frozen=True)

@@ -7,7 +7,6 @@ import contextlib
 import json
 import logging
 import re
-import time
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any
@@ -29,7 +28,12 @@ from ..chem.lineup import lineup_from_dict, resolve_cards
 from ..chem.styles import available_styles
 from ..db import CardRepository, card_to_dict
 from ..errors import FC26Error
-from ..ingest.refresh import DEFAULT_MIN_OVR, refresh_data
+from ..ingest.refresh import (
+    DEFAULT_INTERVAL_HOURS,
+    DEFAULT_MIN_OVR,
+    jittered_sleep,
+    refresh_data,
+)
 from ..ingest.web import fetch_html
 
 _log = logging.getLogger("fc26.refresh")
@@ -74,7 +78,7 @@ async def _refresh_loop(db_path: Path, interval_hours: float, min_ovr: int) -> N
             repo = CardRepository(db_path)
             result = await asyncio.to_thread(
                 refresh_data, repo,
-                min_ovr=min_ovr, fetch_html=fetch_html, sleep=time.sleep,
+                min_ovr=min_ovr, fetch_html=fetch_html, sleep=jittered_sleep,
             )
             _log.info(
                 "auto-refresh done: %s new, %s updated, %s enriched",
@@ -92,7 +96,7 @@ def create_app(
     web_dir: Path | None = None,
     *,
     auto_refresh: bool = False,
-    refresh_interval_hours: float = 24.0,
+    refresh_interval_hours: float = DEFAULT_INTERVAL_HOURS,
     refresh_min_ovr: int = DEFAULT_MIN_OVR,
 ) -> FastAPI:
     @contextlib.asynccontextmanager

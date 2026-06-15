@@ -26,7 +26,7 @@ from .ingest.enrich import enrich_cards
 from .ingest.expand import expand_cards
 from .ingest.fcratings import fetch_top100
 from .ingest.futgg import fetch_futgg_card
-from .ingest.refresh import DEFAULT_MIN_OVR, refresh_data
+from .ingest.refresh import DEFAULT_INTERVAL_HOURS, DEFAULT_MIN_OVR, jittered_sleep, refresh_data
 from .ingest.seed import seed_cards
 from .ingest.web import fetch_html
 from .models import Card
@@ -251,7 +251,7 @@ def refresh(
             repo,
             min_ovr=min_ovr,
             fetch_html=fetch_html,
-            sleep=time.sleep,
+            sleep=jittered_sleep,
             on_progress=console.print,
             enrich_limit=limit,
         )
@@ -618,7 +618,7 @@ def serve(
     web: Path = typer.Option(Path("web/dist"), "--web", help="Built SPA dir to serve (skipped if absent)"),
     auto_refresh: bool = typer.Option(True, "--auto-refresh/--no-auto-refresh",
                                       help="Re-scrape the live card pool on a schedule while serving"),
-    refresh_interval_hours: float = typer.Option(24.0, "--refresh-interval-hours",
+    refresh_interval_hours: float = typer.Option(DEFAULT_INTERVAL_HOURS, "--refresh-interval-hours",
                                                  help="Hours between auto-refreshes"),
     refresh_min_ovr: int = typer.Option(DEFAULT_MIN_OVR, "--refresh-min-ovr",
                                         help="Lowest OVR to re-scrape on auto-refresh"),
