@@ -4,6 +4,7 @@ import CardsPage from './pages/CardsPage'
 import SquadsPage from './pages/SquadsPage'
 import BuildPage from './pages/BuildPage'
 import UpgradePage from './pages/UpgradePage'
+import UpdatesPage from './pages/UpdatesPage'
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/squads" element={<SquadsPage />} />
           <Route path="/build" element={<BuildPage />} />
           <Route path="/upgrade" element={<UpgradePage />} />
+          <Route path="/updates" element={<UpdatesPage />} />
         </Routes>
       </main>
     </div>

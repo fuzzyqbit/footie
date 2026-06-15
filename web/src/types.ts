@@ -121,3 +121,10 @@ export interface Meta {
   leagues: string[]
   versions: string[]
 }
+
+export interface UpdateInfo {
+  refreshed_at: string | null
+  new_count: number
+  updated_count: number
+  new_cards: Card[]
+}

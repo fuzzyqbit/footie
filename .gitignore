@@ -6,3 +6,4 @@ htmlcov/
 build/
 dist/
 .venv/
+data/last_refresh.json

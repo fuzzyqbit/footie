@@ -254,6 +254,7 @@ def refresh(
             sleep=jittered_sleep,
             on_progress=console.print,
             enrich_limit=limit,
+            manifest_path=db.parent / "last_refresh.json",
         )
     except FC26Error as exc:
         _fail(str(exc))

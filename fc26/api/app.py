@@ -79,6 +79,7 @@ async def _refresh_loop(db_path: Path, interval_hours: float, min_ovr: int) -> N
             result = await asyncio.to_thread(
                 refresh_data, repo,
                 min_ovr=min_ovr, fetch_html=fetch_html, sleep=jittered_sleep,
+                manifest_path=db_path.parent / "last_refresh.json",
             )
             _log.info(
                 "auto-refresh done: %s new, %s updated, %s enriched",
@@ -299,6 +300,18 @@ def create_app(
             "leagues": leagues,
             "versions": versions,
         })
+
+    @app.get("/api/updates")
+    async def get_updates() -> dict:
+        empty = {"refreshed_at": None, "new_count": 0, "updated_count": 0, "new_cards": []}
+        manifest = db_path.parent / "last_refresh.json"
+        if not manifest.exists():
+            return _ok(empty)
+        try:
+            parsed = json.loads(manifest.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return _ok(empty)
+        return _ok(parsed)
 
     # Serve the built SPA (web/dist) as a single-page app. Registered AFTER the
     # /api routes so those match first; unmatched /api/* stays a JSON 404. Any

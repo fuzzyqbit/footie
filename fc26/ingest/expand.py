@@ -23,6 +23,7 @@ class ExpandResult:
     new: int
     merged: int
     failed_pages: tuple[str, ...]   # "url: reason"
+    new_ids: tuple[str, ...] = ()   # ids of cards that were newly added
 
 
 def expand_cards(
@@ -38,6 +39,7 @@ def expand_cards(
     new = 0
     merged = 0
     failed_pages: list[str] = []
+    new_ids: list[str] = []
 
     page = 0
     attempts = 0
@@ -67,13 +69,14 @@ def expand_cards(
             repo.upsert(card)
             if existing is None:
                 new += 1
+                new_ids.append(card.id)
             else:
                 merged += 1
         on_progress(f"page {page}: {len(cards)} cards")
         if len(cards) < ROWS_PER_FULL_PAGE:
             break   # short page = last page
 
-    return ExpandResult(seen, new, merged, tuple(failed_pages))
+    return ExpandResult(seen, new, merged, tuple(failed_pages), tuple(new_ids))
 
 
 def _resolve(repo: CardRepository, card: Card) -> tuple[Card, Card | None]:

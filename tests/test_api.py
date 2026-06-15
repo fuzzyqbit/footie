@@ -385,6 +385,36 @@ def test_get_meta(client):
     assert "base" in data["versions"]
 
 
+def test_get_updates_no_manifest(client):
+    r = client.get("/api/updates")
+    assert r.status_code == 200
+    body = r.json()
+    assert body["ok"] is True
+    data = body["data"]
+    assert data["refreshed_at"] is None
+    assert data["new_count"] == 0
+    assert data["updated_count"] == 0
+    assert data["new_cards"] == []
+
+
+def test_get_updates_reads_manifest(client, tmp_db):
+    manifest = tmp_db.parent / "last_refresh.json"
+    payload = {
+        "refreshed_at": "2026-06-14T00:00:00+00:00",
+        "new_count": 1,
+        "updated_count": 2,
+        "new_cards": [_card_dict("ST")],
+    }
+    manifest.write_text(json.dumps(payload), encoding="utf-8")
+    r = client.get("/api/updates")
+    assert r.status_code == 200
+    data = r.json()["data"]
+    assert data["refreshed_at"] == "2026-06-14T00:00:00+00:00"
+    assert data["new_count"] == 1
+    assert data["updated_count"] == 2
+    assert len(data["new_cards"]) == 1
+
+
 def test_serve_command_exists():
     from fc26.cli import app as typer_app
     # typer stores name=None when derived from callback; check callback names too

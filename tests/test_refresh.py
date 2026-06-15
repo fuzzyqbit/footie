@@ -9,7 +9,8 @@ def test_refresh_runs_expand_then_enrich_and_aggregates(monkeypatch):
 
     def fake_expand(repo, *, min_ovr, fetch_html, sleep, on_progress=lambda _m: None, **kw):
         calls.append(("expand", min_ovr))
-        return ExpandResult(seen=10, new=3, merged=7, failed_pages=())
+        return ExpandResult(seen=10, new=3, merged=7, failed_pages=(),
+                            new_ids=("a--base", "b--base", "c--base"))
 
     def fake_enrich(repo, *, fetch_html, sleep, on_progress=lambda _m: None, limit=None, **kw):
         calls.append(("enrich", limit))

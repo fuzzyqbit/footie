@@ -129,6 +129,18 @@ export const handlers = [
 
   http.post('http://localhost:8026/api/upgrade', () =>
     HttpResponse.json({ ok: true, data: MOCK_UPGRADE, error: null })),
+
+  http.get('http://localhost:8026/api/updates', () =>
+    HttpResponse.json({
+      ok: true,
+      data: {
+        refreshed_at: '2026-06-14T00:00:00+00:00',
+        new_count: 2,
+        updated_count: 5,
+        new_cards: [MOCK_CARD, MOCK_HAALAND],
+      },
+      error: null,
+    })),
 ]
 
 export const server = setupServer(...handlers)

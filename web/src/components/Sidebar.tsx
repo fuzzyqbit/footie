@@ -5,6 +5,7 @@ const LINKS = [
   { to: '/squads', label: 'Squads' },
   { to: '/build', label: 'Build' },
   { to: '/upgrade', label: 'Upgrade' },
+  { to: '/updates', label: 'Latest' },
 ]
 
 export default function Sidebar() {
