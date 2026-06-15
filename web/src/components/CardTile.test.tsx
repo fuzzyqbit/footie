@@ -28,6 +28,13 @@ test('click again collapses stats', async () => {
   expect(screen.queryByText('PAC')).not.toBeInTheDocument()
 })
 
+test('shows the card version (base and special)', () => {
+  const { rerender } = render(<CardTile card={MOCK_CARD} />)
+  expect(screen.getByText('base')).toBeInTheDocument()
+  rerender(<CardTile card={{ ...MOCK_CARD, version: 'TOTS' }} />)
+  expect(screen.getByText('TOTS')).toBeInTheDocument()
+})
+
 test('shows null price as —', () => {
   render(<CardTile card={{ ...MOCK_CARD, price: null }} />)
   expect(screen.getByText('—')).toBeInTheDocument()

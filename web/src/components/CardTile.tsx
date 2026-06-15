@@ -25,7 +25,20 @@ export default function CardTile({ card }: Props) {
         <span className="text-gold font-bold text-lg w-8 text-center">{card.ovr}</span>
         <div className="flex-1 min-w-0">
           <div className="text-white font-medium truncate">{card.player_name}</div>
-          <div className="text-muted text-xs">{card.position}</div>
+          <div className="flex items-center gap-1.5 text-xs min-w-0">
+            <span className="text-muted shrink-0">{card.position}</span>
+            <span
+              className={
+                'truncate rounded px-1.5 py-0.5 leading-none ' +
+                (card.version.toLowerCase() === 'base'
+                  ? 'bg-border text-muted'
+                  : 'bg-gold/20 text-gold')
+              }
+              title={card.version}
+            >
+              {card.version}
+            </span>
+          </div>
         </div>
         <div className="text-chem text-sm font-medium">{formatPrice(card.price)}</div>
       </div>
