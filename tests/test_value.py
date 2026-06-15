@@ -52,5 +52,16 @@ def test_quality_uses_ovr_when_face_missing():
     assert picks[0].quality == 84.0
 
 
+def test_per_tier_keeps_best_bargain_per_rating():
+    # two 87s + two 88s; per_tier=1 keeps cheapest of each, ordered rating desc
+    a87 = _card(1, ovr=87, price=1_000)
+    b87 = _card(2, ovr=87, price=2_000)
+    a88 = _card(3, ovr=88, price=3_000)
+    b88 = _card(4, ovr=88, price=9_000)
+    picks = value_picks([b88, a87, a88, b87], per_tier=1)
+    assert [p.card.id for p in picks] == ["p3--base", "p1--base"]   # 88 then 87
+    assert [p.card.ovr for p in picks] == [88, 87]
+
+
 def test_default_max_price_is_cheap_ceiling():
     assert DEFAULT_MAX_PRICE == 50_000

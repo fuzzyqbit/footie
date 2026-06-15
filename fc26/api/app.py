@@ -320,14 +320,18 @@ def create_app(
         max_price: int = DEFAULT_MAX_PRICE,
         pos: str | None = None,
         limit: int = 30,
+        per_tier: int | None = None,
     ) -> dict:
         if limit < 1:
             raise FC26Error("limit must be >= 1")
         if max_price < 1:
             raise FC26Error("max_price must be >= 1")
+        if per_tier is not None and per_tier < 1:
+            raise FC26Error("per_tier must be >= 1")
         repo = CardRepository(db_path)
         picks = value_picks(
-            repo.find_all(), min_ovr=min_ovr, max_price=max_price, pos=pos, limit=limit
+            repo.find_all(), min_ovr=min_ovr, max_price=max_price,
+            pos=pos, limit=limit, per_tier=per_tier,
         )
         return _ok({
             "picks": [

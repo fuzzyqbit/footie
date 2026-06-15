@@ -3,14 +3,14 @@ import CardTile from '../components/CardTile'
 import SkeletonGrid from '../components/SkeletonGrid'
 
 export default function ValuePage() {
-  const { data, isPending, error } = useValue()
+  const { data, isPending, error } = useValue({ per_tier: 1 })
   const picks = data?.picks ?? []
 
   return (
     <div>
       <h1 className="text-2xl font-bold text-white mb-1">Value</h1>
       <p className="text-muted text-sm mb-4">
-        Underrated bargains — best rating-per-coin, cheap on the market.
+        Best bargain at each rating tier — cheap, underrated cards by rating-per-coin.
       </p>
 
       {error && (

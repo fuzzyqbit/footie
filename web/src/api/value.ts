@@ -7,6 +7,7 @@ export interface ValueParams {
   max_price?: number
   pos?: string
   limit?: number
+  per_tier?: number
 }
 
 function buildQs(params: ValueParams): string {
@@ -15,6 +16,7 @@ function buildQs(params: ValueParams): string {
   if (params.max_price != null) qs.set('max_price', String(params.max_price))
   if (params.pos) qs.set('pos', params.pos)
   if (params.limit != null) qs.set('limit', String(params.limit))
+  if (params.per_tier != null) qs.set('per_tier', String(params.per_tier))
   const s = qs.toString()
   return s ? `?${s}` : ''
 }
