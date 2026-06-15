@@ -8,6 +8,7 @@ import UpdatesPage from './pages/UpdatesPage'
 import ValuePage from './pages/ValuePage'
 import WatchlistPage from './pages/WatchlistPage'
 import ComparePage from './pages/ComparePage'
+import ObjectivesPage from './pages/ObjectivesPage'
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
           <Route path="/value" element={<ValuePage />} />
           <Route path="/watchlist" element={<WatchlistPage />} />
           <Route path="/compare" element={<ComparePage />} />
+          <Route path="/objectives" element={<ObjectivesPage />} />
         </Routes>
       </main>
     </div>

@@ -3,6 +3,7 @@ import type { Card } from '../types'
 import { faceKeys } from '../faceLabels'
 import { useIsWatched, toggleWatch } from '../watchlist'
 import { statColor, tierColor } from '../statColor'
+import { displayName } from '../displayName'
 import StatRadar from './StatRadar'
 
 interface Props {
@@ -32,7 +33,9 @@ export default function CardTile({ card }: Props) {
       <div className="flex items-center gap-2 mb-1">
         <span className="text-gold font-bold text-lg w-8 text-center">{card.ovr}</span>
         <div className="flex-1 min-w-0">
-          <div className="text-white font-medium truncate">{card.player_name}</div>
+          <div className="text-white font-medium truncate" title={card.player_name}>
+            {displayName(card.player_name)}
+          </div>
           <div className="flex items-center gap-1.5 text-xs min-w-0">
             <span className="text-muted shrink-0">{card.position}</span>
             <span

@@ -623,3 +623,20 @@ def test_value_filters_by_league(tmp_path, tmp_squads):
     client = _mixed_client(tmp_path, tmp_squads)
     picks = client.get("/api/value?league=La%20Liga").json()["data"]["picks"]
     assert {p["league"] for p in picks} == {"La Liga"}
+
+
+def test_cards_no_price_filter(tmp_path, tmp_squads):
+    priced = _card_dict("ST")
+    objective = _card_dict("RW")
+    objective["id"] = "objective-card"
+    objective["price"] = None
+    db = tmp_path / "players.json"
+    db.write_text(
+        json.dumps({"schema_version": 1, "cards": [priced, objective]}),
+        encoding="utf-8",
+    )
+    client = TestClient(create_app(db, tmp_squads))
+    data = client.get("/api/cards?no_price=true").json()["data"]
+    assert data["total"] == 1
+    assert data["cards"][0]["id"] == "objective-card"
+    assert data["cards"][0]["price"] is None

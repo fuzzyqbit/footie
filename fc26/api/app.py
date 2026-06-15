@@ -165,6 +165,7 @@ def create_app(
         min_ovr: int | None = None,
         stat: str | None = None,
         stat_min: int | None = None,
+        no_price: bool = False,
         sort: str = "ovr",
         limit: int = 50,
         offset: int = 0,
@@ -207,6 +208,8 @@ def create_app(
             attr = _FACE_ATTR[stat]
             cards = [c for c in cards
                      if (v := getattr(c.face, attr)) is not None and v >= stat_min]
+        if no_price:
+            cards = [c for c in cards if c.price is None]
         reverse = sort != "name"
         cards.sort(key=_SORT_KEYS[sort], reverse=reverse)
         total = len(cards)

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { Card, FaceStats } from '../types'
 import { useWatchlist } from '../watchlist'
+import { displayName } from '../displayName'
 import CompareRadar from '../components/CompareRadar'
 
 const COLORS = ['#e2b714', '#4caf50', '#3b82f6']
@@ -113,7 +114,9 @@ export default function ComparePage() {
                     <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: color }} />
                   )}
                   <span className="text-gold font-bold">{card.ovr}</span>
-                  <span className="truncate max-w-32">{card.player_name}</span>
+                  <span className="truncate max-w-32" title={card.player_name}>
+                    {displayName(card.player_name)}
+                  </span>
                 </button>
               )
             })}
@@ -139,7 +142,9 @@ export default function ComparePage() {
                       <th key={c.id} className="py-1 px-3 text-right">
                         <span className="inline-flex items-center gap-1.5 justify-end">
                           <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[i] }} />
-                          <span className="text-white truncate max-w-28">{c.player_name}</span>
+                          <span className="text-white truncate max-w-28" title={c.player_name}>
+                            {displayName(c.player_name)}
+                          </span>
                         </span>
                       </th>
                     ))}

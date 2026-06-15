@@ -12,6 +12,7 @@ export interface CardParams {
   min_ovr?: number
   stat?: string
   stat_min?: number
+  no_price?: boolean
   sort?: string
   limit?: number
   offset?: number
@@ -30,6 +31,7 @@ function buildQs(params: CardParams): string {
     qs.set('stat', params.stat)
     qs.set('stat_min', String(params.stat_min))
   }
+  if (params.no_price) qs.set('no_price', 'true')
   if (params.sort) qs.set('sort', params.sort)
   if (params.limit != null) qs.set('limit', String(params.limit))
   if (params.offset != null) qs.set('offset', String(params.offset))
