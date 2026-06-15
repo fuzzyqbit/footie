@@ -10,7 +10,7 @@ const LINKS = [
   { to: '/value', label: 'Value' },
   { to: '/watchlist', label: 'Flagged' },
   { to: '/compare', label: 'Compare' },
-  { to: '/objectives', label: 'Objectives' },
+  { to: '/objectives', label: 'Untradeable' },
 ]
 
 export default function Sidebar() {
