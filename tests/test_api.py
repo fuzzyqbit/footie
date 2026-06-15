@@ -177,6 +177,14 @@ def test_list_cards_bad_sort(client):
     assert "sort" in body["error"].lower()
 
 
+def test_list_cards_sort_by_face_stat(client):
+    # every face stat is a valid sort key and orders descending
+    for key in ("pac", "sho", "pas", "dri", "def", "phy"):
+        r = client.get(f"/api/cards?sort={key}")
+        assert r.status_code == 200, key
+        assert r.json()["ok"] is True
+
+
 def test_list_cards_version_filter(client):
     r = client.get("/api/cards?version=base")
     assert r.status_code == 200

@@ -44,6 +44,11 @@ _SAFE_NAME_RE = re.compile(r"^[a-zA-Z0-9_-]+$")
 _SORT_KEYS = {
     "ovr": lambda c: c.ovr,
     "pac": lambda c: c.face.pac or 0,
+    "sho": lambda c: c.face.sho or 0,
+    "pas": lambda c: c.face.pas or 0,
+    "dri": lambda c: c.face.dri or 0,
+    "def": lambda c: c.face.def_ or 0,
+    "phy": lambda c: c.face.phy or 0,
     "name": lambda c: c.player_name.lower(),
 }
 
@@ -157,7 +162,10 @@ def create_app(
         offset: int = 0,
     ) -> dict:
         if sort not in _SORT_KEYS:
-            raise FC26Error(f"unknown sort key {sort!r} (use: ovr, pac, name)")
+            raise FC26Error(
+                f"unknown sort key {sort!r} "
+                "(use: ovr, pac, sho, pas, dri, def, phy, name)"
+            )
         if limit < 1:
             raise FC26Error("limit must be >= 1")
         if offset < 0:

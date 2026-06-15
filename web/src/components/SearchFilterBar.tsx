@@ -7,6 +7,17 @@ interface Props {
   onChange: (params: CardParams) => void
 }
 
+// Sort options over the six face stats. GK cards store the keeper attribute set
+// in the same slots, so relabel them when GK is the selected position.
+const STAT_SORTS: Array<{ key: string; out: string; gk: string }> = [
+  { key: 'pac', out: 'PAC', gk: 'DIV' },
+  { key: 'sho', out: 'SHO', gk: 'HAN' },
+  { key: 'pas', out: 'PAS', gk: 'KIC' },
+  { key: 'dri', out: 'DRI', gk: 'REF' },
+  { key: 'def', out: 'DEF', gk: 'SPD' },
+  { key: 'phy', out: 'PHY', gk: 'POS' },
+]
+
 export default function SearchFilterBar({ params, onChange }: Props) {
   const { data: meta } = useMeta()
   const [searchInput, setSearchInput] = useState(params.search ?? '')
@@ -83,7 +94,11 @@ export default function SearchFilterBar({ params, onChange }: Props) {
         className="bg-card border border-border rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-gold"
       >
         <option value="ovr">OVR ↓</option>
-        <option value="pac">PAC ↓</option>
+        {STAT_SORTS.map(({ key, out, gk }) => (
+          <option key={key} value={key}>
+            {(params.pos === 'GK' ? gk : out)} ↓
+          </option>
+        ))}
         <option value="name">Name A–Z</option>
       </select>
     </div>
