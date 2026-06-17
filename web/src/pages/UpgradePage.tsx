@@ -54,7 +54,7 @@ export default function UpgradePage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-white mb-4">Upgrade</h1>
+      <h1 className="text-2xl font-bold text-fg mb-4">Upgrade</h1>
 
       <div className="flex flex-wrap gap-3 mb-4 items-end">
         <div className="flex flex-col gap-1">
@@ -63,7 +63,7 @@ export default function UpgradePage() {
             id="squad-select"
             value={selectedName}
             onChange={e => setSelectedName(e.target.value)}
-            className="bg-card border border-border rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-gold"
+            className="bg-card border border-border rounded px-2 py-1.5 text-sm text-fg focus:outline-none focus:border-gold"
           >
             <option value="">Select squad…</option>
             {(squadList ?? []).map(s => (
@@ -81,14 +81,14 @@ export default function UpgradePage() {
             placeholder="e.g. 500K or 5M"
             value={budget}
             onChange={e => setBudget(e.target.value)}
-            className="bg-card border border-border rounded px-3 py-1.5 text-sm text-white placeholder-muted w-36 focus:outline-none focus:border-gold"
+            className="bg-card border border-border rounded px-3 py-1.5 text-sm text-fg placeholder-muted w-36 focus:outline-none focus:border-gold"
           />
         </div>
 
         <button
           onClick={handleFindUpgrades}
           disabled={!selectedName || !budget || upgradeMutation.isPending}
-          className="px-4 py-2 bg-gold text-navy font-bold rounded text-sm disabled:opacity-50 self-end"
+          className="px-4 py-2 bg-gold text-[#0f0f1a] font-bold rounded text-sm disabled:opacity-50 self-end"
         >
           {upgradeMutation.isPending ? 'Searching…' : 'Find upgrades'}
         </button>
@@ -121,7 +121,7 @@ export default function UpgradePage() {
                 <div className="flex-1">
                   <span className="text-muted line-through text-sm">{swap.out_name}</span>
                   <span className="text-muted mx-2">→</span>
-                  <span className="text-white font-medium text-sm">{swap.in_name}</span>
+                  <span className="text-fg font-medium text-sm">{swap.in_name}</span>
                   <span className="text-muted text-xs ml-1">{swap.in_version}</span>
                 </div>
                 <div className="text-right">
@@ -142,7 +142,7 @@ export default function UpgradePage() {
             <button
               onClick={handleSaveModified}
               disabled={saveMutation.isPending}
-              className="px-4 py-2 bg-gold text-navy font-medium rounded text-sm disabled:opacity-50"
+              className="px-4 py-2 bg-gold text-[#0f0f1a] font-medium rounded text-sm disabled:opacity-50"
             >
               {saveMutation.isPending ? 'Saving…' : 'Save upgraded squad'}
             </button>

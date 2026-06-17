@@ -27,6 +27,7 @@ from .ingest.enrich import enrich_cards
 from .ingest.expand import expand_cards
 from .ingest.fcratings import fetch_top100
 from .ingest.futgg import fetch_futgg_card
+from .ingest.images import upgrade_card_images
 from .ingest.objectives import write_objectives
 from .ingest.refresh import DEFAULT_INTERVAL_HOURS, DEFAULT_MIN_OVR, jittered_sleep, refresh_data
 from .ingest.sbc import write_sbcs
@@ -234,6 +235,43 @@ def expand(
         console.print(f"[yellow]failed:[/yellow] {failure}")
     if result.seen == 0:
         _fail("nothing ingested")
+
+
+@app.command()
+def images(
+    refresh: bool = typer.Option(False, "--refresh", help="Re-fetch HD art even for already-enriched cards"),
+    limit: int | None = typer.Option(None, "--limit", help="Cap detail-page fetches (sampling/partial)"),
+    workers: int = typer.Option(1, "--workers", help="Concurrent detail-page fetches (single JSON writer)"),
+    db: Path = DB_OPTION,
+) -> None:
+    """Fetch HD card art (player render + frame) from each card's futbin detail page.
+
+    Run `fc26 expand` first so cards carry a futbin_url; this upgrades the small
+    list thumbnails to full-size signed CDN URLs (hotlinked, not downloaded).
+    """
+    repo = CardRepository(db)
+    try:
+        result = upgrade_card_images(
+            repo,
+            fetch_html=fetch_html,
+            sleep=time.sleep,
+            on_progress=console.print,
+            refresh=refresh,
+            limit=limit,
+            workers=workers,
+        )
+    except FC26Error as exc:
+        _fail(str(exc))
+    console.print(
+        f"hd art: upgraded {len(result.upgraded)}, skipped {len(result.skipped)}, "
+        f"missed {len(result.missed)}"
+    )
+    for miss in result.missed:
+        console.print(f"[yellow]miss:[/yellow] {miss}")
+    if not result.upgraded and not result.missed:
+        no_url = all(not c.futbin_url for c in repo.find_all())
+        if no_url:
+            _fail("no cards carry a futbin_url - run `fc26 expand --min-ovr N` first")
 
 
 @app.command()

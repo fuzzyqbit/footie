@@ -47,7 +47,7 @@ export default function SbcsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-white mb-1">SBCs</h1>
+      <h1 className="text-2xl font-bold text-fg mb-1">SBCs</h1>
       <p className="text-muted text-sm mb-4">
         Best Squad Building Challenges to do right now — scraped live from the fut.gg SBC hub.
         Ranked so cheap, repeatable pack &amp; upgrade SBCs surface first. Cost is fut.gg’s
@@ -79,7 +79,7 @@ export default function SbcsPage() {
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-white font-semibold">{sbc.name}</span>
+                    <span className="text-fg font-semibold">{sbc.name}</span>
                     <span className="text-xs bg-navy text-muted rounded px-1.5 py-0.5">
                       {CATEGORY_LABEL[sbc.category] ?? sbc.category}
                     </span>

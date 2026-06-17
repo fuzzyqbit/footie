@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { useWatchlist } from '../watchlist'
+import ThemeToggle from './ThemeToggle'
 
 const LINKS = [
   { to: '/cards', label: 'Cards' },
@@ -12,6 +13,7 @@ const LINKS = [
   { to: '/compare', label: 'Compare' },
   { to: '/objectives', label: 'Objectives' },
   { to: '/sbcs', label: 'SBCs' },
+  { to: '/create', label: 'Create' },
 ]
 
 export default function Sidebar() {
@@ -27,7 +29,7 @@ export default function Sidebar() {
             `flex items-center justify-between px-3 py-2 rounded text-sm font-medium transition-colors ${
               isActive
                 ? 'text-gold bg-navy border-l-2 border-gold'
-                : 'text-muted hover:text-white hover:bg-navy'
+                : 'text-muted hover:text-fg hover:bg-navy'
             }`
           }
         >
@@ -39,6 +41,7 @@ export default function Sidebar() {
           )}
         </NavLink>
       ))}
+      <ThemeToggle />
     </nav>
   )
 }

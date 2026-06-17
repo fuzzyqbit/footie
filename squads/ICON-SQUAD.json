@@ -1,0 +1,17 @@
+{
+  "name": "ICON-SQUAD",
+  "formation": "4-2-3-1",
+  "starting_xi": {
+    "GK": "campos--player-moments",
+    "RB": "puyol-saforcada--trophy-titans-icon-88",
+    "CB1": "desailly--trophy-titans-icon-88",
+    "CB2": "campbell--trophy-titans-icon",
+    "LB": "cole--trophy-titans-icon-88",
+    "CDM1": "schweinsteiger--trophy-titans-icon",
+    "CDM2": "foudy--winter-wildcard-icon",
+    "CAM": "arantes-nascimento--icon",
+    "RW": "madeira-caeiro-figo--winter-wildcard-icon",
+    "LW": "henry--trophy-titans-icon",
+    "ST": "lineker--trophy-titans-icon"
+  }
+}

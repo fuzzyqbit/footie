@@ -19,8 +19,17 @@ export default function SlotCard({ slot, card, chem, isSelected, onClick }: Prop
         border transition-colors min-w-[52px]
         ${isSelected ? 'border-gold bg-navy' : 'border-border hover:border-muted'}`}
     >
+      {card.image_url && (
+        <img
+          src={card.image_url}
+          alt=""
+          aria-hidden
+          loading="lazy"
+          className="h-12 w-auto mx-auto object-contain mb-0.5"
+        />
+      )}
       <div className="text-gold font-bold text-sm leading-none">{card.ovr}</div>
-      <div className="text-white text-xs truncate max-w-[64px] mx-auto leading-tight mt-0.5">
+      <div className="text-fg text-xs truncate max-w-[64px] mx-auto leading-tight mt-0.5">
         {card.player_name.split(' ').pop()}
       </div>
       <div className="text-muted text-[10px] leading-none">{slot}</div>

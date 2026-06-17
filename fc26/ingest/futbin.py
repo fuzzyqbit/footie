@@ -12,6 +12,7 @@ from ..models import Card, FaceStats, VALID_POSITIONS, make_card_id
 
 LIST_URL_TEMPLATE = "https://www.futbin.com/players?player_rating={min_ovr}-99&page={page}"  # consumed by the expand orchestrator
 ROWS_PER_FULL_PAGE = 30  # consumed by the expand orchestrator
+FUTBIN_ORIGIN = "https://www.futbin.com"
 
 # futbin badge texts that mean "this is the plain base card".
 # Live site uses "Normal" (verified 2026-06-10); gold/silver entries kept
@@ -74,6 +75,29 @@ def parse_price(raw: str) -> int | None:
         value *= 1_000
     price = int(value)
     return price if price > 0 else None
+
+
+def _first_img_src(tree, predicate) -> str | None:
+    """First <img> whose src satisfies predicate (selectolax decodes &amp; -> &)."""
+    for img in tree.css("img"):
+        src = img.attributes.get("src") or ""
+        if src and predicate(src):
+            return src
+    return None
+
+
+def _extract_card_art(tree) -> tuple[str | None, str | None, str | None]:
+    """(futbin_url, image_url, bg_url) from a player-list row.
+
+    image_url = player render PNG, bg_url = card-frame PNG. Both are the small
+    list-page thumbnails (w~64); the `images` command upgrades them to HD.
+    """
+    anchor = tree.css_first("a.player-row-playercard")
+    href = anchor.attributes.get("href") if anchor else None
+    futbin_url = f"{FUTBIN_ORIGIN}{href}" if href and href.startswith("/") else href
+    image_url = _first_img_src(tree, lambda s: "/img/players/" in s)
+    bg_url = _first_img_src(tree, lambda s: "/img/cards/" in s)
+    return futbin_url, image_url, bg_url
 
 
 def _parse_row(row_html: str, source_url: str) -> Card | None:
@@ -204,6 +228,9 @@ def _parse_row(row_html: str, source_url: str) -> Card | None:
             raw_price = re.sub(r"coins?", "", price_div.text(strip=True), flags=re.IGNORECASE).strip()
             price = parse_price(raw_price)
 
+    # --- Card art + detail URL ---
+    futbin_url, image_url, bg_url = _extract_card_art(tree)
+
     # --- Build card ---
     card_id = make_card_id(player_name, version)
     today = datetime.date.today().isoformat()
@@ -224,6 +251,9 @@ def _parse_row(row_html: str, source_url: str) -> Card | None:
         league=league,
         club=club,
         price=price,
+        image_url=image_url,
+        bg_url=bg_url,
+        futbin_url=futbin_url,
         source_url=source_url,
         crawled_at=today,
     )

@@ -12,7 +12,7 @@ export default function UpdatesPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-white mb-1">Latest</h1>
+      <h1 className="text-2xl font-bold text-fg mb-1">Latest</h1>
       <p className="text-muted text-sm mb-4">{refreshedAt}</p>
 
       {error && (

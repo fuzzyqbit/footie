@@ -22,6 +22,13 @@ export const MOCK_CARD: Card = {
   height_cm: null,
   age: null,
   price: 1200000,
+  image_url: null,
+  bg_url: null,
+  futbin_url: null,
+  club_url: null,
+  league_url: null,
+  nation_url: null,
+  common_name: null,
   source_url: null,
   crawled_at: null,
 }

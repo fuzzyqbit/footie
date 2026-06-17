@@ -84,6 +84,13 @@ class Card:
     height_cm: int | None = None
     age: int | None = None
     price: int | None = None
+    image_url: str | None = None     # player render PNG (futbin CDN, signed); HD when enriched
+    bg_url: str | None = None        # card background/frame PNG (futbin CDN, signed)
+    futbin_url: str | None = None    # canonical futbin detail page for this card
+    club_url: str | None = None      # club crest PNG (futbin CDN, signed; dark variant)
+    league_url: str | None = None    # league logo PNG (futbin CDN, signed; dark variant)
+    nation_url: str | None = None    # nation flag PNG (futbin CDN, signed)
+    common_name: str | None = None   # short/known name from the player render <img alt>
     source_url: str | None = None
     crawled_at: str | None = None
 

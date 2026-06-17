@@ -31,11 +31,11 @@ export default function ValuePage() {
   const picks = data?.picks ?? []
 
   const inputCls =
-    'bg-card border border-border rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-gold'
+    'bg-card border border-border rounded px-2 py-1.5 text-sm text-fg focus:outline-none focus:border-gold'
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-white mb-1">Value</h1>
+      <h1 className="text-2xl font-bold text-fg mb-1">Value</h1>
       <p className="text-muted text-sm mb-4">
         Best bargains at each rating tier — cheap, underrated cards by rating-per-coin.
       </p>

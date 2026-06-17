@@ -10,10 +10,11 @@ import WatchlistPage from './pages/WatchlistPage'
 import ComparePage from './pages/ComparePage'
 import ObjectivesPage from './pages/ObjectivesPage'
 import SbcsPage from './pages/SbcsPage'
+import GeneratorPage from './pages/GeneratorPage'
 
 export default function App() {
   return (
-    <div className="flex h-screen bg-navy text-white overflow-hidden">
+    <div className="flex h-screen bg-navy text-fg overflow-hidden">
       <Sidebar />
       <main className="flex-1 overflow-y-auto p-6">
         <Routes>
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/compare" element={<ComparePage />} />
           <Route path="/objectives" element={<ObjectivesPage />} />
           <Route path="/sbcs" element={<SbcsPage />} />
+          <Route path="/create" element={<GeneratorPage />} />
         </Routes>
       </main>
     </div>

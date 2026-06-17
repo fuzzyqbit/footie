@@ -105,7 +105,7 @@ export default function SquadsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-white mb-4">Squads</h1>
+      <h1 className="text-2xl font-bold text-fg mb-4">Squads</h1>
       <div className="flex gap-4">
         <div className="w-44 flex-shrink-0">
           <div className="text-muted text-xs uppercase tracking-wider mb-2">Saved squads</div>
@@ -118,8 +118,8 @@ export default function SquadsPage() {
               onClick={() => handleSelectSquad(s.name)}
               className={`w-full text-left px-3 py-2 rounded text-sm mb-1 transition-colors
                 ${selectedSquadName === s.name
-                  ? 'bg-gold text-navy font-medium'
-                  : 'bg-card text-white hover:bg-card-hover'}`}
+                  ? 'bg-gold text-[#0f0f1a] font-medium'
+                  : 'bg-card text-fg hover:bg-card-hover'}`}
             >
               {s.name}
             </button>
@@ -156,7 +156,7 @@ export default function SquadsPage() {
                 <button
                   onClick={handleSave}
                   disabled={saveMutation.isPending}
-                  className="px-4 py-2 bg-gold text-navy font-medium rounded text-sm disabled:opacity-50"
+                  className="px-4 py-2 bg-gold text-[#0f0f1a] font-medium rounded text-sm disabled:opacity-50"
                 >
                   {saveMutation.isPending ? 'Saving…' : 'Save'}
                 </button>

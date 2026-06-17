@@ -26,7 +26,7 @@ export default function SearchSelect({
         value={value}
         placeholder={placeholder}
         onChange={e => onChange(e.target.value)}
-        className={`bg-card border border-border rounded px-2 py-1.5 text-sm text-white placeholder-muted focus:outline-none focus:border-gold ${className}`}
+        className={`bg-card border border-border rounded px-2 py-1.5 text-sm text-fg placeholder-muted focus:outline-none focus:border-gold ${className}`}
       />
       <datalist id={listId}>
         {options.map(o => (

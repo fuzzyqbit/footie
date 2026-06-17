@@ -17,7 +17,7 @@ export default function CardsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-white mb-4">Cards</h1>
+      <h1 className="text-2xl font-bold text-fg mb-4">Cards</h1>
       <SearchFilterBar params={params} onChange={p => setParams({ ...p, limit: LIMIT })} />
 
       {error && (
@@ -45,7 +45,7 @@ export default function CardsPage() {
           <button
             onClick={() => setParams(p => ({ ...p, offset: Math.max(0, (p.offset ?? 0) - LIMIT) }))}
             disabled={offset === 0}
-            className="px-3 py-1.5 bg-card border border-border rounded text-sm text-white disabled:opacity-40"
+            className="px-3 py-1.5 bg-card border border-border rounded text-sm text-fg disabled:opacity-40"
           >
             Prev
           </button>
@@ -53,7 +53,7 @@ export default function CardsPage() {
           <button
             onClick={() => setParams(p => ({ ...p, offset: (p.offset ?? 0) + LIMIT }))}
             disabled={offset + LIMIT >= total}
-            className="px-3 py-1.5 bg-card border border-border rounded text-sm text-white disabled:opacity-40"
+            className="px-3 py-1.5 bg-card border border-border rounded text-sm text-fg disabled:opacity-40"
           >
             Next
           </button>

@@ -35,7 +35,7 @@ export default function PlayerDropdown({ slot, cards, onSwap, onClose }: Props) 
           placeholder="Search players..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="w-full bg-navy border border-border rounded px-2 py-1 text-sm text-white placeholder-muted focus:outline-none focus:border-gold"
+          className="w-full bg-navy border border-border rounded px-2 py-1 text-sm text-fg placeholder-muted focus:outline-none focus:border-gold"
         />
       </div>
       <ul className="max-h-64 overflow-y-auto">
@@ -46,7 +46,7 @@ export default function PlayerDropdown({ slot, cards, onSwap, onClose }: Props) 
               className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-navy transition-colors"
             >
               <span className="text-gold font-bold text-sm w-6">{card.ovr}</span>
-              <span className="flex-1 text-white text-sm truncate">{card.player_name}</span>
+              <span className="flex-1 text-fg text-sm truncate">{card.player_name}</span>
               <span className="text-muted text-xs">{card.position}</span>
             </button>
           </li>

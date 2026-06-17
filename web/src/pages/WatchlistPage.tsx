@@ -7,7 +7,7 @@ export default function WatchlistPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-white mb-1">Watchlist</h1>
+      <h1 className="text-2xl font-bold text-fg mb-1">Watchlist</h1>
       <p className="text-muted text-sm mb-4">
         Players you flagged to look at later — tap the star on any card to add or remove it.
       </p>

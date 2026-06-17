@@ -1,0 +1,17 @@
+{
+  "name": "Haaland-squad",
+  "formation": "4-2-3-1",
+  "starting_xi": {
+    "GK": "emiliano-martinez--uel-rttf",
+    "RB": "matty-cash--uel-rttf",
+    "CB1": "chris-richards--uecl-rttf",
+    "CB2": "victor-lindelof--uel-rttf",
+    "LB": "antonee-robinson--path-to-glory",
+    "CDM1": "declan-rice--tots",
+    "CDM2": "youri-tielemans--uel-rttf",
+    "CAM": "bruno-miguel-borges-fernandes--tots",
+    "RW": "ismaila-sarr--uecl-rttf",
+    "LW": "jadon-sancho--uel-rttf",
+    "ST": "erling-haaland--tots"
+  }
+}

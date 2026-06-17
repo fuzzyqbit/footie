@@ -27,6 +27,13 @@ export interface Card {
   height_cm: number | null
   age: number | null
   price: number | null
+  image_url: string | null
+  bg_url: string | null
+  futbin_url: string | null
+  club_url: string | null
+  league_url: string | null
+  nation_url: string | null
+  common_name: string | null
   source_url: string | null
   crawled_at: string | null
 }

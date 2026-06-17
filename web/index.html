@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FC 26 Assistant</title>
+    <script>
+      (function () {
+        try {
+          if (localStorage.getItem('fc26-theme') === 'light')
+            document.documentElement.classList.add('light')
+        } catch (e) {}
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

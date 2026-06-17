@@ -69,7 +69,7 @@ export default function ComparePage() {
         {vals.map((v, i) => (
           <td
             key={i}
-            className={`py-1 px-3 text-right ${i === best ? 'text-gold font-semibold' : 'text-white'}`}
+            className={`py-1 px-3 text-right ${i === best ? 'text-gold font-semibold' : 'text-fg'}`}
           >
             {v == null ? '—' : fmt(v)}
           </td>
@@ -80,7 +80,7 @@ export default function ComparePage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-white mb-1">Compare</h1>
+      <h1 className="text-2xl font-bold text-fg mb-1">Compare</h1>
       <p className="text-muted text-sm mb-4">
         Pick up to {MAX} flagged players to overlay their stats. Best value in each row is gold.
       </p>
@@ -103,10 +103,10 @@ export default function ComparePage() {
                   disabled={disabled}
                   className={`flex items-center gap-2 rounded px-2.5 py-1.5 text-sm border transition-colors ${
                     color
-                      ? 'bg-navy text-white'
+                      ? 'bg-navy text-fg'
                       : disabled
                         ? 'bg-card text-muted border-border opacity-40 cursor-not-allowed'
-                        : 'bg-card text-white border-border hover:bg-card-hover'
+                        : 'bg-card text-fg border-border hover:bg-card-hover'
                   }`}
                   style={color ? { borderColor: color } : undefined}
                 >
@@ -142,7 +142,7 @@ export default function ComparePage() {
                       <th key={c.id} className="py-1 px-3 text-right">
                         <span className="inline-flex items-center gap-1.5 justify-end">
                           <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[i] }} />
-                          <span className="text-white truncate max-w-28" title={c.player_name}>
+                          <span className="text-fg truncate max-w-28" title={c.player_name}>
                             {displayName(c.player_name)}
                           </span>
                         </span>

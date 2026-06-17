@@ -39,7 +39,7 @@ export default function SearchFilterBar({ params, onChange }: Props) {
         placeholder="Search players..."
         value={searchInput}
         onChange={e => setSearchInput(e.target.value)}
-        className="bg-card border border-border rounded px-3 py-1.5 text-sm text-white placeholder-muted focus:outline-none focus:border-gold"
+        className="bg-card border border-border rounded px-3 py-1.5 text-sm text-fg placeholder-muted focus:outline-none focus:border-gold"
       />
 
       <div className="flex items-center gap-1">
@@ -49,7 +49,7 @@ export default function SearchFilterBar({ params, onChange }: Props) {
           aria-label="Position"
           value={params.pos ?? ''}
           onChange={e => onChange({ ...params, pos: e.target.value || undefined, offset: 0 })}
-          className="bg-card border border-border rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-gold"
+          className="bg-card border border-border rounded px-2 py-1.5 text-sm text-fg focus:outline-none focus:border-gold"
         >
           <option value="">All positions</option>
           {['GK', 'CB', 'RB', 'LB', 'CDM', 'CM', 'CAM', 'RM', 'LM', 'RW', 'LW', 'ST', 'CF', 'SS'].map(p => (
@@ -62,7 +62,7 @@ export default function SearchFilterBar({ params, onChange }: Props) {
         aria-label="League"
         value={params.league ?? ''}
         onChange={e => onChange({ ...params, league: e.target.value || undefined, offset: 0 })}
-        className="bg-card border border-border rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-gold"
+        className="bg-card border border-border rounded px-2 py-1.5 text-sm text-fg focus:outline-none focus:border-gold"
       >
         <option value="">All leagues</option>
         {(meta?.leagues ?? []).map(l => <option key={l} value={l}>{l}</option>)}
@@ -85,15 +85,13 @@ export default function SearchFilterBar({ params, onChange }: Props) {
         className="w-40"
       />
 
-      <select
-        aria-label="Version"
+      <SearchSelect
+        label="Version"
+        placeholder="Any version (Icon, Hero…)"
         value={params.version ?? ''}
-        onChange={e => onChange({ ...params, version: e.target.value || undefined, offset: 0 })}
-        className="bg-card border border-border rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-gold"
-      >
-        <option value="">All versions</option>
-        {(meta?.versions ?? []).map(v => <option key={v} value={v}>{v}</option>)}
-      </select>
+        options={meta?.versions ?? []}
+        onChange={v => onChange({ ...params, version: v || undefined, offset: 0 })}
+      />
 
       <input
         type="number"
@@ -102,14 +100,14 @@ export default function SearchFilterBar({ params, onChange }: Props) {
         max={99}
         value={params.min_ovr ?? ''}
         onChange={e => onChange({ ...params, min_ovr: e.target.value ? Number(e.target.value) : undefined, offset: 0 })}
-        className="bg-card border border-border rounded px-3 py-1.5 text-sm text-white placeholder-muted w-24 focus:outline-none focus:border-gold"
+        className="bg-card border border-border rounded px-3 py-1.5 text-sm text-fg placeholder-muted w-24 focus:outline-none focus:border-gold"
       />
 
       <select
         aria-label="Stat filter"
         value={params.stat ?? ''}
         onChange={e => onChange({ ...params, stat: e.target.value || undefined, offset: 0 })}
-        className="bg-card border border-border rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-gold"
+        className="bg-card border border-border rounded px-2 py-1.5 text-sm text-fg focus:outline-none focus:border-gold"
       >
         <option value="">Stat ≥</option>
         {STAT_SORTS.map(({ key, out, gk }) => (
@@ -126,14 +124,14 @@ export default function SearchFilterBar({ params, onChange }: Props) {
         disabled={!params.stat}
         value={params.stat_min ?? ''}
         onChange={e => onChange({ ...params, stat_min: e.target.value ? Number(e.target.value) : undefined, offset: 0 })}
-        className="bg-card border border-border rounded px-3 py-1.5 text-sm text-white placeholder-muted w-20 focus:outline-none focus:border-gold disabled:opacity-40"
+        className="bg-card border border-border rounded px-3 py-1.5 text-sm text-fg placeholder-muted w-20 focus:outline-none focus:border-gold disabled:opacity-40"
       />
 
       <select
         aria-label="Sort"
         value={params.sort ?? 'ovr'}
         onChange={e => onChange({ ...params, sort: e.target.value, offset: 0 })}
-        className="bg-card border border-border rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-gold"
+        className="bg-card border border-border rounded px-2 py-1.5 text-sm text-fg focus:outline-none focus:border-gold"
       >
         <option value="ovr">OVR ↓</option>
         {STAT_SORTS.map(({ key, out, gk }) => (

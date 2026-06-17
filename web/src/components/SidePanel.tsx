@@ -30,7 +30,7 @@ export default function SidePanel({ slot, card, chemReport }: Props) {
     <div className="w-52 flex-shrink-0 bg-card border border-border rounded-lg p-4 flex flex-col gap-3">
       <div>
         <div className="text-gold font-bold text-xl">{card.ovr}</div>
-        <div className="text-white font-medium">{card.player_name}</div>
+        <div className="text-fg font-medium">{card.player_name}</div>
         <div className="text-muted text-sm">{card.position} · {card.version}</div>
       </div>
 
@@ -45,7 +45,7 @@ export default function SidePanel({ slot, card, chemReport }: Props) {
         {faceKeys(card.position).map(([key, label]) => (
           <div key={key} className="flex justify-between text-xs bg-navy rounded px-2 py-1">
             <span className="text-muted">{label}</span>
-            <span className="text-white font-medium">{card.face[key] ?? '—'}</span>
+            <span className="text-fg font-medium">{card.face[key] ?? '—'}</span>
           </div>
         ))}
       </div>

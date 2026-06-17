@@ -1,4 +1,4 @@
-const BASE = 'http://localhost:8026'
+const BASE = import.meta.env.VITE_API_BASE ?? 'http://localhost:8026'
 
 interface Envelope<T> {
   ok: boolean

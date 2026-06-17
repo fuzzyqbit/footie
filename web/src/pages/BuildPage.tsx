@@ -101,7 +101,7 @@ export default function BuildPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-white mb-4">Build</h1>
+      <h1 className="text-2xl font-bold text-fg mb-4">Build</h1>
 
       <div className="flex flex-wrap gap-3 mb-4 items-end">
         <div className="flex flex-col gap-1">
@@ -110,7 +110,7 @@ export default function BuildPage() {
             id="formation-select"
             value={formation}
             onChange={e => setFormation(e.target.value)}
-            className="bg-card border border-border rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-gold"
+            className="bg-card border border-border rounded px-2 py-1.5 text-sm text-fg focus:outline-none focus:border-gold"
           >
             {formations.map(f => <option key={f} value={f}>{f}</option>)}
           </select>
@@ -125,7 +125,7 @@ export default function BuildPage() {
             placeholder="e.g. 500K or 5M"
             value={budget}
             onChange={e => setBudget(e.target.value)}
-            className="bg-card border border-border rounded px-3 py-1.5 text-sm text-white placeholder-muted w-36 focus:outline-none focus:border-gold"
+            className="bg-card border border-border rounded px-3 py-1.5 text-sm text-fg placeholder-muted w-36 focus:outline-none focus:border-gold"
           />
         </div>
 
@@ -135,7 +135,7 @@ export default function BuildPage() {
             id="league-filter"
             value={league}
             onChange={e => setLeague(e.target.value)}
-            className="bg-card border border-border rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-gold"
+            className="bg-card border border-border rounded px-2 py-1.5 text-sm text-fg focus:outline-none focus:border-gold"
           >
             <option value="">Any</option>
             {(meta?.leagues ?? []).map(l => <option key={l} value={l}>{l}</option>)}
@@ -148,7 +148,7 @@ export default function BuildPage() {
             id="objective-select"
             value={objective}
             onChange={e => setObjective(e.target.value)}
-            className="bg-card border border-border rounded px-2 py-1.5 text-sm text-white focus:outline-none focus:border-gold"
+            className="bg-card border border-border rounded px-2 py-1.5 text-sm text-fg focus:outline-none focus:border-gold"
           >
             <option value="meta">Meta (pace + chem)</option>
             <option value="rating">Rating (max OVR)</option>
@@ -158,7 +158,7 @@ export default function BuildPage() {
         <button
           onClick={handleBuild}
           disabled={!budget || buildMutation.isPending}
-          className="px-4 py-2 bg-gold text-navy font-bold rounded text-sm disabled:opacity-50 self-end"
+          className="px-4 py-2 bg-gold text-[#0f0f1a] font-bold rounded text-sm disabled:opacity-50 self-end"
         >
           {buildMutation.isPending ? 'Building…' : 'Build'}
         </button>
@@ -198,12 +198,12 @@ export default function BuildPage() {
                 value={squadName}
                 onChange={e => setSquadName(e.target.value)}
                 placeholder="Squad name"
-                className="bg-card border border-border rounded px-3 py-1.5 text-sm text-white w-36 focus:outline-none focus:border-gold"
+                className="bg-card border border-border rounded px-3 py-1.5 text-sm text-fg w-36 focus:outline-none focus:border-gold"
               />
               <button
                 onClick={handleSave}
                 disabled={saveMutation.isPending || !squadName}
-                className="px-4 py-2 bg-gold text-navy font-medium rounded text-sm disabled:opacity-50"
+                className="px-4 py-2 bg-gold text-[#0f0f1a] font-medium rounded text-sm disabled:opacity-50"
               >
                 {saveMutation.isPending ? 'Saving…' : 'Save squad'}
               </button>

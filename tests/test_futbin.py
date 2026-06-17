@@ -48,6 +48,28 @@ def test_dembele_toty_pinned_values(page_html):
     assert dembele.crawled_at is not None
 
 
+def test_dembele_row_carries_image_and_detail_urls(page_html):
+    cards = parse_futbin_page(page_html, source_url=URL)
+    dembele = next(c for c in cards if "dembele" in c.id and "toty" in c.id)
+    assert dembele.futbin_url == "https://www.futbin.com/26/player/21745/ousmane-dembele"
+    assert dembele.image_url == (
+        "https://cdn3.futbin.com/content/fifa26/img/players/p100894739.png"
+        "?fm=png&ixlib=java-2.1.0&verzion=5&w=64&s=5162ad7f6eb7860401a2a80c8d862a66"
+    )
+    assert dembele.bg_url == (
+        "https://cdn3.futbin.com/content/fifa26/img/cards/tiny/5_toty.png"
+        "?fm=png&ixlib=java-2.1.0&w=64&s=55e27e51c6168b698491e24f269a3490"
+    )
+
+
+def test_every_row_has_image_and_detail_urls(page_html):
+    cards = parse_futbin_page(page_html, source_url=URL)
+    for c in cards:
+        assert c.futbin_url and c.futbin_url.startswith("https://www.futbin.com/26/player/")
+        assert c.image_url and "/img/players/" in c.image_url
+        assert c.bg_url and "/img/cards/" in c.bg_url
+
+
 def test_maradona_journey_of_nations_pinned(page_html):
     """Row 14: Maradona Journey of Nations — special version, Icon league, EA FC ICONS club."""
     cards = parse_futbin_page(page_html, source_url=URL)

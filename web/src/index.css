@@ -9,4 +9,18 @@
   --color-chem: #4caf50;
   --color-muted: #aaaaaa;
   --color-border: #2a2a3a;
+  --color-fg: #ffffff;
 }
+
+/* Light theme overrides the surface + text tokens; accent tokens
+   (gold, chem, pitch) stay constant so cards/buttons keep their identity. */
+html.light {
+  --color-navy: #eef1f7;
+  --color-card: #ffffff;
+  --color-card-hover: #e7ebf4;
+  --color-border: #d3d8e4;
+  --color-muted: #5a6072;
+  --color-fg: #14161f;
+}
+
+html, body { background-color: var(--color-navy); }
