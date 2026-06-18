@@ -13,7 +13,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "pytest-cov>=5"]
+dev = ["pytest>=8", "pytest-cov>=5", "pytest-benchmark>=5,<6", "py-spy>=0.4"]
 
 [project.scripts]
 fc26 = "fc26.cli:app"
@@ -26,4 +26,8 @@ build-backend = "setuptools.build_meta"
 include = ["fc26*"]
 
 [tool.pytest.ini_options]
-markers = ["live: hits the real network (opt-in via --run-live)"]
+markers = [
+    "live: hits the real network (opt-in via --run-live)",
+    "benchmark: performance benchmark (opt-in via --run-bench)",
+    "golden: golden-output equivalence check (opt-in via --run-bench)",
+]
