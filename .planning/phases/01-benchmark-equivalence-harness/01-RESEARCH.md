@@ -520,7 +520,10 @@ pstats.Stats("refresh.prof").sort_stats("cumulative").print_stats(25)
 
 **Note:** The version facts for pytest-benchmark (5.2.3) and py-spy (0.4.2), their Python-3.14 support, the macOS-sudo/SIP behavior, and the `--benchmark-*` flag syntax are **VERIFIED/CITED** (PyPI JSON + official docs, 2026-06-18), not assumed.
 
-## Open Questions
+## Open Questions (RESOLVED)
+
+> Each question below carries an inline recommendation; the Phase 1 plans (01-01..01-03) implement those recommendations. Retained for traceability.
+
 
 1. **Exact composition of the deterministic corpus.**
    - What we know: ~30-60 cards carved from `data/players.json`, must cover every position in FORMATIONS across ≥2 leagues/nations/clubs and have stable prices, for build/upgrade to produce non-trivial, deterministic results.
