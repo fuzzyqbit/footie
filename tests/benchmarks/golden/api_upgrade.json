@@ -1,0 +1,14 @@
+{
+  "data": {
+    "budget": 500000000,
+    "chem_after": 26,
+    "chem_before": 26,
+    "score_after": 1076.73,
+    "score_before": 1076.73,
+    "spent": 0,
+    "swaps": [],
+    "warnings": []
+  },
+  "error": null,
+  "ok": true
+}

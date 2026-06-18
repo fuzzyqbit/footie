@@ -1,0 +1,1104 @@
+{
+  "4-2-3-1|meta|1000000": {
+    "seed_cost": 202800,
+    "swaps": [
+      {
+        "in": "angerer--trophy-titans-icon",
+        "slot": "GK"
+      },
+      {
+        "in": "abily--future-stars-icon",
+        "slot": "CAM"
+      },
+      {
+        "in": "agnes-beever-jones--future-stars",
+        "slot": "ST"
+      },
+      {
+        "in": "aleix-febas-perez--honourable-mentions",
+        "slot": "CB1"
+      },
+      {
+        "in": "alejandro-grimaldo-garcia--tots",
+        "slot": "LB"
+      },
+      {
+        "in": "adama-traore-diarra--fantasy-fc",
+        "slot": "RW"
+      },
+      {
+        "in": "abdukodir-khusanov--path-to-glory",
+        "slot": "CB2"
+      },
+      {
+        "in": "adrien-rabiot--tots",
+        "slot": "CDM1"
+      },
+      {
+        "in": "aaron-wan-bissaka--fut-birthday",
+        "slot": "RB"
+      },
+      {
+        "in": "alberto-moleiro-gonzalez--tots",
+        "slot": "LW"
+      }
+    ],
+    "total_cost": 541053,
+    "xi": {
+      "CAM": "abily--future-stars-icon",
+      "CB1": "aleix-febas-perez--honourable-mentions",
+      "CB2": "abdukodir-khusanov--path-to-glory",
+      "CDM1": "adrien-rabiot--tots",
+      "CDM2": "adam-wharton--future-stars",
+      "GK": "angerer--trophy-titans-icon",
+      "LB": "alejandro-grimaldo-garcia--tots",
+      "LW": "alberto-moleiro-gonzalez--tots",
+      "RB": "aaron-wan-bissaka--fut-birthday",
+      "RW": "adama-traore-diarra--fantasy-fc",
+      "ST": "agnes-beever-jones--future-stars"
+    }
+  },
+  "4-2-3-1|meta|10000000": {
+    "seed_cost": 202800,
+    "swaps": [
+      {
+        "in": "angerer--trophy-titans-icon",
+        "slot": "GK"
+      },
+      {
+        "in": "abily--future-stars-icon",
+        "slot": "CAM"
+      },
+      {
+        "in": "agnes-beever-jones--future-stars",
+        "slot": "ST"
+      },
+      {
+        "in": "aleix-febas-perez--honourable-mentions",
+        "slot": "CB1"
+      },
+      {
+        "in": "adam-wharton--uecl-rttf",
+        "slot": "CDM2"
+      },
+      {
+        "in": "achraf-hakimi--ucl-rttf",
+        "slot": "RB"
+      },
+      {
+        "in": "alejandro-grimaldo-garcia--tots",
+        "slot": "LB"
+      },
+      {
+        "in": "adama-traore-diarra--fantasy-fc",
+        "slot": "RW"
+      },
+      {
+        "in": "abdukodir-khusanov--path-to-glory",
+        "slot": "CB2"
+      },
+      {
+        "in": "adrien-rabiot--tots",
+        "slot": "CDM1"
+      }
+    ],
+    "total_cost": 6262641,
+    "xi": {
+      "CAM": "abily--future-stars-icon",
+      "CB1": "aleix-febas-perez--honourable-mentions",
+      "CB2": "abdukodir-khusanov--path-to-glory",
+      "CDM1": "adrien-rabiot--tots",
+      "CDM2": "adam-wharton--uecl-rttf",
+      "GK": "angerer--trophy-titans-icon",
+      "LB": "alejandro-grimaldo-garcia--tots",
+      "LW": "ajibade--knockout-royalty",
+      "RB": "achraf-hakimi--ucl-rttf",
+      "RW": "adama-traore-diarra--fantasy-fc",
+      "ST": "agnes-beever-jones--future-stars"
+    }
+  },
+  "4-2-3-1|meta|500000000": {
+    "seed_cost": 202800,
+    "swaps": [
+      {
+        "in": "angerer--trophy-titans-icon",
+        "slot": "GK"
+      },
+      {
+        "in": "abily--future-stars-icon",
+        "slot": "CAM"
+      },
+      {
+        "in": "agnes-beever-jones--future-stars",
+        "slot": "ST"
+      },
+      {
+        "in": "aleix-febas-perez--honourable-mentions",
+        "slot": "CB1"
+      },
+      {
+        "in": "adam-wharton--uecl-rttf",
+        "slot": "CDM2"
+      },
+      {
+        "in": "achraf-hakimi--ucl-rttf",
+        "slot": "RB"
+      },
+      {
+        "in": "alejandro-grimaldo-garcia--tots",
+        "slot": "LB"
+      },
+      {
+        "in": "adama-traore-diarra--fantasy-fc",
+        "slot": "RW"
+      },
+      {
+        "in": "abdukodir-khusanov--path-to-glory",
+        "slot": "CB2"
+      },
+      {
+        "in": "adrien-rabiot--tots",
+        "slot": "CDM1"
+      }
+    ],
+    "total_cost": 6262641,
+    "xi": {
+      "CAM": "abily--future-stars-icon",
+      "CB1": "aleix-febas-perez--honourable-mentions",
+      "CB2": "abdukodir-khusanov--path-to-glory",
+      "CDM1": "adrien-rabiot--tots",
+      "CDM2": "adam-wharton--uecl-rttf",
+      "GK": "angerer--trophy-titans-icon",
+      "LB": "alejandro-grimaldo-garcia--tots",
+      "LW": "ajibade--knockout-royalty",
+      "RB": "achraf-hakimi--ucl-rttf",
+      "RW": "adama-traore-diarra--fantasy-fc",
+      "ST": "agnes-beever-jones--future-stars"
+    }
+  },
+  "4-2-3-1|rating|1000000": {
+    "seed_cost": 202800,
+    "swaps": [
+      {
+        "in": "aaron-drinan--tots",
+        "slot": "ST"
+      },
+      {
+        "in": "abdukodir-khusanov--path-to-glory",
+        "slot": "CB2"
+      },
+      {
+        "in": "aleix-febas-perez--honourable-mentions",
+        "slot": "CDM1"
+      },
+      {
+        "in": "alejandro-grimaldo-garcia--tots",
+        "slot": "LB"
+      },
+      {
+        "in": "angerer--trophy-titans-icon",
+        "slot": "GK"
+      },
+      {
+        "in": "abily--future-stars-icon",
+        "slot": "CAM"
+      },
+      {
+        "in": "adrien-rabiot--tots",
+        "slot": "CDM2"
+      },
+      {
+        "in": "alberto-moleiro-gonzalez--tots",
+        "slot": "LW"
+      },
+      {
+        "in": "alberto-oliveira-baio--tots-highlights",
+        "slot": "RB"
+      },
+      {
+        "in": "adam-karabec--showdown",
+        "slot": "RW"
+      }
+    ],
+    "total_cost": 489178,
+    "xi": {
+      "CAM": "abily--future-stars-icon",
+      "CB1": "ahmetcan-kaplan--fantasy-fc",
+      "CB2": "abdukodir-khusanov--path-to-glory",
+      "CDM1": "aleix-febas-perez--honourable-mentions",
+      "CDM2": "adrien-rabiot--tots",
+      "GK": "angerer--trophy-titans-icon",
+      "LB": "alejandro-grimaldo-garcia--tots",
+      "LW": "alberto-moleiro-gonzalez--tots",
+      "RB": "alberto-oliveira-baio--tots-highlights",
+      "RW": "adam-karabec--showdown",
+      "ST": "aaron-drinan--tots"
+    }
+  },
+  "4-2-3-1|rating|10000000": {
+    "seed_cost": 202800,
+    "swaps": [
+      {
+        "in": "aaron-drinan--tots",
+        "slot": "ST"
+      },
+      {
+        "in": "adam-wharton--uecl-rttf",
+        "slot": "CDM2"
+      },
+      {
+        "in": "achraf-hakimi--ucl-rttf",
+        "slot": "RB"
+      },
+      {
+        "in": "abdukodir-khusanov--path-to-glory",
+        "slot": "CB2"
+      },
+      {
+        "in": "aleix-febas-perez--honourable-mentions",
+        "slot": "CDM1"
+      },
+      {
+        "in": "alejandro-grimaldo-garcia--tots",
+        "slot": "LB"
+      },
+      {
+        "in": "angerer--trophy-titans-icon",
+        "slot": "GK"
+      },
+      {
+        "in": "abily--future-stars-icon",
+        "slot": "CAM"
+      },
+      {
+        "in": "alberto-moleiro-gonzalez--tots",
+        "slot": "LW"
+      },
+      {
+        "in": "adam-karabec--showdown",
+        "slot": "RW"
+      }
+    ],
+    "total_cost": 6205178,
+    "xi": {
+      "CAM": "abily--future-stars-icon",
+      "CB1": "ahmetcan-kaplan--fantasy-fc",
+      "CB2": "abdukodir-khusanov--path-to-glory",
+      "CDM1": "aleix-febas-perez--honourable-mentions",
+      "CDM2": "adam-wharton--uecl-rttf",
+      "GK": "angerer--trophy-titans-icon",
+      "LB": "alejandro-grimaldo-garcia--tots",
+      "LW": "alberto-moleiro-gonzalez--tots",
+      "RB": "achraf-hakimi--ucl-rttf",
+      "RW": "adam-karabec--showdown",
+      "ST": "aaron-drinan--tots"
+    }
+  },
+  "4-2-3-1|rating|500000000": {
+    "seed_cost": 202800,
+    "swaps": [
+      {
+        "in": "aaron-drinan--tots",
+        "slot": "ST"
+      },
+      {
+        "in": "adam-wharton--uecl-rttf",
+        "slot": "CDM2"
+      },
+      {
+        "in": "achraf-hakimi--ucl-rttf",
+        "slot": "RB"
+      },
+      {
+        "in": "abdukodir-khusanov--path-to-glory",
+        "slot": "CB2"
+      },
+      {
+        "in": "aleix-febas-perez--honourable-mentions",
+        "slot": "CDM1"
+      },
+      {
+        "in": "alejandro-grimaldo-garcia--tots",
+        "slot": "LB"
+      },
+      {
+        "in": "angerer--trophy-titans-icon",
+        "slot": "GK"
+      },
+      {
+        "in": "abily--future-stars-icon",
+        "slot": "CAM"
+      },
+      {
+        "in": "alberto-moleiro-gonzalez--tots",
+        "slot": "LW"
+      },
+      {
+        "in": "adam-karabec--showdown",
+        "slot": "RW"
+      }
+    ],
+    "total_cost": 6205178,
+    "xi": {
+      "CAM": "abily--future-stars-icon",
+      "CB1": "ahmetcan-kaplan--fantasy-fc",
+      "CB2": "abdukodir-khusanov--path-to-glory",
+      "CDM1": "aleix-febas-perez--honourable-mentions",
+      "CDM2": "adam-wharton--uecl-rttf",
+      "GK": "angerer--trophy-titans-icon",
+      "LB": "alejandro-grimaldo-garcia--tots",
+      "LW": "alberto-moleiro-gonzalez--tots",
+      "RB": "achraf-hakimi--ucl-rttf",
+      "RW": "adam-karabec--showdown",
+      "ST": "aaron-drinan--tots"
+    }
+  },
+  "4-3-3|meta|1000000": {
+    "seed_cost": 208950,
+    "swaps": [
+      {
+        "in": "angerer--trophy-titans-icon",
+        "slot": "GK"
+      },
+      {
+        "in": "abily--future-stars-icon",
+        "slot": "CM2"
+      },
+      {
+        "in": "alex-freeman--fantasy-fc",
+        "slot": "RB"
+      },
+      {
+        "in": "aaron-drinan--tots",
+        "slot": "ST"
+      },
+      {
+        "in": "aleix-febas-perez--honourable-mentions",
+        "slot": "CB1"
+      },
+      {
+        "in": "alejandro-balde-martinez--fut-birthday",
+        "slot": "LB"
+      },
+      {
+        "in": "adama-traore-diarra--fantasy-fc",
+        "slot": "RW"
+      },
+      {
+        "in": "adrien-rabiot--tots",
+        "slot": "CM1"
+      },
+      {
+        "in": "abdukodir-khusanov--path-to-glory",
+        "slot": "CB2"
+      },
+      {
+        "in": "alberto-moleiro-gonzalez--tots",
+        "slot": "LW"
+      },
+      {
+        "in": "adam-wharton--future-stars",
+        "slot": "CM3"
+      }
+    ],
+    "total_cost": 656699,
+    "xi": {
+      "CB1": "aleix-febas-perez--honourable-mentions",
+      "CB2": "abdukodir-khusanov--path-to-glory",
+      "CM1": "adrien-rabiot--tots",
+      "CM2": "abily--future-stars-icon",
+      "CM3": "adam-wharton--future-stars",
+      "GK": "angerer--trophy-titans-icon",
+      "LB": "alejandro-balde-martinez--fut-birthday",
+      "LW": "alberto-moleiro-gonzalez--tots",
+      "RB": "alex-freeman--fantasy-fc",
+      "RW": "adama-traore-diarra--fantasy-fc",
+      "ST": "aaron-drinan--tots"
+    }
+  },
+  "4-3-3|meta|10000000": {
+    "seed_cost": 208950,
+    "swaps": [
+      {
+        "in": "angerer--trophy-titans-icon",
+        "slot": "GK"
+      },
+      {
+        "in": "abily--future-stars-icon",
+        "slot": "CM2"
+      },
+      {
+        "in": "alex-freeman--fantasy-fc",
+        "slot": "RB"
+      },
+      {
+        "in": "aaron-drinan--tots",
+        "slot": "ST"
+      },
+      {
+        "in": "aleix-febas-perez--honourable-mentions",
+        "slot": "CB1"
+      },
+      {
+        "in": "alejandro-balde-martinez--fut-birthday",
+        "slot": "LB"
+      },
+      {
+        "in": "adama-traore-diarra--fantasy-fc",
+        "slot": "RW"
+      },
+      {
+        "in": "adam-wharton--uecl-rttf",
+        "slot": "CM1"
+      },
+      {
+        "in": "abdukodir-khusanov--path-to-glory",
+        "slot": "CB2"
+      },
+      {
+        "in": "alberto-moleiro-gonzalez--tots",
+        "slot": "LW"
+      },
+      {
+        "in": "adrien-rabiot--tots",
+        "slot": "CM3"
+      }
+    ],
+    "total_cost": 3254949,
+    "xi": {
+      "CB1": "aleix-febas-perez--honourable-mentions",
+      "CB2": "abdukodir-khusanov--path-to-glory",
+      "CM1": "adam-wharton--uecl-rttf",
+      "CM2": "abily--future-stars-icon",
+      "CM3": "adrien-rabiot--tots",
+      "GK": "angerer--trophy-titans-icon",
+      "LB": "alejandro-balde-martinez--fut-birthday",
+      "LW": "alberto-moleiro-gonzalez--tots",
+      "RB": "alex-freeman--fantasy-fc",
+      "RW": "adama-traore-diarra--fantasy-fc",
+      "ST": "aaron-drinan--tots"
+    }
+  },
+  "4-3-3|meta|500000000": {
+    "seed_cost": 208950,
+    "swaps": [
+      {
+        "in": "angerer--trophy-titans-icon",
+        "slot": "GK"
+      },
+      {
+        "in": "abily--future-stars-icon",
+        "slot": "CM2"
+      },
+      {
+        "in": "alex-freeman--fantasy-fc",
+        "slot": "RB"
+      },
+      {
+        "in": "aaron-drinan--tots",
+        "slot": "ST"
+      },
+      {
+        "in": "aleix-febas-perez--honourable-mentions",
+        "slot": "CB1"
+      },
+      {
+        "in": "alejandro-balde-martinez--fut-birthday",
+        "slot": "LB"
+      },
+      {
+        "in": "adama-traore-diarra--fantasy-fc",
+        "slot": "RW"
+      },
+      {
+        "in": "adam-wharton--uecl-rttf",
+        "slot": "CM1"
+      },
+      {
+        "in": "abdukodir-khusanov--path-to-glory",
+        "slot": "CB2"
+      },
+      {
+        "in": "alberto-moleiro-gonzalez--tots",
+        "slot": "LW"
+      },
+      {
+        "in": "adrien-rabiot--tots",
+        "slot": "CM3"
+      }
+    ],
+    "total_cost": 3254949,
+    "xi": {
+      "CB1": "aleix-febas-perez--honourable-mentions",
+      "CB2": "abdukodir-khusanov--path-to-glory",
+      "CM1": "adam-wharton--uecl-rttf",
+      "CM2": "abily--future-stars-icon",
+      "CM3": "adrien-rabiot--tots",
+      "GK": "angerer--trophy-titans-icon",
+      "LB": "alejandro-balde-martinez--fut-birthday",
+      "LW": "alberto-moleiro-gonzalez--tots",
+      "RB": "alex-freeman--fantasy-fc",
+      "RW": "adama-traore-diarra--fantasy-fc",
+      "ST": "aaron-drinan--tots"
+    }
+  },
+  "4-3-3|rating|1000000": {
+    "seed_cost": 208950,
+    "swaps": [
+      {
+        "in": "aaron-drinan--tots",
+        "slot": "ST"
+      },
+      {
+        "in": "abdukodir-khusanov--path-to-glory",
+        "slot": "CB2"
+      },
+      {
+        "in": "abily--future-stars-icon",
+        "slot": "CM1"
+      },
+      {
+        "in": "alejandro-grimaldo-garcia--tots",
+        "slot": "LB"
+      },
+      {
+        "in": "angerer--trophy-titans-icon",
+        "slot": "GK"
+      },
+      {
+        "in": "aleix-febas-perez--honourable-mentions",
+        "slot": "CB1"
+      },
+      {
+        "in": "adrien-rabiot--tots",
+        "slot": "CM2"
+      },
+      {
+        "in": "alberto-moleiro-gonzalez--tots",
+        "slot": "LW"
+      },
+      {
+        "in": "alberto-oliveira-baio--tots-highlights",
+        "slot": "RB"
+      },
+      {
+        "in": "adam-karabec--showdown",
+        "slot": "RW"
+      }
+    ],
+    "total_cost": 480841,
+    "xi": {
+      "CB1": "aleix-febas-perez--honourable-mentions",
+      "CB2": "abdukodir-khusanov--path-to-glory",
+      "CM1": "abily--future-stars-icon",
+      "CM2": "adrien-rabiot--tots",
+      "CM3": "aidan-morris--showdown",
+      "GK": "angerer--trophy-titans-icon",
+      "LB": "alejandro-grimaldo-garcia--tots",
+      "LW": "alberto-moleiro-gonzalez--tots",
+      "RB": "alberto-oliveira-baio--tots-highlights",
+      "RW": "adam-karabec--showdown",
+      "ST": "aaron-drinan--tots"
+    }
+  },
+  "4-3-3|rating|10000000": {
+    "seed_cost": 208950,
+    "swaps": [
+      {
+        "in": "aaron-drinan--tots",
+        "slot": "ST"
+      },
+      {
+        "in": "adam-wharton--uecl-rttf",
+        "slot": "CM2"
+      },
+      {
+        "in": "achraf-hakimi--ucl-rttf",
+        "slot": "RB"
+      },
+      {
+        "in": "abdukodir-khusanov--path-to-glory",
+        "slot": "CB2"
+      },
+      {
+        "in": "abily--future-stars-icon",
+        "slot": "CM1"
+      },
+      {
+        "in": "alejandro-grimaldo-garcia--tots",
+        "slot": "LB"
+      },
+      {
+        "in": "angerer--trophy-titans-icon",
+        "slot": "GK"
+      },
+      {
+        "in": "aleix-febas-perez--honourable-mentions",
+        "slot": "CB1"
+      },
+      {
+        "in": "alberto-moleiro-gonzalez--tots",
+        "slot": "LW"
+      },
+      {
+        "in": "adrien-rabiot--tots",
+        "slot": "CM3"
+      },
+      {
+        "in": "adam-karabec--showdown",
+        "slot": "RW"
+      }
+    ],
+    "total_cost": 6215999,
+    "xi": {
+      "CB1": "aleix-febas-perez--honourable-mentions",
+      "CB2": "abdukodir-khusanov--path-to-glory",
+      "CM1": "abily--future-stars-icon",
+      "CM2": "adam-wharton--uecl-rttf",
+      "CM3": "adrien-rabiot--tots",
+      "GK": "angerer--trophy-titans-icon",
+      "LB": "alejandro-grimaldo-garcia--tots",
+      "LW": "alberto-moleiro-gonzalez--tots",
+      "RB": "achraf-hakimi--ucl-rttf",
+      "RW": "adam-karabec--showdown",
+      "ST": "aaron-drinan--tots"
+    }
+  },
+  "4-3-3|rating|500000000": {
+    "seed_cost": 208950,
+    "swaps": [
+      {
+        "in": "aaron-drinan--tots",
+        "slot": "ST"
+      },
+      {
+        "in": "adam-wharton--uecl-rttf",
+        "slot": "CM2"
+      },
+      {
+        "in": "achraf-hakimi--ucl-rttf",
+        "slot": "RB"
+      },
+      {
+        "in": "abdukodir-khusanov--path-to-glory",
+        "slot": "CB2"
+      },
+      {
+        "in": "abily--future-stars-icon",
+        "slot": "CM1"
+      },
+      {
+        "in": "alejandro-grimaldo-garcia--tots",
+        "slot": "LB"
+      },
+      {
+        "in": "angerer--trophy-titans-icon",
+        "slot": "GK"
+      },
+      {
+        "in": "aleix-febas-perez--honourable-mentions",
+        "slot": "CB1"
+      },
+      {
+        "in": "alberto-moleiro-gonzalez--tots",
+        "slot": "LW"
+      },
+      {
+        "in": "adrien-rabiot--tots",
+        "slot": "CM3"
+      },
+      {
+        "in": "adam-karabec--showdown",
+        "slot": "RW"
+      }
+    ],
+    "total_cost": 6215999,
+    "xi": {
+      "CB1": "aleix-febas-perez--honourable-mentions",
+      "CB2": "abdukodir-khusanov--path-to-glory",
+      "CM1": "abily--future-stars-icon",
+      "CM2": "adam-wharton--uecl-rttf",
+      "CM3": "adrien-rabiot--tots",
+      "GK": "angerer--trophy-titans-icon",
+      "LB": "alejandro-grimaldo-garcia--tots",
+      "LW": "alberto-moleiro-gonzalez--tots",
+      "RB": "achraf-hakimi--ucl-rttf",
+      "RW": "adam-karabec--showdown",
+      "ST": "aaron-drinan--tots"
+    }
+  },
+  "4-4-2|meta|1000000": {
+    "seed_cost": 195050,
+    "swaps": [
+      {
+        "in": "angerer--trophy-titans-icon",
+        "slot": "GK"
+      },
+      {
+        "in": "abily--future-stars-icon",
+        "slot": "CM2"
+      },
+      {
+        "in": "aaron-drinan--tots",
+        "slot": "ST1"
+      },
+      {
+        "in": "alex-freeman--fantasy-fc",
+        "slot": "RB"
+      },
+      {
+        "in": "aleix-febas-perez--honourable-mentions",
+        "slot": "CB1"
+      },
+      {
+        "in": "alejandro-balde-martinez--fut-birthday",
+        "slot": "LB"
+      },
+      {
+        "in": "adama-traore-diarra--fantasy-fc",
+        "slot": "RM"
+      },
+      {
+        "in": "alba-redondo-ferrer--uwcl-primetime",
+        "slot": "ST2"
+      },
+      {
+        "in": "adrien-rabiot--tots",
+        "slot": "CM1"
+      },
+      {
+        "in": "abdukodir-khusanov--path-to-glory",
+        "slot": "CB2"
+      },
+      {
+        "in": "alberto-moleiro-gonzalez--tots",
+        "slot": "LM"
+      }
+    ],
+    "total_cost": 731304,
+    "xi": {
+      "CB1": "aleix-febas-perez--honourable-mentions",
+      "CB2": "abdukodir-khusanov--path-to-glory",
+      "CM1": "adrien-rabiot--tots",
+      "CM2": "abily--future-stars-icon",
+      "GK": "angerer--trophy-titans-icon",
+      "LB": "alejandro-balde-martinez--fut-birthday",
+      "LM": "alberto-moleiro-gonzalez--tots",
+      "RB": "alex-freeman--fantasy-fc",
+      "RM": "adama-traore-diarra--fantasy-fc",
+      "ST1": "aaron-drinan--tots",
+      "ST2": "alba-redondo-ferrer--uwcl-primetime"
+    }
+  },
+  "4-4-2|meta|10000000": {
+    "seed_cost": 195050,
+    "swaps": [
+      {
+        "in": "angerer--trophy-titans-icon",
+        "slot": "GK"
+      },
+      {
+        "in": "abily--future-stars-icon",
+        "slot": "CM2"
+      },
+      {
+        "in": "aaron-drinan--tots",
+        "slot": "ST1"
+      },
+      {
+        "in": "alex-freeman--fantasy-fc",
+        "slot": "RB"
+      },
+      {
+        "in": "aleix-febas-perez--honourable-mentions",
+        "slot": "CB1"
+      },
+      {
+        "in": "alejandro-balde-martinez--fut-birthday",
+        "slot": "LB"
+      },
+      {
+        "in": "adama-traore-diarra--fantasy-fc",
+        "slot": "RM"
+      },
+      {
+        "in": "alba-redondo-ferrer--uwcl-primetime",
+        "slot": "ST2"
+      },
+      {
+        "in": "adam-wharton--uecl-rttf",
+        "slot": "CM1"
+      },
+      {
+        "in": "abdukodir-khusanov--path-to-glory",
+        "slot": "CB2"
+      },
+      {
+        "in": "alberto-moleiro-gonzalez--tots",
+        "slot": "LM"
+      }
+    ],
+    "total_cost": 3307304,
+    "xi": {
+      "CB1": "aleix-febas-perez--honourable-mentions",
+      "CB2": "abdukodir-khusanov--path-to-glory",
+      "CM1": "adam-wharton--uecl-rttf",
+      "CM2": "abily--future-stars-icon",
+      "GK": "angerer--trophy-titans-icon",
+      "LB": "alejandro-balde-martinez--fut-birthday",
+      "LM": "alberto-moleiro-gonzalez--tots",
+      "RB": "alex-freeman--fantasy-fc",
+      "RM": "adama-traore-diarra--fantasy-fc",
+      "ST1": "aaron-drinan--tots",
+      "ST2": "alba-redondo-ferrer--uwcl-primetime"
+    }
+  },
+  "4-4-2|meta|500000000": {
+    "seed_cost": 195050,
+    "swaps": [
+      {
+        "in": "angerer--trophy-titans-icon",
+        "slot": "GK"
+      },
+      {
+        "in": "abily--future-stars-icon",
+        "slot": "CM2"
+      },
+      {
+        "in": "aaron-drinan--tots",
+        "slot": "ST1"
+      },
+      {
+        "in": "alex-freeman--fantasy-fc",
+        "slot": "RB"
+      },
+      {
+        "in": "aleix-febas-perez--honourable-mentions",
+        "slot": "CB1"
+      },
+      {
+        "in": "alejandro-balde-martinez--fut-birthday",
+        "slot": "LB"
+      },
+      {
+        "in": "adama-traore-diarra--fantasy-fc",
+        "slot": "RM"
+      },
+      {
+        "in": "alba-redondo-ferrer--uwcl-primetime",
+        "slot": "ST2"
+      },
+      {
+        "in": "adam-wharton--uecl-rttf",
+        "slot": "CM1"
+      },
+      {
+        "in": "abdukodir-khusanov--path-to-glory",
+        "slot": "CB2"
+      },
+      {
+        "in": "alberto-moleiro-gonzalez--tots",
+        "slot": "LM"
+      }
+    ],
+    "total_cost": 3307304,
+    "xi": {
+      "CB1": "aleix-febas-perez--honourable-mentions",
+      "CB2": "abdukodir-khusanov--path-to-glory",
+      "CM1": "adam-wharton--uecl-rttf",
+      "CM2": "abily--future-stars-icon",
+      "GK": "angerer--trophy-titans-icon",
+      "LB": "alejandro-balde-martinez--fut-birthday",
+      "LM": "alberto-moleiro-gonzalez--tots",
+      "RB": "alex-freeman--fantasy-fc",
+      "RM": "adama-traore-diarra--fantasy-fc",
+      "ST1": "aaron-drinan--tots",
+      "ST2": "alba-redondo-ferrer--uwcl-primetime"
+    }
+  },
+  "4-4-2|rating|1000000": {
+    "seed_cost": 195050,
+    "swaps": [
+      {
+        "in": "aaron-drinan--tots",
+        "slot": "ST1"
+      },
+      {
+        "in": "abdukodir-khusanov--path-to-glory",
+        "slot": "CB2"
+      },
+      {
+        "in": "abily--future-stars-icon",
+        "slot": "CM1"
+      },
+      {
+        "in": "alejandro-grimaldo-garcia--tots",
+        "slot": "LB"
+      },
+      {
+        "in": "angerer--trophy-titans-icon",
+        "slot": "GK"
+      },
+      {
+        "in": "aleix-febas-perez--honourable-mentions",
+        "slot": "CB1"
+      },
+      {
+        "in": "adrien-rabiot--tots",
+        "slot": "CM2"
+      },
+      {
+        "in": "alberto-moleiro-gonzalez--tots",
+        "slot": "LM"
+      },
+      {
+        "in": "alberto-oliveira-baio--tots-highlights",
+        "slot": "RM"
+      },
+      {
+        "in": "agnes-beever-jones--future-stars",
+        "slot": "ST2"
+      }
+    ],
+    "total_cost": 456394,
+    "xi": {
+      "CB1": "aleix-febas-perez--honourable-mentions",
+      "CB2": "abdukodir-khusanov--path-to-glory",
+      "CM1": "abily--future-stars-icon",
+      "CM2": "adrien-rabiot--tots",
+      "GK": "angerer--trophy-titans-icon",
+      "LB": "alejandro-grimaldo-garcia--tots",
+      "LM": "alberto-moleiro-gonzalez--tots",
+      "RB": "achraf-hakimi--base",
+      "RM": "alberto-oliveira-baio--tots-highlights",
+      "ST1": "aaron-drinan--tots",
+      "ST2": "agnes-beever-jones--future-stars"
+    }
+  },
+  "4-4-2|rating|10000000": {
+    "seed_cost": 195050,
+    "swaps": [
+      {
+        "in": "aaron-drinan--tots",
+        "slot": "ST1"
+      },
+      {
+        "in": "adam-wharton--uecl-rttf",
+        "slot": "CM2"
+      },
+      {
+        "in": "achraf-hakimi--ucl-rttf",
+        "slot": "RB"
+      },
+      {
+        "in": "abdukodir-khusanov--path-to-glory",
+        "slot": "CB2"
+      },
+      {
+        "in": "abily--future-stars-icon",
+        "slot": "CM1"
+      },
+      {
+        "in": "alejandro-grimaldo-garcia--tots",
+        "slot": "LB"
+      },
+      {
+        "in": "angerer--trophy-titans-icon",
+        "slot": "GK"
+      },
+      {
+        "in": "aleix-febas-perez--honourable-mentions",
+        "slot": "CB1"
+      },
+      {
+        "in": "alberto-moleiro-gonzalez--tots",
+        "slot": "LM"
+      },
+      {
+        "in": "alberto-oliveira-baio--tots-highlights",
+        "slot": "RM"
+      },
+      {
+        "in": "agnes-beever-jones--future-stars",
+        "slot": "ST2"
+      }
+    ],
+    "total_cost": 6196504,
+    "xi": {
+      "CB1": "aleix-febas-perez--honourable-mentions",
+      "CB2": "abdukodir-khusanov--path-to-glory",
+      "CM1": "abily--future-stars-icon",
+      "CM2": "adam-wharton--uecl-rttf",
+      "GK": "angerer--trophy-titans-icon",
+      "LB": "alejandro-grimaldo-garcia--tots",
+      "LM": "alberto-moleiro-gonzalez--tots",
+      "RB": "achraf-hakimi--ucl-rttf",
+      "RM": "alberto-oliveira-baio--tots-highlights",
+      "ST1": "aaron-drinan--tots",
+      "ST2": "agnes-beever-jones--future-stars"
+    }
+  },
+  "4-4-2|rating|500000000": {
+    "seed_cost": 195050,
+    "swaps": [
+      {
+        "in": "aaron-drinan--tots",
+        "slot": "ST1"
+      },
+      {
+        "in": "adam-wharton--uecl-rttf",
+        "slot": "CM2"
+      },
+      {
+        "in": "achraf-hakimi--ucl-rttf",
+        "slot": "RB"
+      },
+      {
+        "in": "abdukodir-khusanov--path-to-glory",
+        "slot": "CB2"
+      },
+      {
+        "in": "abily--future-stars-icon",
+        "slot": "CM1"
+      },
+      {
+        "in": "alejandro-grimaldo-garcia--tots",
+        "slot": "LB"
+      },
+      {
+        "in": "angerer--trophy-titans-icon",
+        "slot": "GK"
+      },
+      {
+        "in": "aleix-febas-perez--honourable-mentions",
+        "slot": "CB1"
+      },
+      {
+        "in": "alberto-moleiro-gonzalez--tots",
+        "slot": "LM"
+      },
+      {
+        "in": "alberto-oliveira-baio--tots-highlights",
+        "slot": "RM"
+      },
+      {
+        "in": "agnes-beever-jones--future-stars",
+        "slot": "ST2"
+      }
+    ],
+    "total_cost": 6196504,
+    "xi": {
+      "CB1": "aleix-febas-perez--honourable-mentions",
+      "CB2": "abdukodir-khusanov--path-to-glory",
+      "CM1": "abily--future-stars-icon",
+      "CM2": "adam-wharton--uecl-rttf",
+      "GK": "angerer--trophy-titans-icon",
+      "LB": "alejandro-grimaldo-garcia--tots",
+      "LM": "alberto-moleiro-gonzalez--tots",
+      "RB": "achraf-hakimi--ucl-rttf",
+      "RM": "alberto-oliveira-baio--tots-highlights",
+      "ST1": "aaron-drinan--tots",
+      "ST2": "agnes-beever-jones--future-stars"
+    }
+  }
+}

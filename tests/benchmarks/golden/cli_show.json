@@ -1,0 +1,51 @@
+{
+  "id": "aaron-drinan--tots",
+  "player_name": "Aaron Drinan",
+  "version": "TOTS",
+  "ovr": 95,
+  "position": "ST",
+  "alt_positions": [
+    "RM",
+    "RW"
+  ],
+  "face": {
+    "pac": 93,
+    "sho": 93,
+    "pas": 83,
+    "dri": 91,
+    "def_": 70,
+    "phy": 95
+  },
+  "subs": null,
+  "playstyles": [
+    "Game Changer",
+    "Tiki Taka",
+    "Technical",
+    "Rapid",
+    "Quick Step",
+    "Enforcer"
+  ],
+  "playstyles_plus": [
+    "Finesse Shot",
+    "Power Shot",
+    "Low Driven"
+  ],
+  "accelerate": "Avg & Normal",
+  "skill_moves": 4,
+  "weak_foot": 4,
+  "club": "Swindon Town",
+  "league": "EFL League Two",
+  "nation": "Republic of Ireland",
+  "height_cm": 182,
+  "age": null,
+  "price": 46250,
+  "image_url": "https://cdn3.futbin.com/content/fifa26/img/players/p50573934.png?fm=png&ixlib=java-2.1.0&verzion=1&w=485&s=a5bd13355c026e75153bf0f11e461b6d",
+  "bg_url": "https://cdn3.futbin.com/content/fifa26/img/cards/hd/11_team_of_the_season.png?fm=png&ixlib=java-2.1.0&w=644&s=d6295d7b3c38aa2601c186bc191946e9",
+  "futbin_url": "https://www.futbin.com/26/player/24731/aaron-drinan",
+  "club_url": "https://cdn3.futbin.com/content/fifa26/img/clubs/dark/1934.png?fm=png&ixlib=java-2.1.0&verzion=3&w=22&s=597d3e3ab03971a9af78d6bb57b33f00",
+  "league_url": "https://cdn3.futbin.com/content/fifa26/img/league/dark/61.png?fm=png&ixlib=java-2.1.0&verzion=2&w=22&s=d789d30f7aa49cf06c52742bed0f2cc9",
+  "nation_url": "https://cdn3.futbin.com/content/fifa26/img/nation/25.png?fm=png&ixlib=java-2.1.0&verzion=2&w=22&s=fb072855ed794350043fd54cdb2c539d",
+  "common_name": "Drinan",
+  "source_url": "https://www.futbin.com/players?player_rating=87-99&page=6",
+  "crawled_at": "2026-06-10"
+}

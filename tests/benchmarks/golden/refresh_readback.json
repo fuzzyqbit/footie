@@ -1,0 +1,362 @@
+[
+  {
+    "id": "aaron-drinan--tots",
+    "league": "EFL League Two",
+    "name": "Aaron Drinan",
+    "nation": "Republic of Ireland",
+    "ovr": 95,
+    "pos": "ST",
+    "price": 46250
+  },
+  {
+    "id": "aaron-wan-bissaka--fut-birthday",
+    "league": "Premier League",
+    "name": "Aaron Wan-Bissaka",
+    "nation": "Congo DR",
+    "ovr": 89,
+    "pos": "RB",
+    "price": 36750
+  },
+  {
+    "id": "abdoulaye-doucoure--time-warp",
+    "league": "ROSHN Saudi League",
+    "name": "Abdoulaye Doucouré",
+    "nation": "Mali",
+    "ovr": 87,
+    "pos": "CDM",
+    "price": 15000
+  },
+  {
+    "id": "abdukodir-khusanov--path-to-glory",
+    "league": "Premier League",
+    "name": "Abdukodir Khusanov",
+    "nation": "Uzbekistan",
+    "ovr": 93,
+    "pos": "CB",
+    "price": 72500
+  },
+  {
+    "id": "abdul-fatawu--future-stars",
+    "league": "EFL Championship",
+    "name": "Abdul Fatawu",
+    "nation": "Ghana",
+    "ovr": 88,
+    "pos": "RM",
+    "price": 13000
+  },
+  {
+    "id": "abdulkerim-bardakc--showdown",
+    "league": "Trendyol Süper Lig",
+    "name": "Abdülkerim Bardakcı",
+    "nation": "Türkiye",
+    "ovr": 88,
+    "pos": "CB",
+    "price": 60750
+  },
+  {
+    "id": "abily--future-stars-icon",
+    "league": "Icons",
+    "name": "Abily",
+    "nation": "France",
+    "ovr": 92,
+    "pos": "CM",
+    "price": 65000
+  },
+  {
+    "id": "abily--icon",
+    "league": "Icons",
+    "name": "Abily",
+    "nation": "France",
+    "ovr": 90,
+    "pos": "CM",
+    "price": 68000
+  },
+  {
+    "id": "abily--thunderstruck-icon",
+    "league": "Icons",
+    "name": "Abily",
+    "nation": "France",
+    "ovr": 91,
+    "pos": "CM",
+    "price": 41750
+  },
+  {
+    "id": "achraf-hakimi--base",
+    "league": "Ligue 1 McDonald's",
+    "name": "Achraf Hakimi",
+    "nation": "Morocco",
+    "ovr": 89,
+    "pos": "RB",
+    "price": 6200
+  },
+  {
+    "id": "achraf-hakimi--ucl-rttf",
+    "league": "Ligue 1 McDonald's",
+    "name": "Achraf Hakimi",
+    "nation": "Morocco",
+    "ovr": 96,
+    "pos": "RB",
+    "price": 3170000
+  },
+  {
+    "id": "ada-hegerberg--base",
+    "league": "D1 Arkema",
+    "name": "Ada Hegerberg",
+    "nation": "Norway",
+    "ovr": 87,
+    "pos": "ST",
+    "price": 1000
+  },
+  {
+    "id": "ada-hegerberg--fof-captains",
+    "league": "D1 Arkema",
+    "name": "Ada Hegerberg",
+    "nation": "Norway",
+    "ovr": 87,
+    "pos": "ST",
+    "price": 19250
+  },
+  {
+    "id": "adam-karabec--showdown",
+    "league": "Ligue 1 McDonald's",
+    "name": "Adam Karabec",
+    "nation": "Czechia",
+    "ovr": 90,
+    "pos": "CAM",
+    "price": 39800
+  },
+  {
+    "id": "adam-wharton--future-stars",
+    "league": "Premier League",
+    "name": "Adam Wharton",
+    "nation": "England",
+    "ovr": 88,
+    "pos": "CDM",
+    "price": 21750
+  },
+  {
+    "id": "adam-wharton--uecl-rttf",
+    "league": "Premier League",
+    "name": "Adam Wharton",
+    "nation": "England",
+    "ovr": 96,
+    "pos": "CDM",
+    "price": 2620000
+  },
+  {
+    "id": "adama-traore-diarra--fantasy-fc",
+    "league": "Premier League",
+    "name": "Adama Traoré Diarra",
+    "nation": "Spain",
+    "ovr": 89,
+    "pos": "RM",
+    "price": 109000
+  },
+  {
+    "id": "ademola-lookman--knockout-royalty",
+    "league": "LALIGA EA SPORTS",
+    "name": "Ademola Lookman",
+    "nation": "Nigeria",
+    "ovr": 88,
+    "pos": "ST",
+    "price": 56650
+  },
+  {
+    "id": "adrian-martinez--showdown-sbc",
+    "league": "LPF",
+    "name": "Adrián Martínez",
+    "nation": "Argentina",
+    "ovr": 88,
+    "pos": "ST",
+    "price": 12250
+  },
+  {
+    "id": "adrien-rabiot--tots",
+    "league": "Serie A TIM",
+    "name": "Adrien Rabiot",
+    "nation": "France",
+    "ovr": 92,
+    "pos": "CM",
+    "price": 44000
+  },
+  {
+    "id": "agnes-beever-jones--future-stars",
+    "league": "Barclays WSL",
+    "name": "Agnes Beever-Jones",
+    "nation": "England",
+    "ovr": 90,
+    "pos": "ST",
+    "price": 35000
+  },
+  {
+    "id": "ahmed-hegazi--fc-pro",
+    "league": "ROSHN Saudi League",
+    "name": "Ahmed Hegazi",
+    "nation": "Egypt",
+    "ovr": 87,
+    "pos": "CB",
+    "price": 45000
+  },
+  {
+    "id": "ahmetcan-kaplan--fantasy-fc",
+    "league": "Eredivisie",
+    "name": "Ahmetcan Kaplan",
+    "nation": "Türkiye",
+    "ovr": 88,
+    "pos": "CB",
+    "price": 35250
+  },
+  {
+    "id": "aidan-morris--showdown",
+    "league": "EFL Championship",
+    "name": "Aidan Morris",
+    "nation": "United States",
+    "ovr": 90,
+    "pos": "CDM",
+    "price": 26150
+  },
+  {
+    "id": "ajibade--knockout-royalty",
+    "league": "D1 Arkema",
+    "name": "Ajibade",
+    "nation": "Nigeria",
+    "ovr": 89,
+    "pos": "RM",
+    "price": 20000
+  },
+  {
+    "id": "alba-redondo-ferrer--uwcl-primetime",
+    "league": "Liga F",
+    "name": "Alba Redondo Ferrer",
+    "nation": "Spain",
+    "ovr": 87,
+    "pos": "ST",
+    "price": 97050
+  },
+  {
+    "id": "alberto-moleiro-gonzalez--future-stars",
+    "league": "LALIGA EA SPORTS",
+    "name": "Alberto Moleiro González",
+    "nation": "Spain",
+    "ovr": 88,
+    "pos": "LM",
+    "price": 18500
+  },
+  {
+    "id": "alberto-moleiro-gonzalez--tots",
+    "league": "LALIGA EA SPORTS",
+    "name": "Alberto Moleiro González",
+    "nation": "Spain",
+    "ovr": 92,
+    "pos": "LM",
+    "price": 30000
+  },
+  {
+    "id": "alberto-oliveira-baio--tots-highlights",
+    "league": "Liga Portugal",
+    "name": "Alberto Oliveira Baio",
+    "nation": "Portugal",
+    "ovr": 91,
+    "pos": "RB",
+    "price": 30000
+  },
+  {
+    "id": "aleix-febas-perez--honourable-mentions",
+    "league": "LALIGA EA SPORTS",
+    "name": "Aleix Febas Pérez",
+    "nation": "Spain",
+    "ovr": 92,
+    "pos": "CM",
+    "price": 48250
+  },
+  {
+    "id": "alejandro-balde-martinez--fut-birthday",
+    "league": "LALIGA EA SPORTS",
+    "name": "Alejandro Balde Martínez",
+    "nation": "Spain",
+    "ovr": 90,
+    "pos": "LB",
+    "price": 140000
+  },
+  {
+    "id": "alejandro-grimaldo-garcia--answer-the-call",
+    "league": "Bundesliga",
+    "name": "Alejandro Grimaldo García",
+    "nation": "Spain",
+    "ovr": 92,
+    "pos": "LM",
+    "price": 42250
+  },
+  {
+    "id": "alejandro-grimaldo-garcia--ratings-reload",
+    "league": "Bundesliga",
+    "name": "Alejandro Grimaldo García",
+    "nation": "Spain",
+    "ovr": 87,
+    "pos": "LM",
+    "price": 22500
+  },
+  {
+    "id": "alejandro-grimaldo-garcia--tots",
+    "league": "Bundesliga",
+    "name": "Alejandro Grimaldo García",
+    "nation": "Spain",
+    "ovr": 92,
+    "pos": "LB",
+    "price": 38500
+  },
+  {
+    "id": "alex-freeman--fantasy-fc",
+    "league": "LALIGA EA SPORTS",
+    "name": "Alex Freeman",
+    "nation": "United States",
+    "ovr": 88,
+    "pos": "RB",
+    "price": 38250
+  },
+  {
+    "id": "alisson-ramses-becker--base",
+    "league": "Premier League",
+    "name": "Alisson Ramses Becker",
+    "nation": "Brazil",
+    "ovr": 89,
+    "pos": "GK",
+    "price": 4600
+  },
+  {
+    "id": "alyssa-naeher--knockout-royalty",
+    "league": "NWSL",
+    "name": "Alyssa Naeher",
+    "nation": "United States",
+    "ovr": 88,
+    "pos": "GK",
+    "price": 28000
+  },
+  {
+    "id": "anatoliy-trubin--star-performer",
+    "league": "Liga Portugal",
+    "name": "Anatoliy Trubin",
+    "nation": "Ukraine",
+    "ovr": 88,
+    "pos": "GK",
+    "price": 173000
+  },
+  {
+    "id": "angerer--icon",
+    "league": "Icons",
+    "name": "Angerer",
+    "nation": "Germany",
+    "ovr": 92,
+    "pos": "GK",
+    "price": 69500
+  },
+  {
+    "id": "angerer--trophy-titans-icon",
+    "league": "Icons",
+    "name": "Angerer",
+    "nation": "Germany",
+    "ovr": 93,
+    "pos": "GK",
+    "price": 31250
+  }
+]

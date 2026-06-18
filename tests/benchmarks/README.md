@@ -73,3 +73,33 @@ Use this in later phases: after an optimization, the targeted path should get
 > rounds, large work unit). After a *real* improvement in a later phase,
 > re-baseline (`--benchmark-autosave`) and commit the new reference rather than
 > chasing single-run noise.
+
+## Profiling (BENCH-04)
+
+### cProfile (default, no sudo)
+
+Two runnable entrypoints attribute time within the hot paths:
+
+```bash
+python tests/benchmarks/profile_refresh.py   # refresh write amplification
+python tests/benchmarks/profile_builder.py   # build/upgrade compute
+```
+
+Each prints the top 30 functions by cumulative time. Use these to confirm
+*where* the time goes before optimizing in Phases 2-3 (e.g. `_save` / `json`
+for refresh; `compute_chemistry` / `canonical_*` for the builder).
+
+### py-spy (live sampling — manual, macOS caveat)
+
+py-spy samples a running process and renders flamegraphs. On macOS it requires
+`sudo`, and System Integrity Protection blocks attaching to the SIP-protected
+`/usr/bin/python3` — use a Homebrew interpreter (`/opt/homebrew/bin/python3`,
+which this project uses) instead:
+
+```bash
+sudo py-spy record -o profile.svg -- /opt/homebrew/bin/python3 tests/benchmarks/profile_refresh.py
+sudo py-spy top -- /opt/homebrew/bin/python3 tests/benchmarks/profile_builder.py
+```
+
+py-spy is **never** part of the automated test run — it's an interactive,
+sudo-requiring tool. cProfile (above) covers the sudo-free default.
