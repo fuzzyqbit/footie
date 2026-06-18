@@ -48,25 +48,30 @@ def refresh_data(
     enrich_limit: int | None = None,
     manifest_path: Path | None = None,
 ) -> RefreshResult:
-    on_progress(f"expand: scraping live pool (min_ovr={min_ovr})")
-    expand = expand_cards(
-        repo,
-        min_ovr=min_ovr,
-        fetch_html=fetch_html,
-        sleep=sleep,
-        on_progress=on_progress,
-    )
-    on_progress(f"expand done: {expand.new} new, {expand.merged} updated")
+    # One batched write for the whole refresh: the ~2,400 upserts inside
+    # expand_cards/enrich_cards (same repo) defer to a single flush at exit,
+    # turning the per-card whole-file rewrite (O(n^2)) into one write. The
+    # batch flushes even on exception, so a partial scrape still persists.
+    with repo.batch():
+        on_progress(f"expand: scraping live pool (min_ovr={min_ovr})")
+        expand = expand_cards(
+            repo,
+            min_ovr=min_ovr,
+            fetch_html=fetch_html,
+            sleep=sleep,
+            on_progress=on_progress,
+        )
+        on_progress(f"expand done: {expand.new} new, {expand.merged} updated")
 
-    on_progress("enrich: filling league/nation/face stats")
-    enrich = enrich_cards(
-        repo,
-        fetch_html=fetch_html,
-        sleep=sleep,
-        on_progress=on_progress,
-        limit=enrich_limit,
-    )
-    on_progress(f"enrich done: {len(enrich.enriched)} enriched")
+        on_progress("enrich: filling league/nation/face stats")
+        enrich = enrich_cards(
+            repo,
+            fetch_html=fetch_html,
+            sleep=sleep,
+            on_progress=on_progress,
+            limit=enrich_limit,
+        )
+        on_progress(f"enrich done: {len(enrich.enriched)} enriched")
 
     if manifest_path is not None:
         new_cards = []

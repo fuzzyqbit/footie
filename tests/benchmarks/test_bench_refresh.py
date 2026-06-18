@@ -47,3 +47,31 @@ def test_bench_bulk_upsert(benchmark, tmp_path):
     # sanity: final repo holds the whole corpus
     final = CardRepository(Path(tmp_path) / "players.json").find_all()
     assert len(final) == len(cards)
+
+
+@pytest.mark.benchmark
+def test_bench_bulk_upsert_batched(benchmark, tmp_path):
+    """The real refresh write pattern: all upserts inside one batch() → a single
+    flush instead of one whole-file rewrite per card. This is the DATA-03 win."""
+    import json
+
+    from fc26.db import card_from_dict
+
+    cards = [card_from_dict(c) for c in
+             json.loads(corpus_path().read_text(encoding="utf-8"))["cards"]]
+
+    def _setup():
+        db = Path(tmp_path) / "players.json"
+        if db.exists():
+            db.unlink()
+        CardRepository._reset_cache()
+        return (CardRepository(db),), {}
+
+    def _bulk(repo):
+        with repo.batch():
+            for card in cards:
+                repo.upsert(card)
+
+    benchmark.pedantic(_bulk, setup=_setup, rounds=5)
+    final = CardRepository(Path(tmp_path) / "players.json").find_all()
+    assert len(final) == len(cards)

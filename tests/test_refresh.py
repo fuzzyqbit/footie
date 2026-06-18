@@ -1,7 +1,17 @@
+import contextlib
+
 from fc26.ingest import refresh as refresh_mod
 from fc26.ingest.enrich import EnrichResult
 from fc26.ingest.expand import ExpandResult
 from fc26.ingest.refresh import RefreshResult, refresh_data
+
+
+class _StubRepo:
+    """Minimal repo stub: refresh_data wraps the scrape in repo.batch()."""
+
+    @contextlib.contextmanager
+    def batch(self):
+        yield self
 
 
 def test_refresh_runs_expand_then_enrich_and_aggregates(monkeypatch):
@@ -20,7 +30,7 @@ def test_refresh_runs_expand_then_enrich_and_aggregates(monkeypatch):
     monkeypatch.setattr(refresh_mod, "enrich_cards", fake_enrich)
 
     result = refresh_data(
-        repo=object(), min_ovr=90, fetch_html=lambda _u: "", sleep=lambda _s: None,
+        repo=_StubRepo(), min_ovr=90, fetch_html=lambda _u: "", sleep=lambda _s: None,
         enrich_limit=5,
     )
 

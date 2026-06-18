@@ -78,8 +78,9 @@ def seed(
     # no transaction needed: upsert is idempotent, so a mid-loop failure
     # leaves a partial-but-consistent DB and re-running seed completes it
     try:
-        for card in cards:
-            repo.upsert(card)
+        with repo.batch():
+            for card in cards:
+                repo.upsert(card)
     except FC26Error as exc:
         _fail(f"seed aborted: {exc}")
     console.print(f"seeded {len(cards)} card records → {len(repo.find_all())} unique cards in {db}")
@@ -104,8 +105,9 @@ def sync(db: Path = DB_OPTION) -> None:
     except FC26Error as exc:
         _fail(str(exc))
     repo = CardRepository(db)
-    for card in cards:
-        repo.upsert(card)
+    with repo.batch():
+        for card in cards:
+            repo.upsert(card)
     console.print(f"synced {len(cards)} base cards into {db}")
 
 
@@ -188,14 +190,15 @@ def enrich(
     """Bulk-fill league/nation/face stats from fcratings player pages."""
     repo = CardRepository(db)
     try:
-        result = enrich_cards(
-            repo,
-            fetch_html=fetch_html,
-            sleep=time.sleep,
-            on_progress=console.print,
-            refresh=refresh,
-            limit=limit,
-        )
+        with repo.batch():
+            result = enrich_cards(
+                repo,
+                fetch_html=fetch_html,
+                sleep=time.sleep,
+                on_progress=console.print,
+                refresh=refresh,
+                limit=limit,
+            )
     except FC26Error as exc:
         _fail(str(exc))
     console.print(
@@ -217,14 +220,15 @@ def expand(
     """Bulk-ingest the live FUT card pool (base + specials, with prices) from futbin."""
     repo = CardRepository(db)
     try:
-        result = expand_cards(
-            repo,
-            min_ovr=min_ovr,
-            fetch_html=fetch_html,
-            sleep=time.sleep,
-            on_progress=console.print,
-            max_pages=max_pages,
-        )
+        with repo.batch():
+            result = expand_cards(
+                repo,
+                min_ovr=min_ovr,
+                fetch_html=fetch_html,
+                sleep=time.sleep,
+                on_progress=console.print,
+                max_pages=max_pages,
+            )
     except FC26Error as exc:
         _fail(str(exc))
     console.print(
@@ -251,15 +255,16 @@ def images(
     """
     repo = CardRepository(db)
     try:
-        result = upgrade_card_images(
-            repo,
-            fetch_html=fetch_html,
-            sleep=time.sleep,
-            on_progress=console.print,
-            refresh=refresh,
-            limit=limit,
-            workers=workers,
-        )
+        with repo.batch():
+            result = upgrade_card_images(
+                repo,
+                fetch_html=fetch_html,
+                sleep=time.sleep,
+                on_progress=console.print,
+                refresh=refresh,
+                limit=limit,
+                workers=workers,
+            )
     except FC26Error as exc:
         _fail(str(exc))
     console.print(
