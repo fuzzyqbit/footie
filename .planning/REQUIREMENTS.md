@@ -89,17 +89,37 @@ Deferred — gated behind the equivalence harness, only if profiling still shows
 
 ## Traceability
 
-Populated during roadmap creation.
+Every v1 requirement maps to exactly one phase. See `.planning/ROADMAP.md` for phase detail.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (filled by roadmap) | | |
+| BENCH-01 | Phase 1 | Pending |
+| BENCH-02 | Phase 1 | Pending |
+| BENCH-03 | Phase 1 | Pending |
+| BENCH-04 | Phase 1 | Pending |
+| DATA-01 | Phase 2 | Pending |
+| DATA-02 | Phase 2 | Pending |
+| DATA-03 | Phase 2 | Pending |
+| DATA-04 | Phase 2 | Pending |
+| API-01 | Phase 3 | Pending |
+| API-02 | Phase 3 | Pending |
+| API-03 | Phase 3 | Pending |
+| SCRAPE-01 | Phase 4 | Pending |
+| SCRAPE-02 | Phase 4 | Pending |
+| SCRAPE-03 | Phase 4 | Pending |
+| SCRAPE-04 | Phase 4 | Pending |
+| WEB-01 | Phase 5 | Pending |
+| WEB-02 | Phase 5 | Pending |
+| WEB-03 | Phase 5 | Pending |
+| CLI-01 | Phase 5 | Pending |
 
 **Coverage:**
 - v1 requirements: 18 total
-- Mapped to phases: (pending roadmap)
-- Unmapped: (pending roadmap)
+- Mapped to phases: 18 (100%)
+- Unmapped: 0
+
+*v2/deferred (CHEM-01, CHEM-02, STORE-01) intentionally not mapped — remain deferred.*
 
 ---
 *Requirements defined: 2026-06-17*
-*Last updated: 2026-06-17 after initial definition*
+*Last updated: 2026-06-17 after roadmap creation (traceability populated)*
