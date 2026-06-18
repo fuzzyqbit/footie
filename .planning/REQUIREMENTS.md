@@ -15,10 +15,10 @@ Each requirement is a speed improvement that must NOT change observable output. 
 
 ### Benchmarking & Safety (BENCH) — prerequisite
 
-- [ ] **BENCH-01**: A reusable benchmark harness measures refresh, key API endpoints (`/api/cards`, `/api/build`, `/api/upgrade`, `/api/meta`) and db read/write, with committed baselines
-- [ ] **BENCH-02**: A regression gate flags when a benchmarked path slows beyond a set threshold (e.g. mean +10%)
-- [ ] **BENCH-03**: A golden-output/equivalence check captures current outputs (`data/players.json` shape, API responses, CLI text) and asserts they are unchanged after each optimization
-- [ ] **BENCH-04**: Profiling entrypoints (cProfile / py-spy) are documented for the refresh and build/upgrade hot paths
+- [x] **BENCH-01**: A reusable benchmark harness measures refresh, key API endpoints (`/api/cards`, `/api/build`, `/api/upgrade`, `/api/meta`) and db read/write, with committed baselines
+- [x] **BENCH-02**: A regression gate flags when a benchmarked path slows beyond a set threshold (e.g. mean +10%)
+- [x] **BENCH-03**: A golden-output/equivalence check captures current outputs (`data/players.json` shape, API responses, CLI text) and asserts they are unchanged after each optimization
+- [x] **BENCH-04**: Profiling entrypoints (cProfile / py-spy) are documented for the refresh and build/upgrade hot paths
 
 ### Data Layer (DATA)
 
@@ -93,10 +93,10 @@ Every v1 requirement maps to exactly one phase. See `.planning/ROADMAP.md` for p
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| BENCH-01 | Phase 1 | Pending |
-| BENCH-02 | Phase 1 | Pending |
-| BENCH-03 | Phase 1 | Pending |
-| BENCH-04 | Phase 1 | Pending |
+| BENCH-01 | Phase 1 | Complete |
+| BENCH-02 | Phase 1 | Complete |
+| BENCH-03 | Phase 1 | Complete |
+| BENCH-04 | Phase 1 | Complete |
 | DATA-01 | Phase 2 | Pending |
 | DATA-02 | Phase 2 | Pending |
 | DATA-03 | Phase 2 | Pending |
