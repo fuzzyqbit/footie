@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-06-17)
 
 ## Current Position
 
-Phase: 1 of 5 (Benchmark & Equivalence Harness) — COMPLETE ✓
-Plan: 3 of 3 complete
-Status: Phase 1 verified PASSED — ready to plan Phase 2 (Data-Layer Cache & Batched Writes)
-Last activity: 2026-06-18 — Phase 1 executed (harness built, BENCH-01..04 verified, zero fc26/ changes, 341 tests green)
+Phase: 2 of 5 (Data-Layer Cache & Batched Writes)
+Plan: 0 of 2 — planned, ready to execute
+Status: Phase 2 planned (2 plans, DATA-01..04 covered; plan-checker PASSED). Phase 1 COMPLETE ✓.
+Last activity: 2026-06-18 — Phase 2 planned (db.py cache/index/batch/fsync + apply at call sites; guarded by Phase 1 golden+benchmark)
 
-Progress: [██░░░░░░░░] 20% (1 of 5 phases)
+Progress: [██░░░░░░░░] 20% (1 of 5 phases complete)
 
 ## Performance Metrics
 
