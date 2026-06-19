@@ -90,13 +90,14 @@ def test_leaf_functions_are_memoized():
     assert slugify.cache_info().hits >= 1
 
 
-def test_get_handlers_are_sync_posts_are_async(tmp_db, tmp_squads):
+def test_heavy_post_handlers_offload_to_threadpool(tmp_db, tmp_squads):
+    # The CPU-heavy POSTs (build/upgrade/chem/boost) read the body async then run
+    # the blocking compute via run_in_threadpool so the event loop stays free.
+    # Cheap GETs stay inline async (reads are cache-served post-Phase-2, so the
+    # threadpool thread-hop would only add latency).
     app = create_app(tmp_db, tmp_squads)
     endpoints = {r.path: r.endpoint for r in app.routes if hasattr(r, "endpoint")}
-    # GET read endpoints offloaded to the threadpool => plain sync def
-    assert not inspect.iscoroutinefunction(endpoints["/api/cards"])
-    assert not inspect.iscoroutinefunction(endpoints["/api/meta"])
-    assert not inspect.iscoroutinefunction(endpoints["/api/value"])
-    # POST handlers stay async (they await request.json() then run_in_threadpool)
-    assert inspect.iscoroutinefunction(endpoints["/api/build"])
-    assert inspect.iscoroutinefunction(endpoints["/api/upgrade"])
+    for path in ("/api/build", "/api/upgrade", "/api/chem", "/api/boost"):
+        ep = endpoints[path]
+        assert inspect.iscoroutinefunction(ep)
+        assert "run_in_threadpool" in inspect.getsource(ep), f"{path} does not offload"

@@ -100,6 +100,24 @@ def find_upgrades(
     swaps: list[Swap] = []
     swapped_slots: set[str] = set()
 
+    # Precompute once (order-preserving, pure): per-position eligible candidates
+    # (priced + position-eligible, in original pool order) and their meta_score.
+    # The inner loop then scans only the cards eligible for a slot's position --
+    # not the full pool every round -- and reads meta_score from a table instead
+    # of recomputing it. Candidate ORDER is preserved (pool order) so the
+    # delta/cost tie-break resolves identically, and the price/position/meta-None
+    # skip conditions are unchanged.
+    positions = {slot_position(slot_key) for slot_key, _ in lineup.slots}
+    eligible: dict[str, list[Card]] = {p: [] for p in positions}
+    meta_table: dict[tuple[str, str], float | None] = {}
+    for card in pool:
+        if card.price is None:
+            continue   # unbuyable
+        for position in positions:
+            if position == card.position or position in card.alt_positions:
+                eligible[position].append(card)
+                meta_table[(card.id, position)] = meta_score(card, position)
+
     for _round in range(max_swaps):
         base_score, base_chem = _squad_state(lineup, current, objective)
         best: Swap | None = None
@@ -110,23 +128,21 @@ def find_upgrades(
             position = slot_position(slot_key)
             outgoing = current[slot_key]
             out_meta = meta_score(outgoing, position)
-            for candidate in pool:
-                if candidate.price is None:
-                    continue   # unbuyable
-                if position != candidate.position and position not in candidate.alt_positions:
-                    continue   # never suggest out-of-position
-                # one real player per XI - but the OUTGOING card leaves, so
-                # exclude its own slot from the comparison (self-upgrades legal)
-                if any(
-                    _same_player(candidate.player_name, card.player_name)
-                    for other_slot, card in current.items()
-                    if other_slot != slot_key
-                ):
+            # one real player per XI - but the OUTGOING card leaves, so exclude
+            # its own slot from the comparison (self-upgrades legal). Hoisted out
+            # of the candidate loop; the prefix-aware _same_player check is kept.
+            other_names = [
+                card.player_name
+                for other_slot, card in current.items()
+                if other_slot != slot_key
+            ]
+            for candidate in eligible.get(position, ()):
+                if any(_same_player(candidate.player_name, name) for name in other_names):
                     continue
                 cost = net_cost(candidate.price, outgoing.price)
                 if cost > remaining:
                     continue
-                candidate_meta = meta_score(candidate, position)
+                candidate_meta = meta_table.get((candidate.id, position))
                 if candidate_meta is None:
                     continue
                 trial = {**current, slot_key: candidate}

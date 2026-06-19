@@ -165,7 +165,7 @@ def create_app(
         return JSONResponse(status_code=422, content=_err(msg))
 
     @app.get("/api/cards")
-    def list_cards(
+    async def list_cards(
         search: str | None = None,
         pos: str | None = None,
         version: str | None = None,
@@ -226,19 +226,19 @@ def create_app(
         return _ok({"total": total, "cards": [card_to_dict(c) for c in cards[offset:offset + limit]]})
 
     @app.get("/api/cards/{card_id}")
-    def get_card(card_id: str) -> dict:
+    async def get_card(card_id: str) -> dict:
         card = CardRepository(db_path).find_by_id(card_id)
         if card is None:
             raise HTTPException(status_code=404, detail=f"card {card_id!r} not found")
         return _ok(card_to_dict(card))
 
     @app.get("/api/squads")
-    def list_squads() -> dict:
+    async def list_squads() -> dict:
         files = sorted(squads_dir.glob("*.json"))
         return _ok([{"name": f.stem, "path": str(f)} for f in files])
 
     @app.get("/api/squads/{name}")
-    def get_squad(name: str) -> dict:
+    async def get_squad(name: str) -> dict:
         stem = _safe_stem(name)
         if stem is None:
             raise HTTPException(status_code=400, detail=f"invalid squad name {name!r}")
@@ -355,7 +355,7 @@ def create_app(
         return await run_in_threadpool(_worker)
 
     @app.get("/api/meta")
-    def get_meta() -> dict:
+    async def get_meta() -> dict:
         key = db_path.resolve()
         try:
             mtime = db_path.stat().st_mtime_ns
@@ -379,7 +379,7 @@ def create_app(
         return _ok(meta)
 
     @app.get("/api/objectives")
-    def get_objectives() -> dict:
+    async def get_objectives() -> dict:
         """Cards that are unlockable objective rewards, matched from the
         fut.gg objectives hub (data/objectives.json) to the live card pool."""
         obj_path = db_path.parent / "objectives.json"
@@ -405,7 +405,7 @@ def create_app(
         return _ok({"cards": cards})
 
     @app.get("/api/sbcs")
-    def get_sbcs() -> dict:
+    async def get_sbcs() -> dict:
         """Best SBCs to do, scraped from the fut.gg SBC hub (data/sbcs.json):
         cheapest-solution cost + pack/player rewards, ranked best-first."""
         sbc_path = db_path.parent / "sbcs.json"
@@ -418,7 +418,7 @@ def create_app(
         return _ok({"sbcs": entries})
 
     @app.get("/api/updates")
-    def get_updates() -> dict:
+    async def get_updates() -> dict:
         empty = {"refreshed_at": None, "new_count": 0, "updated_count": 0, "new_cards": []}
         manifest = db_path.parent / "last_refresh.json"
         if not manifest.exists():
@@ -449,7 +449,7 @@ def create_app(
         return frozenset(out)
 
     @app.get("/api/value")
-    def get_value(
+    async def get_value(
         min_ovr: int = VALUE_MIN_OVR,
         max_price: int = DEFAULT_MAX_PRICE,
         pos: str | None = None,
