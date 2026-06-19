@@ -34,10 +34,8 @@ from ..errors import FC26Error
 from ..ingest.refresh import (
     DEFAULT_INTERVAL_HOURS,
     DEFAULT_MIN_OVR,
-    jittered_sleep,
-    refresh_data,
+    refresh_data_async,
 )
-from ..ingest.web import fetch_html
 
 _log = logging.getLogger("fc26.refresh")
 
@@ -94,10 +92,18 @@ async def _refresh_loop(db_path: Path, interval_hours: float, min_ovr: int) -> N
         _log.info("auto-refresh starting (min_ovr=%s)", min_ovr)
         try:
             repo = CardRepository(db_path)
+            # Run the async pipeline inside a worker thread: the thread has no
+            # event loop, so asyncio.run creates a fresh one — never nested in
+            # uvicorn's server loop. This keeps the whole scrape (incl. the
+            # blocking upsert file I/O) off the request-serving loop, as before.
             result = await asyncio.to_thread(
-                refresh_data, repo,
-                min_ovr=min_ovr, fetch_html=fetch_html, sleep=jittered_sleep,
-                manifest_path=db_path.parent / "last_refresh.json",
+                lambda: asyncio.run(refresh_data_async(
+                    repo,
+                    min_ovr=min_ovr,
+                    concurrency=4,
+                    min_interval=1.0,
+                    manifest_path=db_path.parent / "last_refresh.json",
+                ))
             )
             _log.info(
                 "auto-refresh done: %s new, %s updated, %s enriched",

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import json as json_lib
 import time
 from dataclasses import asdict
@@ -23,16 +24,23 @@ from .chem.engine import compute_chemistry
 from .chem.lineup import load_lineup, resolve_cards
 from .db import CardRepository, card_to_dict
 from .errors import FC26Error
-from .ingest.enrich import enrich_cards
-from .ingest.expand import expand_cards
+from .ingest.enrich import enrich_cards, enrich_cards_async
+from .ingest.expand import expand_cards, expand_cards_async
 from .ingest.fcratings import fetch_top100
 from .ingest.futgg import fetch_futgg_card
-from .ingest.images import upgrade_card_images
+from .ingest.images import upgrade_card_images, upgrade_card_images_async
 from .ingest.objectives import write_objectives
-from .ingest.refresh import DEFAULT_INTERVAL_HOURS, DEFAULT_MIN_OVR, jittered_sleep, refresh_data
+from .ingest.refresh import (
+    DEFAULT_INTERVAL_HOURS,
+    DEFAULT_MIN_OVR,
+    jittered_sleep,
+    refresh_data,
+    refresh_data_async,
+)
 from .ingest.sbc import write_sbcs
 from .ingest.seed import seed_cards
 from .ingest.web import fetch_html
+from .ingest.web_async import AsyncFetcher
 from .models import Card
 
 app = typer.Typer(help="FC 26 (PS5) FUT player database", no_args_is_help=True)
@@ -189,16 +197,20 @@ def enrich(
 ) -> None:
     """Bulk-fill league/nation/face stats from fcratings player pages."""
     repo = CardRepository(db)
-    try:
-        with repo.batch():
-            result = enrich_cards(
+
+    async def _run():
+        async with AsyncFetcher(concurrency=4, min_interval=1.0) as fetcher:
+            return await enrich_cards_async(
                 repo,
-                fetch_html=fetch_html,
-                sleep=time.sleep,
+                fetcher=fetcher,
                 on_progress=console.print,
                 refresh=refresh,
                 limit=limit,
             )
+
+    try:
+        with repo.batch():
+            result = asyncio.run(_run())
     except FC26Error as exc:
         _fail(str(exc))
     console.print(
@@ -219,16 +231,20 @@ def expand(
 ) -> None:
     """Bulk-ingest the live FUT card pool (base + specials, with prices) from futbin."""
     repo = CardRepository(db)
-    try:
-        with repo.batch():
-            result = expand_cards(
+
+    async def _run():
+        async with AsyncFetcher(concurrency=4, min_interval=1.0) as fetcher:
+            return await expand_cards_async(
                 repo,
                 min_ovr=min_ovr,
-                fetch_html=fetch_html,
-                sleep=time.sleep,
+                fetcher=fetcher,
                 on_progress=console.print,
                 max_pages=max_pages,
             )
+
+    try:
+        with repo.batch():
+            result = asyncio.run(_run())
     except FC26Error as exc:
         _fail(str(exc))
     console.print(
@@ -254,17 +270,23 @@ def images(
     list thumbnails to full-size signed CDN URLs (hotlinked, not downloaded).
     """
     repo = CardRepository(db)
-    try:
-        with repo.batch():
-            result = upgrade_card_images(
+    # --workers preserves user intent: it now sets the async fetcher's
+    # concurrency (in-flight cap), not a thread count.
+    concurrency = workers if workers and workers > 1 else 4
+
+    async def _run():
+        async with AsyncFetcher(concurrency=concurrency, min_interval=1.0) as fetcher:
+            return await upgrade_card_images_async(
                 repo,
-                fetch_html=fetch_html,
-                sleep=time.sleep,
+                fetcher=fetcher,
                 on_progress=console.print,
                 refresh=refresh,
                 limit=limit,
-                workers=workers,
             )
+
+    try:
+        with repo.batch():
+            result = asyncio.run(_run())
     except FC26Error as exc:
         _fail(str(exc))
     console.print(
@@ -293,15 +315,15 @@ def refresh(
     """
     repo = CardRepository(db)
     try:
-        result = refresh_data(
+        result = asyncio.run(refresh_data_async(
             repo,
             min_ovr=min_ovr,
-            fetch_html=fetch_html,
-            sleep=jittered_sleep,
+            concurrency=4,
+            min_interval=1.0,
             on_progress=console.print,
             enrich_limit=limit,
             manifest_path=db.parent / "last_refresh.json",
-        )
+        ))
     except FC26Error as exc:
         _fail(str(exc))
     console.print(
