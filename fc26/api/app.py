@@ -7,6 +7,7 @@ import contextlib
 import json
 import logging
 import re
+import threading
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any
@@ -15,6 +16,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
+from starlette.concurrency import run_in_threadpool
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from ..builder.boost import boosted_stats
@@ -38,6 +40,12 @@ from ..ingest.refresh import (
 from ..ingest.web import fetch_html
 
 _log = logging.getLogger("fc26.refresh")
+
+# /api/meta result cache, keyed by resolved DB path -> (mtime_ns, meta_dict).
+# A refresh writes players.json atomically (os.replace bumps mtime) so the cache
+# self-invalidates; the refresh loop also clears it explicitly (belt-and-suspenders).
+_META_CACHE: dict[Path, tuple[int, dict]] = {}
+_META_LOCK = threading.Lock()
 
 _SAFE_NAME_RE = re.compile(r"^[a-zA-Z0-9_-]+$")
 
@@ -95,6 +103,8 @@ async def _refresh_loop(db_path: Path, interval_hours: float, min_ovr: int) -> N
                 "auto-refresh done: %s new, %s updated, %s enriched",
                 result.expand.new, result.expand.merged, len(result.enrich.enriched),
             )
+            with _META_LOCK:   # belt-and-suspenders: drop stale /api/meta cache
+                _META_CACHE.clear()
         except asyncio.CancelledError:
             raise
         except Exception:
@@ -155,7 +165,7 @@ def create_app(
         return JSONResponse(status_code=422, content=_err(msg))
 
     @app.get("/api/cards")
-    async def list_cards(
+    def list_cards(
         search: str | None = None,
         pos: str | None = None,
         version: str | None = None,
@@ -216,19 +226,19 @@ def create_app(
         return _ok({"total": total, "cards": [card_to_dict(c) for c in cards[offset:offset + limit]]})
 
     @app.get("/api/cards/{card_id}")
-    async def get_card(card_id: str) -> dict:
+    def get_card(card_id: str) -> dict:
         card = CardRepository(db_path).find_by_id(card_id)
         if card is None:
             raise HTTPException(status_code=404, detail=f"card {card_id!r} not found")
         return _ok(card_to_dict(card))
 
     @app.get("/api/squads")
-    async def list_squads() -> dict:
+    def list_squads() -> dict:
         files = sorted(squads_dir.glob("*.json"))
         return _ok([{"name": f.stem, "path": str(f)} for f in files])
 
     @app.get("/api/squads/{name}")
-    async def get_squad(name: str) -> dict:
+    def get_squad(name: str) -> dict:
         stem = _safe_stem(name)
         if stem is None:
             raise HTTPException(status_code=400, detail=f"invalid squad name {name!r}")
@@ -247,102 +257,129 @@ def create_app(
         if stem is None:
             raise HTTPException(status_code=400, detail=f"invalid squad name {name!r}")
         body = await request.json()
-        lineup_from_dict(body, name=stem)   # raises LineupError (-> 400) if invalid
-        path = squads_dir / f"{stem}.json"
-        path.write_text(json.dumps(body, indent=2), encoding="utf-8")
-        return _ok({"name": stem, "path": str(path)})
+
+        def _worker() -> dict:
+            lineup_from_dict(body, name=stem)   # raises LineupError (-> 400) if invalid
+            path = squads_dir / f"{stem}.json"
+            path.write_text(json.dumps(body, indent=2), encoding="utf-8")
+            return _ok({"name": stem, "path": str(path)})
+
+        return await run_in_threadpool(_worker)
 
     @app.post("/api/chem")
     async def post_chem(request: Request) -> dict:
         body = await request.json()
-        lineup = lineup_from_dict(body)
-        repo = CardRepository(db_path)
-        slot_cards = resolve_cards(lineup, repo)
-        report = compute_chemistry(lineup, slot_cards)
-        return _ok(asdict(report))
+
+        def _worker() -> dict:
+            lineup = lineup_from_dict(body)
+            repo = CardRepository(db_path)
+            slot_cards = resolve_cards(lineup, repo)
+            report = compute_chemistry(lineup, slot_cards)
+            return _ok(asdict(report))
+
+        return await run_in_threadpool(_worker)
 
     @app.post("/api/boost")
     async def post_boost(request: Request) -> dict:
         body = await request.json()
-        lineup = lineup_from_dict(body)
-        repo = CardRepository(db_path)
-        slot_cards = resolve_cards(lineup, repo)
-        report = compute_chemistry(lineup, slot_cards)
-        chem_by_slot = {p.slot: p.chem for p in report.players}
-        results = [
-            asdict(boosted_stats(card, lineup.styles.get(slot), chem_by_slot.get(slot, 0)))
-            for slot, card in slot_cards.items()
-        ]
-        return _ok({"players": results, "team_chem": report.team_total})
+
+        def _worker() -> dict:
+            lineup = lineup_from_dict(body)
+            repo = CardRepository(db_path)
+            slot_cards = resolve_cards(lineup, repo)
+            report = compute_chemistry(lineup, slot_cards)
+            chem_by_slot = {p.slot: p.chem for p in report.players}
+            results = [
+                asdict(boosted_stats(card, lineup.styles.get(slot), chem_by_slot.get(slot, 0)))
+                for slot, card in slot_cards.items()
+            ]
+            return _ok({"players": results, "team_chem": report.team_total})
+
+        return await run_in_threadpool(_worker)
 
     @app.post("/api/upgrade")
     async def post_upgrade(request: Request) -> dict:
         body = await request.json()
-        squad_data = body.get("squad") or {}
-        budget_str = str(body.get("budget", "0"))
-        swaps = int(body.get("swaps", 3))
-        lineup = lineup_from_dict(squad_data)
-        repo = CardRepository(db_path)
-        slot_cards = resolve_cards(lineup, repo)
-        budget = parse_budget(budget_str)
-        pool = repo.find_all()
-        plan = find_upgrades(lineup, slot_cards, pool, budget=budget, max_swaps=swaps)
-        return _ok(asdict(plan))
+
+        def _worker() -> dict:
+            squad_data = body.get("squad") or {}
+            budget_str = str(body.get("budget", "0"))
+            swaps = int(body.get("swaps", 3))
+            lineup = lineup_from_dict(squad_data)
+            repo = CardRepository(db_path)
+            slot_cards = resolve_cards(lineup, repo)
+            budget = parse_budget(budget_str)
+            pool = repo.find_all()
+            plan = find_upgrades(lineup, slot_cards, pool, budget=budget, max_swaps=swaps)
+            return _ok(asdict(plan))
+
+        return await run_in_threadpool(_worker)
 
     @app.post("/api/build")
     async def post_build(request: Request) -> dict:
         body = await request.json()
-        formation = str(body.get("formation", ""))
-        budget_str = str(body.get("budget", "0"))
-        league = body.get("league")
-        objective = str(body.get("objective", "meta"))
-        budget = parse_budget(budget_str)
-        repo = CardRepository(db_path)
-        pool = repo.find_all()
-        result = build_squad(formation, pool, budget=budget, league=league, objective=objective)
-        report = compute_chemistry(result.lineup, result.slot_cards)
-        squad_dict: dict = {
-            "name": result.lineup.name or "built-squad",
-            "formation": result.lineup.formation,
-            "starting_xi": {slot: card.id for slot, card in result.slot_cards.items()},
-        }
-        if result.lineup.manager:
-            squad_dict["manager"] = {
-                "league": result.lineup.manager.league,
-                "nation": result.lineup.manager.nation,
+
+        def _worker() -> dict:
+            formation = str(body.get("formation", ""))
+            budget_str = str(body.get("budget", "0"))
+            league = body.get("league")
+            objective = str(body.get("objective", "meta"))
+            budget = parse_budget(budget_str)
+            repo = CardRepository(db_path)
+            pool = repo.find_all()
+            result = build_squad(formation, pool, budget=budget, league=league, objective=objective)
+            report = compute_chemistry(result.lineup, result.slot_cards)
+            squad_dict: dict = {
+                "name": result.lineup.name or "built-squad",
+                "formation": result.lineup.formation,
+                "starting_xi": {slot: card.id for slot, card in result.slot_cards.items()},
             }
-        xi = [
-            {"slot": slot, **card_to_dict(card)}
-            for slot, card in result.slot_cards.items()
-        ]
-        return _ok({
-            "formation": result.lineup.formation,
-            "seed_cost": result.seed_cost,
-            "total_cost": result.total_cost,
-            "team_chem": report.team_total,
-            "xi": xi,
-            "squad": squad_dict,
-        })
+            if result.lineup.manager:
+                squad_dict["manager"] = {
+                    "league": result.lineup.manager.league,
+                    "nation": result.lineup.manager.nation,
+                }
+            xi = [
+                {"slot": slot, **card_to_dict(card)}
+                for slot, card in result.slot_cards.items()
+            ]
+            return _ok({
+                "formation": result.lineup.formation,
+                "seed_cost": result.seed_cost,
+                "total_cost": result.total_cost,
+                "team_chem": report.team_total,
+                "xi": xi,
+                "squad": squad_dict,
+            })
+
+        return await run_in_threadpool(_worker)
 
     @app.get("/api/meta")
-    async def get_meta() -> dict:
-        repo = CardRepository(db_path)
-        all_cards = repo.find_all()
-        leagues = sorted({c.league for c in all_cards if c.league})
-        nations = sorted({c.nation for c in all_cards if c.nation})
-        clubs = sorted({c.club for c in all_cards if c.club})
-        versions = sorted({c.version for c in all_cards})
-        return _ok({
+    def get_meta() -> dict:
+        key = db_path.resolve()
+        try:
+            mtime = db_path.stat().st_mtime_ns
+        except OSError:
+            mtime = -1
+        with _META_LOCK:
+            cached = _META_CACHE.get(key)
+            if cached is not None and cached[0] == mtime:
+                return _ok(cached[1])
+        all_cards = CardRepository(db_path).find_all()
+        meta = {
             "formations": {name: list(slots) for name, slots in FORMATIONS.items()},
             "styles": list(available_styles()),
-            "leagues": leagues,
-            "nations": nations,
-            "clubs": clubs,
-            "versions": versions,
-        })
+            "leagues": sorted({c.league for c in all_cards if c.league}),
+            "nations": sorted({c.nation for c in all_cards if c.nation}),
+            "clubs": sorted({c.club for c in all_cards if c.club}),
+            "versions": sorted({c.version for c in all_cards}),   # NO filter — match original
+        }
+        with _META_LOCK:
+            _META_CACHE[key] = (mtime, meta)
+        return _ok(meta)
 
     @app.get("/api/objectives")
-    async def get_objectives() -> dict:
+    def get_objectives() -> dict:
         """Cards that are unlockable objective rewards, matched from the
         fut.gg objectives hub (data/objectives.json) to the live card pool."""
         obj_path = db_path.parent / "objectives.json"
@@ -368,7 +405,7 @@ def create_app(
         return _ok({"cards": cards})
 
     @app.get("/api/sbcs")
-    async def get_sbcs() -> dict:
+    def get_sbcs() -> dict:
         """Best SBCs to do, scraped from the fut.gg SBC hub (data/sbcs.json):
         cheapest-solution cost + pack/player rewards, ranked best-first."""
         sbc_path = db_path.parent / "sbcs.json"
@@ -381,7 +418,7 @@ def create_app(
         return _ok({"sbcs": entries})
 
     @app.get("/api/updates")
-    async def get_updates() -> dict:
+    def get_updates() -> dict:
         empty = {"refreshed_at": None, "new_count": 0, "updated_count": 0, "new_cards": []}
         manifest = db_path.parent / "last_refresh.json"
         if not manifest.exists():
@@ -412,7 +449,7 @@ def create_app(
         return frozenset(out)
 
     @app.get("/api/value")
-    async def get_value(
+    def get_value(
         min_ovr: int = VALUE_MIN_OVR,
         max_price: int = DEFAULT_MAX_PRICE,
         pos: str | None = None,

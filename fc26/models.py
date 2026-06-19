@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 import unicodedata
 from dataclasses import asdict, dataclass, field
+from functools import lru_cache
 
 from .errors import FC26Error
 
@@ -95,6 +96,7 @@ class Card:
     crawled_at: str | None = None
 
 
+@lru_cache(maxsize=None)
 def slugify(text: str) -> str:
     normalized = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode()
     return re.sub(r"[^a-z0-9]+", "-", normalized.lower()).strip("-")

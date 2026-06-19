@@ -8,6 +8,8 @@ canonical slugs produced here. Alias pairs were enumerated against the live
 
 from __future__ import annotations
 
+from functools import lru_cache
+
 from ..models import slugify
 
 # slugified source string -> canonical slug
@@ -56,16 +58,19 @@ _CLUB_ALIASES = {
 }
 
 
+@lru_cache(maxsize=None)
 def canonical_league(name: str) -> str:
     slug = slugify(name)
     return _LEAGUE_ALIASES.get(slug, slug)
 
 
+@lru_cache(maxsize=None)
 def canonical_nation(name: str) -> str:
     slug = slugify(name)
     return _NATION_ALIASES.get(slug, slug)
 
 
+@lru_cache(maxsize=None)
 def canonical_club(name: str) -> str:
     """Slugify, strip F.C./FC/CF suffixes, then apply abbreviation aliases."""
     slug = slugify(name)
