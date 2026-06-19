@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-06-17)
 
 ## Current Position
 
-Phase: 4 of 5 (Async Scraper Rewrite) — PLANNED ✓ (ready to execute)
-Plan: 0 of 3 executed (3 plans written + checker PASS)
-Status: Phase 4 planned — 04-01 (async fetch core), 04-02 (async ingest variants + byte-identical equivalence gate), 04-03 (wire CLI+API + simulated-latency bench). Sonnet plan-checker PASS (2 blockers + 4 warnings raised then resolved). Ready for `/gsd:execute-phase 4`. Phases 1-3 COMPLETE ✓.
-Last activity: 2026-06-19 — Phase 4 planned (RESEARCH + VALIDATION + 3 plans; key constraint: no pytest-asyncio → async tests drive via asyncio.run; all 6 equivalence risks guarded by fixtured sync-vs-async diff)
+Phase: 4 of 5 (Async Scraper Rewrite) — COMPLETE ✓
+Plan: 3 of 3 executed
+Status: Phase 4 verified PASSED — async ingest rewrite shipped, byte-identical. Ready to plan Phase 5 (Frontend Load & CLI Startup). Phases 1-4 COMPLETE ✓.
+Last activity: 2026-06-19 — Phase 4 executed (AsyncFetcher + async enrich/expand/images/refresh + CLI/FastAPI wiring; golden byte-identical, simulated-latency bench async ~10× sequential, 364 tests green; benchmark write-path noise documented as non-regression, baseline 0004)
 
-Progress: [██████░░░░] 60% (3 of 5 phases complete; Phase 4 planned)
+Progress: [████████░░] 80% (4 of 5 phases complete)
 
 ## Performance Metrics
 
@@ -74,6 +74,6 @@ Items acknowledged and carried forward (v2 — gated behind the equivalence harn
 ## Session Continuity
 
 Last session: 2026-06-19
-Stopped at: Phase 4 planned (3 plans + checker PASS); ready to execute.
-Resume file: None (Phase 4 .continue-here.md retired — planning complete)
-Next action: `/gsd:execute-phase 4`
+Stopped at: Phase 4 executed + verified PASSED; merged to ro.
+Resume file: None
+Next action: `/gsd:plan-phase 5` (Frontend Load & CLI Startup — WEB-01..03, CLI-01)

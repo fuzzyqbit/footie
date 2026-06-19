@@ -35,10 +35,10 @@ Each requirement is a speed improvement that must NOT change observable output. 
 
 ### Scrapers / Ingest (SCRAPE)
 
-- [ ] **SCRAPE-01**: Ingest fetches over a shared `httpx.AsyncClient` with connection reuse
-- [ ] **SCRAPE-02**: Concurrency is bounded (semaphore) with per-host rate limiting + jitter, preserving politeness to fut.gg/fcratings/futbin
-- [ ] **SCRAPE-03**: A single failing card/page does not abort the batch (error isolation + retry/backoff matching current 1-retry semantics)
-- [ ] **SCRAPE-04**: The async pipeline integrates with the sync CLI (`asyncio.run`) and the FastAPI background loop without nested loops, with a single serial writer and preserved expand ordering so scraped output stays equivalent
+- [x] **SCRAPE-01**: Ingest fetches over a shared `httpx.AsyncClient` with connection reuse
+- [x] **SCRAPE-02**: Concurrency is bounded (semaphore) with per-host rate limiting + jitter, preserving politeness to fut.gg/fcratings/futbin
+- [x] **SCRAPE-03**: A single failing card/page does not abort the batch (error isolation + retry/backoff matching current 1-retry semantics)
+- [x] **SCRAPE-04**: The async pipeline integrates with the sync CLI (`asyncio.run`) and the FastAPI background loop without nested loops, with a single serial writer and preserved expand ordering so scraped output stays equivalent
 
 ### Web App Load (WEB)
 
@@ -104,10 +104,10 @@ Every v1 requirement maps to exactly one phase. See `.planning/ROADMAP.md` for p
 | API-01 | Phase 3 | Complete |
 | API-02 | Phase 3 | Complete |
 | API-03 | Phase 3 | Complete |
-| SCRAPE-01 | Phase 4 | Pending |
-| SCRAPE-02 | Phase 4 | Pending |
-| SCRAPE-03 | Phase 4 | Pending |
-| SCRAPE-04 | Phase 4 | Pending |
+| SCRAPE-01 | Phase 4 | Complete |
+| SCRAPE-02 | Phase 4 | Complete |
+| SCRAPE-03 | Phase 4 | Complete |
+| SCRAPE-04 | Phase 4 | Complete |
 | WEB-01 | Phase 5 | Pending |
 | WEB-02 | Phase 5 | Pending |
 | WEB-03 | Phase 5 | Pending |
