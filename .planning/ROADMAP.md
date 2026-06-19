@@ -91,5 +91,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 1. Benchmark & Equivalence Harness | 0/TBD | Not started | - |
 | 2. Data-Layer Cache & Batched Writes | 0/TBD | Not started | - |
 | 3. API Responsiveness | 0/TBD | Not started | - |
-| 4. Async Scraper Rewrite | 0/TBD | Not started | - |
+| 4. Async Scraper Rewrite | 0/3 | Planned | - |
 | 5. Frontend Load & CLI Startup | 0/TBD | Not started | - |
