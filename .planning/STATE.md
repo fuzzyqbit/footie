@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-06-17)
 
 ## Current Position
 
-Phase: 4 of 5 (Async Scraper Rewrite) — COMPLETE ✓
-Plan: 3 of 3 executed
-Status: Phase 4 verified PASSED — async ingest rewrite shipped, byte-identical. Ready to plan Phase 5 (Frontend Load & CLI Startup). Phases 1-4 COMPLETE ✓.
-Last activity: 2026-06-19 — Phase 4 executed (AsyncFetcher + async enrich/expand/images/refresh + CLI/FastAPI wiring; golden byte-identical, simulated-latency bench async ~10× sequential, 364 tests green; benchmark write-path noise documented as non-regression, baseline 0004)
+Phase: 5 of 5 (Frontend Load & CLI Startup) — PLANNED ✓ (ready to execute)
+Plan: 0 of 2 executed (2 plans written + checker PASS)
+Status: Phase 5 planned — 05-01 (frontend: React.lazy routes + Suspense, remove dead html-to-image, vendor chunk split, React Query tuning), 05-02 (CLI deferred imports + light constants module). Sonnet plan-checker PASS (1 blocker + 2 warnings raised then resolved). Ready for `/gsd:execute-phase 5` (final phase). Phases 1-4 COMPLETE ✓.
+Last activity: 2026-06-19 — Phase 5 planned (RESEARCH anchors FRONTEND-TOOLING §A/§B4; key trap caught: DEFAULT_* option defaults must move to a light fc26/ingest/constants.py or they drag selectolax/httpx into CLI import; CLI test monkeypatch targets retargeted to source modules)
 
-Progress: [████████░░] 80% (4 of 5 phases complete)
+Progress: [████████░░] 80% (4 of 5 phases complete; Phase 5 planned)
 
 ## Performance Metrics
 
@@ -74,6 +74,6 @@ Items acknowledged and carried forward (v2 — gated behind the equivalence harn
 ## Session Continuity
 
 Last session: 2026-06-19
-Stopped at: Phase 4 executed + verified PASSED; merged to ro.
+Stopped at: Phase 5 planned (2 plans + checker PASS); merged to ro.
 Resume file: None
-Next action: `/gsd:plan-phase 5` (Frontend Load & CLI Startup — WEB-01..03, CLI-01)
+Next action: `/gsd:execute-phase 5` (final phase — Frontend Load & CLI Startup)

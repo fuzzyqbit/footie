@@ -88,8 +88,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Benchmark & Equivalence Harness | 0/TBD | Not started | - |
-| 2. Data-Layer Cache & Batched Writes | 0/TBD | Not started | - |
-| 3. API Responsiveness | 0/TBD | Not started | - |
+| 1. Benchmark & Equivalence Harness | ✓ | Complete ✓ | 2026-06-19 |
+| 2. Data-Layer Cache & Batched Writes | ✓ | Complete ✓ | 2026-06-19 |
+| 3. API Responsiveness | 2/2 | Complete ✓ | 2026-06-19 |
 | 4. Async Scraper Rewrite | 3/3 | Complete ✓ | 2026-06-19 |
-| 5. Frontend Load & CLI Startup | 0/TBD | Not started | - |
+| 5. Frontend Load & CLI Startup | 0/2 | Planned | - |
