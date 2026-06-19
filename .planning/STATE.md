@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-06-17)
 
 ## Current Position
 
-Phase: 5 of 5 (Frontend Load & CLI Startup) — PLANNED ✓ (ready to execute)
-Plan: 0 of 2 executed (2 plans written + checker PASS)
-Status: Phase 5 planned — 05-01 (frontend: React.lazy routes + Suspense, remove dead html-to-image, vendor chunk split, React Query tuning), 05-02 (CLI deferred imports + light constants module). Sonnet plan-checker PASS (1 blocker + 2 warnings raised then resolved). Ready for `/gsd:execute-phase 5` (final phase). Phases 1-4 COMPLETE ✓.
-Last activity: 2026-06-19 — Phase 5 planned (RESEARCH anchors FRONTEND-TOOLING §A/§B4; key trap caught: DEFAULT_* option defaults must move to a light fc26/ingest/constants.py or they drag selectolax/httpx into CLI import; CLI test monkeypatch targets retargeted to source modules)
+Phase: 5 of 5 (Frontend Load & CLI Startup) — COMPLETE ✓
+Plan: 2 of 2 executed
+Status: 🎉 MILESTONE COMPLETE — all 5 phases done, all 18 v1 requirements delivered, byte-identical. Phase 5 verified PASSED (frontend code-split: entry 336→189 kB, pages + @imgly lazy; CLI import 416→273 modules, selectolax/httpx no longer loaded).
+Last activity: 2026-06-19 — Phase 5 executed (React.lazy routes + Suspense + vendor split + html-to-image removed + React Query tuning; CLI heavy-import deferral + light constants module; vitest 72, golden byte-identical, full suite 365 green)
 
-Progress: [████████░░] 80% (4 of 5 phases complete; Phase 5 planned)
+Progress: [██████████] 100% (5 of 5 phases complete) ✓
 
 ## Performance Metrics
 
@@ -74,6 +74,6 @@ Items acknowledged and carried forward (v2 — gated behind the equivalence harn
 ## Session Continuity
 
 Last session: 2026-06-19
-Stopped at: Phase 5 planned (2 plans + checker PASS); merged to ro.
+Stopped at: 🎉 Milestone complete — Phase 5 executed + verified PASSED; merged to ro. All 5 phases shipped.
 Resume file: None
-Next action: `/gsd:execute-phase 5` (final phase — Frontend Load & CLI Startup)
+Next action: Milestone done. Optional follow-ups: run e2e/web on a serve env; capture final before/after numbers on a quiet machine; consider v2 (CHEM-01/02, STORE-01) only if profiling still warrants.

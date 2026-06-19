@@ -42,13 +42,13 @@ Each requirement is a speed improvement that must NOT change observable output. 
 
 ### Web App Load (WEB)
 
-- [ ] **WEB-01**: Routes are code-split (`React.lazy` + `Suspense`); the initial JS bundle shrinks materially
-- [ ] **WEB-02**: Heavy/WASM deps load only on the page that needs them; the unused `html-to-image` dependency is removed
-- [ ] **WEB-03**: React Query is configured with sensible `staleTime`/`gcTime`/`refetchOnWindowFocus` so navigation doesn't refetch static data
+- [x] **WEB-01**: Routes are code-split (`React.lazy` + `Suspense`); the initial JS bundle shrinks materially
+- [x] **WEB-02**: Heavy/WASM deps load only on the page that needs them; the unused `html-to-image` dependency is removed
+- [x] **WEB-03**: React Query is configured with sensible `staleTime`/`gcTime`/`refetchOnWindowFocus` so navigation doesn't refetch static data
 
 ### CLI Startup (CLI)
 
-- [ ] **CLI-01**: CLI startup defers heavy imports so `--help` and simple commands run fast
+- [x] **CLI-01**: CLI startup defers heavy imports so `--help` and simple commands run fast
 
 ## Acceptance Criteria
 
@@ -108,10 +108,10 @@ Every v1 requirement maps to exactly one phase. See `.planning/ROADMAP.md` for p
 | SCRAPE-02 | Phase 4 | Complete |
 | SCRAPE-03 | Phase 4 | Complete |
 | SCRAPE-04 | Phase 4 | Complete |
-| WEB-01 | Phase 5 | Pending |
-| WEB-02 | Phase 5 | Pending |
-| WEB-03 | Phase 5 | Pending |
-| CLI-01 | Phase 5 | Pending |
+| WEB-01 | Phase 5 | Complete |
+| WEB-02 | Phase 5 | Complete |
+| WEB-03 | Phase 5 | Complete |
+| CLI-01 | Phase 5 | Complete |
 
 **Coverage:**
 - v1 requirements: 18 total

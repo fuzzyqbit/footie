@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Data-Layer Cache & Batched Writes** ✓ - In-process id-indexed read cache over `db.py` + batched/atomic+durable writes that kill the O(n²) refresh rewrite
 - [x] **Phase 3: API Responsiveness** ✓ - Off-event-loop handlers, memoized pure helpers + per-card chem facts, cached `/api/meta`, hoisted hot loops
 - [x] **Phase 4: Async Scraper Rewrite** ✓ - Shared `httpx.AsyncClient`, bounded concurrency + per-host politeness, error isolation, CLI+API integration with single serial writer
-- [ ] **Phase 5: Frontend Load & CLI Startup** - Route code-splitting, lazy WASM dep + dead-dep removal, React Query tuning, CLI deferred imports
+- [x] **Phase 5: Frontend Load & CLI Startup** ✓ - Route code-splitting, lazy WASM dep + dead-dep removal, React Query tuning, CLI deferred imports
 
 ## Phase Details
 
@@ -92,4 +92,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. Data-Layer Cache & Batched Writes | ✓ | Complete ✓ | 2026-06-19 |
 | 3. API Responsiveness | 2/2 | Complete ✓ | 2026-06-19 |
 | 4. Async Scraper Rewrite | 3/3 | Complete ✓ | 2026-06-19 |
-| 5. Frontend Load & CLI Startup | 0/2 | Planned | - |
+| 5. Frontend Load & CLI Startup | 2/2 | Complete ✓ | 2026-06-19 |
