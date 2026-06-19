@@ -9,10 +9,10 @@ See: .planning/PROJECT.md (updated 2026-06-17)
 
 ## Current Position
 
-Phase: 2 of 5 (Data-Layer Cache & Batched Writes) — COMPLETE ✓
-Plan: 2 of 2 complete
-Status: Phase 2 verified PASSED — ready to plan Phase 3 (API Responsiveness). Phases 1-2 COMPLETE ✓.
-Last activity: 2026-06-19 — Phase 2 executed (db.py cache + batched/durable writes; reads ~200× faster, batched refresh ~26×, byte-identical, 348 tests green)
+Phase: 3 of 5 (API Responsiveness)
+Plan: 0 of 2 — planned, ready to execute
+Status: Phase 3 planned (2 plans, API-01..03 covered; plan-checker PASSED). Phases 1-2 COMPLETE ✓.
+Last activity: 2026-06-19 — Phase 3 planned (event-loop offload + memoize leaves + /api/meta cache; hoist find_upgrades; compute_chemistry untouched, Tier-2 deferred)
 
 Progress: [████░░░░░░] 40% (2 of 5 phases complete)
 
