@@ -79,6 +79,66 @@ def expand_cards(
     return ExpandResult(seen, new, merged, tuple(failed_pages), tuple(new_ids))
 
 
+async def expand_cards_async(
+    repo: CardRepository,
+    *,
+    min_ovr: int,
+    fetcher,
+    on_progress: Callable[[str], None] = lambda _msg: None,
+    max_pages: int | None = None,
+) -> ExpandResult:
+    """Async sibling of :func:`expand_cards` — byte-identical output.
+
+    Stays SEQUENTIAL: pagination is data-dependent (the loop only knows page
+    N+1 exists after parsing N) and ``_resolve`` suffixes id collisions using
+    ``find_by_id`` over previously-upserted cards, so the upsert order must be
+    preserved exactly. We only route each page fetch through the AsyncFetcher
+    for connection reuse; the fetcher's HostRateLimiter supplies the politeness
+    delay the sync path got from ``sleep``.
+    """
+    seen = 0
+    new = 0
+    merged = 0
+    failed_pages: list[str] = []
+    new_ids: list[str] = []
+
+    page = 0
+    attempts = 0
+    while True:
+        page += 1
+        if max_pages is not None and page > max_pages:
+            break
+        url = LIST_URL_TEMPLATE.format(min_ovr=min_ovr, page=page)
+        attempts += 1
+        try:
+            html = await fetcher.fetch(url)
+            cards = parse_futbin_page(html, source_url=url)
+        except FC26Error as exc:
+            failed_pages.append(f"{url}: {exc}")
+            if attempts >= ABORT_CHECK_AFTER and len(failed_pages) / attempts > ABORT_FAILURE_RATIO:
+                raise ParseError(
+                    f"{len(failed_pages)}/{attempts} list pages failed - futbin layout changed?"
+                ) from exc
+            continue
+
+        if not cards:
+            break   # past the last page
+        for card in cards:
+            seen += 1
+            card, existing = _resolve(repo, card)
+            repo.upsert(card)
+            if existing is None:
+                new += 1
+                new_ids.append(card.id)
+            else:
+                merged += 1
+        on_progress(f"page {page}: {len(cards)} cards")
+        if len(cards) < ROWS_PER_FULL_PAGE:
+            break   # short page = last page
+
+    return ExpandResult(seen, new, merged, tuple(failed_pages), tuple(new_ids))
+
+
 def _resolve(repo: CardRepository, card: Card) -> tuple[Card, Card | None]:
     """Resolve id collisions and return (card_to_upsert, existing_card_or_None).
 

@@ -57,6 +57,49 @@ def offline_fetch(mapping: dict[str, str]) -> Callable[[str], str]:
     return _fetch
 
 
+class _AsyncStubFetcher:
+    """Async analog of ``offline_fetch`` — serves committed HTML, never the wire.
+
+    Usable two ways: passed directly as ``fetcher=`` (it exposes ``async fetch``)
+    or as an async context manager (``async with`` returns itself).
+    """
+
+    def __init__(self, mapping: dict[str, str]) -> None:
+        self._mapping = mapping
+
+    async def fetch(self, url: str) -> str:
+        try:
+            return self._mapping[url]
+        except KeyError as exc:  # pragma: no cover - defensive
+            raise FetchError(f"offline_fetch: no stub for {url!r}") from exc
+
+    async def __aenter__(self) -> "_AsyncStubFetcher":
+        return self
+
+    async def __aexit__(self, *exc) -> bool:
+        return False
+
+
+def offline_fetch_async(mapping: dict[str, str]) -> _AsyncStubFetcher:
+    """Return an async fetcher stub serving ``mapping``; for ``fetcher=`` args."""
+    return _AsyncStubFetcher(mapping)
+
+
+def async_fetcher_class(mapping: dict[str, str]):
+    """Return a drop-in CLASS replacement for ``AsyncFetcher`` (for monkeypatch).
+
+    ``refresh_data_async`` constructs ``AsyncFetcher(concurrency=..., min_interval=...)``
+    and uses it as an async context manager, so the stub accepts those kwargs
+    (and ignores them) while serving ``mapping``.
+    """
+
+    class _StubFetcherClass(_AsyncStubFetcher):
+        def __init__(self, *, concurrency: int = 4, min_interval: float = 1.0) -> None:
+            super().__init__(mapping)
+
+    return _StubFetcherClass
+
+
 def _regen() -> bool:
     return os.environ.get("REGEN_GOLDEN") == "1"
 

@@ -8,6 +8,7 @@ All URLs are futbin's signed CDN links — stored, not downloaded (hotlinked).
 
 from __future__ import annotations
 
+import asyncio
 import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, replace
@@ -264,5 +265,76 @@ def upgrade_card_images(
                 raise ParseError(
                     f"{failures}/{attempts} detail pages failed - futbin layout changed?"
                 )
+
+    return ImagesResult(tuple(upgraded), tuple(skipped), tuple(missed))
+
+
+async def upgrade_card_images_async(
+    repo: CardRepository,
+    *,
+    fetcher,
+    on_progress: Callable[[str], None] = lambda _msg: None,
+    refresh: bool = False,
+    limit: int | None = None,
+) -> ImagesResult:
+    """Async sibling of :func:`upgrade_card_images` — byte-identical output.
+
+    Detail pages are fetched concurrently (``gather`` preserves card order) but
+    every ``repo.upsert`` runs SERIALLY on this consuming coroutine, in card
+    order — exactly one writer. The output matches the deterministic
+    ``workers=1`` order, NOT the sync ``workers>1`` ``as_completed`` order.
+    """
+    skipped: list[str] = []
+    todo: list[Card] = []
+    for card in repo.find_all():
+        if not card.futbin_url:
+            skipped.append(card.id)
+        elif not refresh and _has_hd_art(card):
+            skipped.append(card.id)
+        elif limit is not None and len(todo) >= limit:
+            skipped.append(card.id)
+        else:
+            todo.append(card)
+
+    upgraded: list[str] = []
+    missed: list[str] = []
+    attempts = 0
+    failures = 0
+
+    def _apply(card: Card, art: PlayerArt) -> None:
+        if art.image_url is None and art.bg_url is None:
+            missed.append(f"{card.id}: no card art on {card.futbin_url}")
+        else:
+            repo.upsert(replace(
+                card,
+                image_url=art.image_url or card.image_url,
+                bg_url=art.bg_url or card.bg_url,
+                club_url=art.club_url or card.club_url,
+                league_url=art.league_url or card.league_url,
+                nation_url=art.nation_url or card.nation_url,
+                common_name=art.common_name or card.common_name,
+            ))
+            upgraded.append(card.id)
+            on_progress(f"hd art {card.id}")
+
+    async def _fetch_async(card: Card):
+        try:
+            html = await fetcher.fetch(card.futbin_url)
+            return card, parse_player_art(html), None
+        except FC26Error as exc:
+            return card, None, exc
+
+    results = await asyncio.gather(*(_fetch_async(card) for card in todo))
+    for card, art, exc in results:
+        attempts += 1
+        if exc is not None:
+            failures += 1
+            missed.append(f"{card.id}: {exc}")
+        else:
+            _apply(card, art)
+        if attempts >= ABORT_CHECK_AFTER and failures / attempts > ABORT_FAILURE_RATIO:
+            raise ParseError(
+                f"{failures}/{attempts} detail pages failed - futbin layout changed?"
+            )
 
     return ImagesResult(tuple(upgraded), tuple(skipped), tuple(missed))

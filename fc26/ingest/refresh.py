@@ -17,8 +17,9 @@ from pathlib import Path
 from typing import Callable
 
 from ..db import CardRepository, card_to_dict
-from .enrich import EnrichResult, enrich_cards
-from .expand import ExpandResult, expand_cards
+from .enrich import EnrichResult, enrich_cards, enrich_cards_async
+from .expand import ExpandResult, expand_cards, expand_cards_async
+from .web_async import AsyncFetcher
 
 MANIFEST_CARD_CAP = 200   # keep last_refresh.json small
 
@@ -73,21 +74,70 @@ def refresh_data(
         )
         on_progress(f"enrich done: {len(enrich.enriched)} enriched")
 
-    if manifest_path is not None:
-        new_cards = []
-        for card_id in expand.new_ids[:MANIFEST_CARD_CAP]:
-            card = repo.find_by_id(card_id)
-            if card is not None:
-                new_cards.append(card_to_dict(card))
-        payload = {
-            "refreshed_at": datetime.now(timezone.utc).isoformat(),
-            "new_count": expand.new,
-            "updated_count": expand.merged,
-            "new_cards": new_cards,
-        }
-        manifest_path.parent.mkdir(parents=True, exist_ok=True)
-        manifest_path.write_text(
-            json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
-        )
+    _write_manifest(repo, expand, manifest_path)
+    return RefreshResult(expand=expand, enrich=enrich)
 
+
+def _write_manifest(
+    repo: CardRepository,
+    expand: ExpandResult,
+    manifest_path: Path | None,
+) -> None:
+    if manifest_path is None:
+        return
+    new_cards = []
+    for card_id in expand.new_ids[:MANIFEST_CARD_CAP]:
+        card = repo.find_by_id(card_id)
+        if card is not None:
+            new_cards.append(card_to_dict(card))
+    payload = {
+        "refreshed_at": datetime.now(timezone.utc).isoformat(),
+        "new_count": expand.new,
+        "updated_count": expand.merged,
+        "new_cards": new_cards,
+    }
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    manifest_path.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+
+
+async def refresh_data_async(
+    repo: CardRepository,
+    *,
+    min_ovr: int = DEFAULT_MIN_OVR,
+    concurrency: int = 4,
+    min_interval: float = 1.0,
+    on_progress: Callable[[str], None] = lambda _msg: None,
+    enrich_limit: int | None = None,
+    manifest_path: Path | None = None,
+) -> RefreshResult:
+    """Async sibling of :func:`refresh_data` — byte-identical output.
+
+    Same expand-then-enrich pipeline inside one batched write, but fetches run
+    over a shared AsyncFetcher (bounded, per-host polite). expand stays
+    sequential (id-suffix ordering); enrich gathers fetches with a single
+    serial writer. The manifest write is identical to the sync path.
+    """
+    async with AsyncFetcher(concurrency=concurrency, min_interval=min_interval) as fetcher:
+        with repo.batch():
+            on_progress(f"expand: scraping live pool (min_ovr={min_ovr})")
+            expand = await expand_cards_async(
+                repo,
+                min_ovr=min_ovr,
+                fetcher=fetcher,
+                on_progress=on_progress,
+            )
+            on_progress(f"expand done: {expand.new} new, {expand.merged} updated")
+
+            on_progress("enrich: filling league/nation/face stats")
+            enrich = await enrich_cards_async(
+                repo,
+                fetcher=fetcher,
+                on_progress=on_progress,
+                limit=enrich_limit,
+            )
+            on_progress(f"enrich done: {len(enrich.enriched)} enriched")
+
+    _write_manifest(repo, expand, manifest_path)
     return RefreshResult(expand=expand, enrich=enrich)
