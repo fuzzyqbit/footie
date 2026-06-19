@@ -22,10 +22,10 @@ Each requirement is a speed improvement that must NOT change observable output. 
 
 ### Data Layer (DATA)
 
-- [ ] **DATA-01**: The card pool is loaded once into an in-process, id-indexed cache; reads no longer re-parse the full `data/players.json` on each call
-- [ ] **DATA-02**: The cache invalidates correctly on write/refresh and across the CLI-writes-while-server-runs case (mtime+size tracking)
-- [ ] **DATA-03**: Refresh writes are batched + atomic (one write per run, temp→rename + fsync), eliminating the O(n²) per-card full-file rewrite
-- [ ] **DATA-04**: `find_all` returns an immutable snapshot so upsert-during-iteration behavior is preserved
+- [x] **DATA-01**: The card pool is loaded once into an in-process, id-indexed cache; reads no longer re-parse the full `data/players.json` on each call
+- [x] **DATA-02**: The cache invalidates correctly on write/refresh and across the CLI-writes-while-server-runs case (mtime+size tracking)
+- [x] **DATA-03**: Refresh writes are batched + atomic (one write per run, temp→rename + fsync), eliminating the O(n²) per-card full-file rewrite
+- [x] **DATA-04**: `find_all` returns an immutable snapshot so upsert-during-iteration behavior is preserved
 
 ### API Responsiveness (API)
 
@@ -97,10 +97,10 @@ Every v1 requirement maps to exactly one phase. See `.planning/ROADMAP.md` for p
 | BENCH-02 | Phase 1 | Complete |
 | BENCH-03 | Phase 1 | Complete |
 | BENCH-04 | Phase 1 | Complete |
-| DATA-01 | Phase 2 | Pending |
-| DATA-02 | Phase 2 | Pending |
-| DATA-03 | Phase 2 | Pending |
-| DATA-04 | Phase 2 | Pending |
+| DATA-01 | Phase 2 | Complete |
+| DATA-02 | Phase 2 | Complete |
+| DATA-03 | Phase 2 | Complete |
+| DATA-04 | Phase 2 | Complete |
 | API-01 | Phase 3 | Pending |
 | API-02 | Phase 3 | Pending |
 | API-03 | Phase 3 | Pending |
