@@ -47,9 +47,9 @@ export function useCards(params: CardParams = {}) {
 }
 
 export function useAllCards() {
+  // staleTime/gcTime come from the global QueryClient defaults (main.tsx).
   return useQuery({
     queryKey: ['cards', 'all'],
     queryFn: () => apiFetch<CardListResponse>('/api/cards?limit=5000'),
-    staleTime: 5 * 60 * 1000,
   })
 }
