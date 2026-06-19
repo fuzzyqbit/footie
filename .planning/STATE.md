@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-06-17)
 
 ## Current Position
 
-Phase: 3 of 5 (API Responsiveness)
-Plan: 0 of 2 — planned, ready to execute
-Status: Phase 3 planned (2 plans, API-01..03 covered; plan-checker PASSED). Phases 1-2 COMPLETE ✓.
-Last activity: 2026-06-19 — Phase 3 planned (event-loop offload + memoize leaves + /api/meta cache; hoist find_upgrades; compute_chemistry untouched, Tier-2 deferred)
+Phase: 3 of 5 (API Responsiveness) — COMPLETE ✓
+Plan: 2 of 2 complete
+Status: Phase 3 verified PASSED — ready to plan Phase 4 (Async Scraper Rewrite). Phases 1-3 COMPLETE ✓.
+Last activity: 2026-06-19 — Phase 3 executed (memoize leaves + hoist find_upgrades + POST offload + /api/meta cache; /api/build & find_upgrades ~2× faster, byte-identical, 352 tests green)
 
-Progress: [████░░░░░░] 40% (2 of 5 phases complete)
+Progress: [██████░░░░] 60% (3 of 5 phases complete)
 
 ## Performance Metrics
 

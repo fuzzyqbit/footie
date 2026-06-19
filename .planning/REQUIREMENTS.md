@@ -29,9 +29,9 @@ Each requirement is a speed improvement that must NOT change observable output. 
 
 ### API Responsiveness (API)
 
-- [ ] **API-01**: Blocking/CPU handlers no longer block the event loop, so concurrent requests don't serialize
-- [ ] **API-02**: Pure helpers (`slugify`/`canonical_*`) and per-card chemistry facts are memoized/precomputed; build/upgrade hot loops hoist invariant work out of the inner loop
-- [ ] **API-03**: `/api/meta` is cached and invalidated on refresh, with byte-identical output preserved
+- [x] **API-01**: Blocking/CPU handlers no longer block the event loop, so concurrent requests don't serialize
+- [x] **API-02**: Pure helpers (`slugify`/`canonical_*`) and per-card chemistry facts are memoized/precomputed; build/upgrade hot loops hoist invariant work out of the inner loop
+- [x] **API-03**: `/api/meta` is cached and invalidated on refresh, with byte-identical output preserved
 
 ### Scrapers / Ingest (SCRAPE)
 
@@ -101,9 +101,9 @@ Every v1 requirement maps to exactly one phase. See `.planning/ROADMAP.md` for p
 | DATA-02 | Phase 2 | Complete |
 | DATA-03 | Phase 2 | Complete |
 | DATA-04 | Phase 2 | Complete |
-| API-01 | Phase 3 | Pending |
-| API-02 | Phase 3 | Pending |
-| API-03 | Phase 3 | Pending |
+| API-01 | Phase 3 | Complete |
+| API-02 | Phase 3 | Complete |
+| API-03 | Phase 3 | Complete |
 | SCRAPE-01 | Phase 4 | Pending |
 | SCRAPE-02 | Phase 4 | Pending |
 | SCRAPE-03 | Phase 4 | Pending |
