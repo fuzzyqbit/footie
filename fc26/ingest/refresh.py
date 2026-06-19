@@ -17,14 +17,17 @@ from pathlib import Path
 from typing import Callable
 
 from ..db import CardRepository, card_to_dict
+from .constants import DEFAULT_INTERVAL_HOURS, DEFAULT_MIN_OVR  # re-export
 from .enrich import EnrichResult, enrich_cards, enrich_cards_async
 from .expand import ExpandResult, expand_cards, expand_cards_async
 from .web_async import AsyncFetcher
 
-MANIFEST_CARD_CAP = 200   # keep last_refresh.json small
+__all__ = [
+    "DEFAULT_INTERVAL_HOURS", "DEFAULT_MIN_OVR", "MANIFEST_CARD_CAP",
+    "jittered_sleep", "RefreshResult", "refresh_data", "refresh_data_async",
+]
 
-DEFAULT_MIN_OVR = 84
-DEFAULT_INTERVAL_HOURS = 72.0   # every 3 days — gentle on the source sites
+MANIFEST_CARD_CAP = 200   # keep last_refresh.json small
 
 
 def jittered_sleep(seconds: float) -> None:

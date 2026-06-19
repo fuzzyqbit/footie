@@ -120,7 +120,7 @@ def test_add_calls_futgg_fetch(db_path, monkeypatch):
         fetched_urls.append(url)
         return Card(id="x--tots", player_name="X", version="TOTS", ovr=90, position="ST")
 
-    monkeypatch.setattr("fc26.cli.fetch_futgg_card", fake_fetch)
+    monkeypatch.setattr("fc26.ingest.futgg.fetch_futgg_card", fake_fetch)
     result = runner.invoke(app, ["add", "https://www.fut.gg/players/1-x/26-1/", "--db", str(db_path)])
     assert result.exit_code == 0
     assert fetched_urls == ["https://www.fut.gg/players/1-x/26-1/"]
@@ -131,7 +131,7 @@ def test_sync_calls_fcratings_fetch(db_path, monkeypatch):
     def fake_fetch():
         return [Card(id="y--base", player_name="Y", version="base", ovr=85, position="CB")]
 
-    monkeypatch.setattr("fc26.cli.fetch_top100", fake_fetch)
+    monkeypatch.setattr("fc26.ingest.fcratings.fetch_top100", fake_fetch)
     result = runner.invoke(app, ["sync", "--db", str(db_path)])
     assert result.exit_code == 0
     assert CardRepository(db_path).find_by_id("y--base") is not None
@@ -143,7 +143,7 @@ def test_fetch_error_is_clean_not_traceback(db_path, monkeypatch):
     def fake_fetch(url):
         raise FetchError("could not fetch http://x: boom")
 
-    monkeypatch.setattr("fc26.cli.fetch_futgg_card", fake_fetch)
+    monkeypatch.setattr("fc26.ingest.futgg.fetch_futgg_card", fake_fetch)
     result = runner.invoke(app, ["add", "http://x", "--db", str(db_path)])
     assert result.exit_code == 1
     assert "could not fetch" in result.output
@@ -181,7 +181,7 @@ def test_add_invalid_card_exits_clean(db_path, monkeypatch):
     def fake_fetch(url):
         return Card(id="bad--tots", player_name="Bad", version="TOTS", ovr=200, position="ST")
 
-    monkeypatch.setattr("fc26.cli.fetch_futgg_card", fake_fetch)
+    monkeypatch.setattr("fc26.ingest.futgg.fetch_futgg_card", fake_fetch)
     result = runner.invoke(app, ["add", "http://x", "--db", str(db_path)])
     assert result.exit_code == 1
     assert "out of range" in result.output
@@ -195,7 +195,7 @@ def test_enrich_command_reports_summary(db_path, monkeypatch):
         kwargs["on_progress"]("enriched x--base (France, La Liga)")
         return EnrichResult(("x--base",), ("y--base",), ("z--base: not found",))
 
-    monkeypatch.setattr("fc26.cli.enrich_cards_async", fake_enrich)
+    monkeypatch.setattr("fc26.ingest.enrich.enrich_cards_async", fake_enrich)
     result = runner.invoke(app, ["enrich", "--db", str(db_path)])
     assert result.exit_code == 0
     assert "enriched x--base (France, La Liga)" in result.output
@@ -209,7 +209,7 @@ def test_enrich_command_exit_1_only_when_truly_nothing_happened(db_path, monkeyp
     async def fake(repo, **kw):
         return EnrichResult((), (), ())
 
-    monkeypatch.setattr("fc26.cli.enrich_cards_async", fake)
+    monkeypatch.setattr("fc26.ingest.enrich.enrich_cards_async", fake)
     result = runner.invoke(app, ["enrich", "--db", str(db_path)])
     assert result.exit_code == 1
 
@@ -220,7 +220,7 @@ def test_enrich_command_exit_0_when_only_misses(db_path, monkeypatch):
     async def fake(repo, **kw):
         return EnrichResult((), (), ("a--base: gone",))
 
-    monkeypatch.setattr("fc26.cli.enrich_cards_async", fake)
+    monkeypatch.setattr("fc26.ingest.enrich.enrich_cards_async", fake)
     result = runner.invoke(app, ["enrich", "--db", str(db_path)])
     assert result.exit_code == 0
     assert "a--base" in result.output
@@ -232,7 +232,7 @@ def test_enrich_command_exit_0_when_all_skipped(db_path, monkeypatch):
     async def fake(repo, **kw):
         return EnrichResult((), ("a--base", "b--base"), ())
 
-    monkeypatch.setattr("fc26.cli.enrich_cards_async", fake)
+    monkeypatch.setattr("fc26.ingest.enrich.enrich_cards_async", fake)
     result = runner.invoke(app, ["enrich", "--db", str(db_path)])
     assert result.exit_code == 0
 
@@ -243,7 +243,7 @@ def test_enrich_command_clean_error_on_abort(db_path, monkeypatch):
     async def boom(repo, **kwargs):
         raise ParseError("11/12 player pages failed - fcratings layout changed?")
 
-    monkeypatch.setattr("fc26.cli.enrich_cards_async", boom)
+    monkeypatch.setattr("fc26.ingest.enrich.enrich_cards_async", boom)
     result = runner.invoke(app, ["enrich", "--db", str(db_path)])
     assert result.exit_code == 1
     assert "layout changed" in result.output
@@ -257,7 +257,7 @@ def test_expand_command_reports_summary(db_path, monkeypatch):
         kwargs["on_progress"]("page 1: 30 cards")
         return ExpandResult(37, 35, 2, ())
 
-    monkeypatch.setattr("fc26.cli.expand_cards_async", fake_expand)
+    monkeypatch.setattr("fc26.ingest.expand.expand_cards_async", fake_expand)
     result = runner.invoke(app, ["expand", "--min-ovr", "87", "--db", str(db_path)])
     assert result.exit_code == 0
     assert "page 1: 30 cards" in result.output
@@ -275,7 +275,7 @@ def test_expand_exit_1_when_nothing_ingested(db_path, monkeypatch):
     async def fake(repo, **kw):
         return ExpandResult(0, 0, 0, ("url: boom",))
 
-    monkeypatch.setattr("fc26.cli.expand_cards_async", fake)
+    monkeypatch.setattr("fc26.ingest.expand.expand_cards_async", fake)
     result = runner.invoke(app, ["expand", "--min-ovr", "87", "--db", str(db_path)])
     assert result.exit_code == 1
 
@@ -286,7 +286,7 @@ def test_expand_clean_error_on_abort(db_path, monkeypatch):
     async def boom(repo, **kwargs):
         raise ParseError("3/5 list pages failed - futbin layout changed?")
 
-    monkeypatch.setattr("fc26.cli.expand_cards_async", boom)
+    monkeypatch.setattr("fc26.ingest.expand.expand_cards_async", boom)
     result = runner.invoke(app, ["expand", "--min-ovr", "87", "--db", str(db_path)])
     assert result.exit_code == 1
     assert "layout changed" in result.output

@@ -4,43 +4,21 @@ from __future__ import annotations
 
 import asyncio
 import json as json_lib
-import time
 from dataclasses import asdict
 from pathlib import Path
 from typing import NoReturn
 
-import httpx
 import typer
 from rich.console import Console
 from rich.table import Table
 
-from .builder.advise import advise_squad
-from .builder.boost import boosted_stats
-from .builder.build import build_squad
-from .builder.market import parse_budget
-from .builder.plan import plan_for_squad, plan_from_scratch
-from .builder.upgrade import find_upgrades
-from .chem.engine import compute_chemistry
-from .chem.lineup import load_lineup, resolve_cards
+# Light imports only at module top so `fc26 --help` / search / show / list start
+# fast. The scrape (selectolax/httpx) + builder + chem graph is deferred into the
+# command bodies that use it. DEFAULT_* come from the light .ingest.constants
+# (importing them from .ingest.refresh would pull the whole ingest graph).
 from .db import CardRepository, card_to_dict
 from .errors import FC26Error
-from .ingest.enrich import enrich_cards, enrich_cards_async
-from .ingest.expand import expand_cards, expand_cards_async
-from .ingest.fcratings import fetch_top100
-from .ingest.futgg import fetch_futgg_card
-from .ingest.images import upgrade_card_images, upgrade_card_images_async
-from .ingest.objectives import write_objectives
-from .ingest.refresh import (
-    DEFAULT_INTERVAL_HOURS,
-    DEFAULT_MIN_OVR,
-    jittered_sleep,
-    refresh_data,
-    refresh_data_async,
-)
-from .ingest.sbc import write_sbcs
-from .ingest.seed import seed_cards
-from .ingest.web import fetch_html
-from .ingest.web_async import AsyncFetcher
+from .ingest.constants import DEFAULT_INTERVAL_HOURS, DEFAULT_MIN_OVR
 from .models import Card
 
 app = typer.Typer(help="FC 26 (PS5) FUT player database", no_args_is_help=True)
@@ -75,6 +53,7 @@ def seed(
     db: Path = DB_OPTION,
 ) -> None:
     """One-time: build the DB from this repo's crawled markdown docs."""
+    from .ingest.seed import seed_cards
     try:
         top100_md = (docs_dir / "08-player-ratings-top100.md").read_text(encoding="utf-8")
         master_md = (docs_dir / "10-fastest-xi.md").read_text(encoding="utf-8")
@@ -97,6 +76,7 @@ def seed(
 @app.command()
 def add(url: str, db: Path = DB_OPTION) -> None:
     """Crawl one fut.gg per-card page and upsert it."""
+    from .ingest.futgg import fetch_futgg_card
     try:
         card = fetch_futgg_card(url)
         merged = CardRepository(db).upsert(card)
@@ -108,6 +88,7 @@ def add(url: str, db: Path = DB_OPTION) -> None:
 @app.command()
 def sync(db: Path = DB_OPTION) -> None:
     """Re-crawl the fcratings top-100 and merge (fut.gg data is never degraded)."""
+    from .ingest.fcratings import fetch_top100
     try:
         cards = fetch_top100()
     except FC26Error as exc:
@@ -196,6 +177,8 @@ def enrich(
     db: Path = DB_OPTION,
 ) -> None:
     """Bulk-fill league/nation/face stats from fcratings player pages."""
+    from .ingest.enrich import enrich_cards_async
+    from .ingest.web_async import AsyncFetcher
     repo = CardRepository(db)
 
     async def _run():
@@ -230,6 +213,8 @@ def expand(
     db: Path = DB_OPTION,
 ) -> None:
     """Bulk-ingest the live FUT card pool (base + specials, with prices) from futbin."""
+    from .ingest.expand import expand_cards_async
+    from .ingest.web_async import AsyncFetcher
     repo = CardRepository(db)
 
     async def _run():
@@ -269,6 +254,8 @@ def images(
     Run `fc26 expand` first so cards carry a futbin_url; this upgrades the small
     list thumbnails to full-size signed CDN URLs (hotlinked, not downloaded).
     """
+    from .ingest.images import upgrade_card_images_async
+    from .ingest.web_async import AsyncFetcher
     repo = CardRepository(db)
     # --workers preserves user intent: it now sets the async fetcher's
     # concurrency (in-flight cap), not a thread count.
@@ -313,6 +300,7 @@ def refresh(
     Same pipeline the server's daily auto-refresh runs. Writes merge into the
     existing db, so a partial scrape never wipes data.
     """
+    from .ingest.refresh import refresh_data_async
     repo = CardRepository(db)
     try:
         result = asyncio.run(refresh_data_async(
@@ -340,6 +328,9 @@ def refresh_objectives(
                              help="Path to write the objectives JSON"),
 ) -> None:
     """Scrape fut.gg objective reward players + task text, match untradeable cards."""
+    import httpx
+
+    from .ingest.objectives import write_objectives
     repo = CardRepository(db)
     try:
         records = write_objectives(out, repo)
@@ -360,6 +351,9 @@ def refresh_sbcs(
                              help="Path to write the SBCs JSON"),
 ) -> None:
     """Scrape the fut.gg SBC hub (cost + pack/player rewards), ranked best-first."""
+    import httpx
+
+    from .ingest.sbc import write_sbcs
     try:
         records = write_sbcs(out)
     except FC26Error as exc:
@@ -383,6 +377,9 @@ def upgrade(
     json: bool = JSON_FLAG,
 ) -> None:
     """Suggest budgeted squad upgrades (pace-meta + chemistry aware)."""
+    from .builder.market import parse_budget
+    from .builder.upgrade import find_upgrades
+    from .chem.lineup import load_lineup, resolve_cards
     try:
         coins = parse_budget(budget)
         lineup = load_lineup(squad_file)
@@ -446,6 +443,9 @@ def build(
     json: bool = JSON_FLAG,
 ) -> None:
     """Build a fresh XI from scratch: cheapest legal seed, then budgeted upgrades."""
+    from .builder.build import build_squad
+    from .builder.market import parse_budget
+    from .chem.engine import compute_chemistry
     try:
         coins = parse_budget(budget)
         repo = CardRepository(db)
@@ -504,6 +504,9 @@ def plan(
         _fail("give a squad file (upgrade mode) or --formation (build mode)")
     if write is not None and squad_file is not None and write.resolve() == squad_file.resolve():
         _fail("--write must target a NEW file, not the input")
+    from .builder.market import parse_budget
+    from .builder.plan import plan_for_squad, plan_from_scratch
+    from .chem.lineup import load_lineup, resolve_cards
     lineup = None
     try:
         coins = parse_budget(budget)
@@ -587,6 +590,8 @@ def chem(
     json: bool = JSON_FLAG,
 ) -> None:
     """Compute FC26 chemistry for a lineup file."""
+    from .chem.engine import compute_chemistry
+    from .chem.lineup import load_lineup, resolve_cards
     try:
         lineup = load_lineup(squad_file)
         slot_cards = resolve_cards(lineup, CardRepository(db))
@@ -620,6 +625,8 @@ def advise(
     json: bool = JSON_FLAG,
 ) -> None:
     """Strategy tips: chem leverage, out-of-position, weak slots, best chem styles."""
+    from .builder.advise import advise_squad
+    from .chem.lineup import load_lineup, resolve_cards
     try:
         lineup = load_lineup(squad_file)
         slot_cards = resolve_cards(lineup, CardRepository(db))
@@ -666,6 +673,9 @@ def boost(
     json: bool = JSON_FLAG,
 ) -> None:
     """Show chem-gated boosted stats for a styled lineup."""
+    from .builder.boost import boosted_stats
+    from .chem.engine import compute_chemistry
+    from .chem.lineup import load_lineup, resolve_cards
     try:
         lineup = load_lineup(squad_file)
         slot_cards = resolve_cards(lineup, CardRepository(db))
