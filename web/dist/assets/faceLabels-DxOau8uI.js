@@ -1,0 +1,1 @@
+const p=[["pac","PAC"],["sho","SHO"],["pas","PAS"],["dri","DRI"],["def_","DEF"],["phy","PHY"]],E=[["pac","DIV"],["sho","HAN"],["pas","KIC"],["dri","REF"],["def_","SPD"],["phy","POS"]];function a(s){return s==="GK"?E:p}export{a as f};

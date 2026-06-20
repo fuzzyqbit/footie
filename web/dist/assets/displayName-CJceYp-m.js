@@ -1,0 +1,1 @@
+const i={"de Assis Moreira":"Ronaldinho","dos Santos Leite":"Kaká","da Silva Rocha":"Roberto Carlos","Nazário de Lima":"Ronaldo (R9)","Vinícius José de Oliveira Júnior":"Vinícius Júnior"};function a(o){return i[o]??o}export{a as d};

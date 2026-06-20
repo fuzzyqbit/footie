@@ -1,0 +1,1 @@
+const a="http://localhost:8026";async function e(o,r){const t=await(await fetch(`${a}${o}`,{headers:{"Content-Type":"application/json"},...r})).json();if(!t.ok)throw new Error(t.error??"API error");return t.data}export{e as a};
