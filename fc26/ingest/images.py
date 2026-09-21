@@ -17,7 +17,7 @@ from typing import Callable
 from selectolax.parser import HTMLParser
 
 from ..db import CardRepository
-from ..errors import FC26Error, ParseError
+from ..errors import FC26Error, ParseError, RateLimitedError
 from ..models import Card
 
 REQUEST_DELAY_SECONDS = 1.0
@@ -325,7 +325,10 @@ async def upgrade_card_images_async(
             return card, None, exc
 
     results = await asyncio.gather(*(_fetch_async(card) for card in todo))
+    blocked = next((exc for _, _, exc in results if isinstance(exc, RateLimitedError)), None)
     for card, art, exc in results:
+        if isinstance(exc, RateLimitedError):
+            continue   # host blocked us: not a miss, just not fetched yet
         attempts += 1
         if exc is not None:
             failures += 1
@@ -337,4 +340,11 @@ async def upgrade_card_images_async(
                 f"{failures}/{attempts} detail pages failed - futbin layout changed?"
             )
 
+    if blocked is not None:
+        # everything fetched before the block is already applied; rerun later
+        # and the already-upgraded cards are skipped.
+        raise RateLimitedError(
+            f"{blocked} ({len(upgraded)} upgraded before the block - rerun to continue)",
+            blocked.retry_after,
+        )
     return ImagesResult(tuple(upgraded), tuple(skipped), tuple(missed))

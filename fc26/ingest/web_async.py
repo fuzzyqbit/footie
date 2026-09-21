@@ -31,7 +31,8 @@ from urllib.parse import urlsplit
 from curl_cffi.requests import AsyncSession
 from curl_cffi.requests.exceptions import RequestException
 
-from ..errors import FetchError
+from ..errors import FetchError, RateLimitedError
+from .constants import BLOCKED_STATUSES, rate_limited_error
 
 # curl_cffi's legacy base error isn't always a subclass of RequestException;
 # catch both so "1 retry on any request failure" holds.
@@ -49,7 +50,6 @@ USER_AGENT = "footie-playbook/0.1 (personal squad tool)"
 IMPERSONATE = "chrome"
 # Flat request timeout (seconds); curl_cffi takes a number or (connect, read).
 _TIMEOUT_SECONDS = 20.0
-
 
 class HostRateLimiter:
     """Per-host minimum interval between request *starts* (token bucket of size 1).
@@ -89,6 +89,7 @@ class AsyncFetcher:
         self._retries = retries
         self._concurrency = concurrency
         self._session: AsyncSession | None = None
+        self._blocked: dict[str, RateLimitedError] = {}   # host -> first block seen
 
     async def __aenter__(self) -> "AsyncFetcher":
         self._session = AsyncSession(
@@ -104,14 +105,24 @@ class AsyncFetcher:
             await self._session.close()
 
     async def fetch(self, url: str) -> str:
-        """GET a page (1 retry on any request error), or raise FetchError."""
+        """GET a page (1 retry on any request error), or raise FetchError.
+
+        A 403/429 raises RateLimitedError at once and trips a per-host breaker so
+        queued fetches to that host fail fast instead of hammering a block.
+        """
         host = urlsplit(url).netloc
         last: Exception | None = None
         for _ in range(self._retries + 1):
             await self._rl.wait(host)            # politeness gate (per host), no slot held
+            if host in self._blocked:            # circuit open: no more requests to this host
+                raise self._blocked[host]
             async with self._sem:                # concurrency cap (global)
                 try:
                     resp = await self._session.get(url)
+                    if getattr(resp, "status_code", None) in BLOCKED_STATUSES:
+                        self._blocked[host] = rate_limited_error(
+                            url, resp.status_code, resp.headers.get("retry-after"))
+                        raise self._blocked[host]
                     resp.raise_for_status()
                     return resp.text
                 except _FETCH_ERRORS as exc:

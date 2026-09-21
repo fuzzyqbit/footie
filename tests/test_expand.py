@@ -117,3 +117,30 @@ def test_stops_on_empty_page_after_full_page(tmp_path, monkeypatch):
                           sleep=lambda s: None)
     assert result.seen == 30
     assert len(fetched) == 2  # full page 1, then the empty page 2 stops the loop
+
+
+def test_start_page_resumes_mid_crawl(tmp_path, monkeypatch):
+    repo = CardRepository(tmp_path / "players.json")
+    pages = [[_card(f"x{p}{i}--tots", f"X{p}{i}", "TOTS", 88) for i in range(30)]
+             for p in range(3)]
+    monkeypatch.setattr("fc26.ingest.expand.parse_futbin_page", _pages(*pages))
+    fetched = []
+    expand_cards(repo, min_ovr=87, fetch_html=lambda u: (fetched.append(u) or u),
+                 sleep=lambda s: None, start_page=2, max_pages=2)
+    assert [u.rsplit("page=", 1)[1] for u in fetched] == ["2", "3"]
+
+
+def test_rate_limit_stops_crawl_immediately_with_resume_hint(tmp_path):
+    from fc26.errors import RateLimitedError
+
+    repo = CardRepository(tmp_path / "players.json")
+    fetched = []
+
+    def blocked(url):
+        fetched.append(url)
+        raise RateLimitedError("www.futbin.com blocked us (HTTP 403)", 3484)
+
+    with pytest.raises(RateLimitedError, match=r"--start-page 1") as exc:
+        expand_cards(repo, min_ovr=87, fetch_html=blocked, sleep=lambda s: None)
+    assert len(fetched) == 1            # did not hammer pages 2..N
+    assert exc.value.retry_after == 3484

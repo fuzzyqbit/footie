@@ -6,7 +6,7 @@ from dataclasses import dataclass, replace
 from typing import Callable
 
 from ..db import CardRepository
-from ..errors import FC26Error, ParseError
+from ..errors import FC26Error, ParseError, RateLimitedError
 from ..models import Card
 from .futbin import LIST_URL_TEMPLATE, ROWS_PER_FULL_PAGE, parse_futbin_page
 
@@ -34,6 +34,7 @@ def expand_cards(
     sleep: Callable[[float], None],
     on_progress: Callable[[str], None] = lambda _msg: None,
     max_pages: int | None = None,
+    start_page: int = 1,
 ) -> ExpandResult:
     seen = 0
     new = 0
@@ -41,11 +42,11 @@ def expand_cards(
     failed_pages: list[str] = []
     new_ids: list[str] = []
 
-    page = 0
+    page = start_page - 1   # resume support: a blocked run reports where to restart
     attempts = 0
     while True:
         page += 1
-        if max_pages is not None and page > max_pages:
+        if max_pages is not None and page - start_page + 1 > max_pages:
             break
         url = LIST_URL_TEMPLATE.format(min_ovr=min_ovr, page=page)
         attempts += 1
@@ -53,6 +54,8 @@ def expand_cards(
             html = fetch_html(url)
             sleep(REQUEST_DELAY_SECONDS)
             cards = parse_futbin_page(html, source_url=url)
+        except RateLimitedError as exc:
+            raise RateLimitedError(f"{exc} (resume with --start-page {page})", exc.retry_after) from exc
         except FC26Error as exc:
             failed_pages.append(f"{url}: {exc}")
             if attempts >= ABORT_CHECK_AFTER and len(failed_pages) / attempts > ABORT_FAILURE_RATIO:
@@ -86,6 +89,7 @@ async def expand_cards_async(
     fetcher,
     on_progress: Callable[[str], None] = lambda _msg: None,
     max_pages: int | None = None,
+    start_page: int = 1,
 ) -> ExpandResult:
     """Async sibling of :func:`expand_cards` — byte-identical output.
 
@@ -102,17 +106,19 @@ async def expand_cards_async(
     failed_pages: list[str] = []
     new_ids: list[str] = []
 
-    page = 0
+    page = start_page - 1   # resume support: a blocked run reports where to restart
     attempts = 0
     while True:
         page += 1
-        if max_pages is not None and page > max_pages:
+        if max_pages is not None and page - start_page + 1 > max_pages:
             break
         url = LIST_URL_TEMPLATE.format(min_ovr=min_ovr, page=page)
         attempts += 1
         try:
             html = await fetcher.fetch(url)
             cards = parse_futbin_page(html, source_url=url)
+        except RateLimitedError as exc:
+            raise RateLimitedError(f"{exc} (resume with --start-page {page})", exc.retry_after) from exc
         except FC26Error as exc:
             failed_pages.append(f"{url}: {exc}")
             if attempts >= ABORT_CHECK_AFTER and len(failed_pages) / attempts > ABORT_FAILURE_RATIO:

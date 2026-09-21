@@ -13,5 +13,13 @@ class FetchError(FC26Error):
     """A network fetch failed after retry."""
 
 
+class RateLimitedError(FetchError):
+    """The host refused us (HTTP 403/429) - stop crawling it, don't retry."""
+
+    def __init__(self, message: str, retry_after: int | None = None) -> None:
+        super().__init__(message)
+        self.retry_after = retry_after
+
+
 class ParseError(FC26Error):
     """A page or document did not match the expected structure."""

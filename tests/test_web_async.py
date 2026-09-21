@@ -143,3 +143,53 @@ def test_session_built_with_chrome_impersonation():
             return f._session is not None
 
     assert asyncio.run(_run())
+
+
+class _BlockedResp(_Resp):
+    def __init__(self, status_code, retry_after=None):
+        super().__init__("blocked")
+        self.status_code = status_code
+        self.headers = {"retry-after": retry_after} if retry_after else {}
+
+
+def test_403_raises_rate_limited_without_retry_and_trips_host_breaker():
+    from fc26.errors import RateLimitedError
+
+    f = AsyncFetcher(concurrency=2, min_interval=0.0)
+    calls = []
+
+    async def _handler(url):
+        calls.append(url)
+        return _BlockedResp(403, "3484")
+
+    f._session = _StubSession(_handler)
+
+    async def _run():
+        with pytest.raises(RateLimitedError) as first:
+            await f.fetch("https://www.futbin.com/27/players?page=36")
+        with pytest.raises(RateLimitedError):
+            await f.fetch("https://www.futbin.com/27/players?page=37")
+        return first.value
+
+    err = asyncio.run(_run())
+    assert len(calls) == 1                      # no retry, and page 37 never hit the network
+    assert err.retry_after == 3484
+    assert "retry after ~58 min" in str(err)
+
+
+def test_breaker_is_per_host():
+    from fc26.errors import RateLimitedError
+
+    f = AsyncFetcher(concurrency=2, min_interval=0.0)
+
+    async def _handler(url):
+        return _BlockedResp(429) if "futbin" in url else _Resp("fine")
+
+    f._session = _StubSession(_handler)
+
+    async def _run():
+        with pytest.raises(RateLimitedError):
+            await f.fetch("https://www.futbin.com/a")
+        return await f.fetch("https://www.fut.gg/b")
+
+    assert asyncio.run(_run()) == "fine"

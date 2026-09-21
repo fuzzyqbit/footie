@@ -21,7 +21,7 @@ from .errors import FC26Error
 from .ingest.constants import DEFAULT_INTERVAL_HOURS, DEFAULT_MIN_OVR
 from .models import Card
 
-app = typer.Typer(help="FC 26 (PS5) FUT player database", no_args_is_help=True)
+app = typer.Typer(help="FC 27 (PS5) FUT player database", no_args_is_help=True)
 console = Console(width=200)
 
 DEFAULT_DB = Path("data/players.json")
@@ -210,6 +210,8 @@ def enrich(
 def expand(
     min_ovr: int = typer.Option(..., "--min-ovr", help="Ingest all cards at or above this rating"),
     max_pages: int | None = typer.Option(None, "--max-pages", help="Cap list pages (testing/partial)"),
+    start_page: int = typer.Option(1, "--start-page", min=1, help="Resume from this list page (after a block)"),
+    interval: float = typer.Option(1.0, "--interval", min=0.5, help="Min seconds between requests (jittered up to 2x)"),
     db: Path = DB_OPTION,
 ) -> None:
     """Bulk-ingest the live FUT card pool (base + specials, with prices) from futbin."""
@@ -218,13 +220,14 @@ def expand(
     repo = CardRepository(db)
 
     async def _run():
-        async with AsyncFetcher(concurrency=4, min_interval=1.0) as fetcher:
+        async with AsyncFetcher(concurrency=4, min_interval=interval) as fetcher:
             return await expand_cards_async(
                 repo,
                 min_ovr=min_ovr,
                 fetcher=fetcher,
                 on_progress=console.print,
                 max_pages=max_pages,
+                start_page=start_page,
             )
 
     try:
@@ -247,6 +250,7 @@ def images(
     refresh: bool = typer.Option(False, "--refresh", help="Re-fetch HD art even for already-enriched cards"),
     limit: int | None = typer.Option(None, "--limit", help="Cap detail-page fetches (sampling/partial)"),
     workers: int = typer.Option(1, "--workers", help="Concurrent detail-page fetches (single JSON writer)"),
+    interval: float = typer.Option(1.0, "--interval", min=0.5, help="Min seconds between requests (jittered up to 2x)"),
     db: Path = DB_OPTION,
 ) -> None:
     """Fetch HD card art (player render + frame) from each card's futbin detail page.
@@ -262,7 +266,7 @@ def images(
     concurrency = workers if workers and workers > 1 else 4
 
     async def _run():
-        async with AsyncFetcher(concurrency=concurrency, min_interval=1.0) as fetcher:
+        async with AsyncFetcher(concurrency=concurrency, min_interval=interval) as fetcher:
             return await upgrade_card_images_async(
                 repo,
                 fetcher=fetcher,
@@ -286,6 +290,72 @@ def images(
         no_url = all(not c.futbin_url for c in repo.find_all())
         if no_url:
             _fail("no cards carry a futbin_url - run `fc26 expand --min-ovr N` first")
+
+
+@app.command()
+def frames(
+    delay: float = typer.Option(2.0, "--delay", min=0.5, help="Seconds between futbin requests"),
+    db: Path = DB_OPTION,
+) -> None:
+    """HD card backgrounds from futbin: one request per card type, applied to every card of it."""
+    import time
+
+    from .ingest.frames import upgrade_card_frames
+    from .ingest.web_async import AsyncFetcher
+    repo = CardRepository(db)
+
+    def _fetch(url: str) -> str:
+        async def _one():
+            async with AsyncFetcher(concurrency=1, min_interval=0.0) as fetcher:
+                return await fetcher.fetch(url)
+        return asyncio.run(_one())
+
+    try:
+        with repo.batch():
+            result = upgrade_card_frames(repo, fetch_html=_fetch, sleep=time.sleep,
+                                         delay=delay, on_progress=console.print)
+    except FC26Error as exc:
+        _fail(str(exc))
+    console.print(f"frames: {len(result.frames)} backgrounds, {result.cards} cards updated, "
+                  f"missed {len(result.missed)}")
+    for miss in result.missed:
+        console.print(f"[yellow]miss:[/yellow] {miss}")
+
+
+@app.command()
+def styles(
+    refresh: bool = typer.Option(False, "--refresh", help="Re-fetch even cards that already have sub-stats"),
+    limit: int | None = typer.Option(None, "--limit", help="Cap card-page fetches (sampling/partial)"),
+    interval: float = typer.Option(3.0, "--interval", min=0.5, help="Min seconds between requests (jittered up to 2x)"),
+    workers: int = typer.Option(1, "--workers", min=1, max=4, help="Concurrent page downloads (request starts still spaced by --interval)"),
+    db: Path = DB_OPTION,
+) -> None:
+    """Fill PlayStyles + sub-stats from fut.gg for cards ingested by `fc26 expand`.
+
+    Cards are joined to fut.gg by EA item id (exact), verified per page, and
+    written in small batches - safe to interrupt and rerun.
+    """
+    from .ingest.futgg_styles import upgrade_card_styles_async
+    from .ingest.web_async import AsyncFetcher
+    repo = CardRepository(db)
+
+    async def _run():
+        async with AsyncFetcher(concurrency=workers, min_interval=interval) as fetcher:
+            return await upgrade_card_styles_async(
+                repo, fetcher=fetcher, on_progress=console.print,
+                refresh=refresh, limit=limit,
+            )
+
+    try:
+        result = asyncio.run(_run())
+    except FC26Error as exc:
+        _fail(str(exc))
+    console.print(
+        f"styles: updated {len(result.updated)}, skipped {len(result.skipped)}, "
+        f"missed {len(result.missed)}"
+    )
+    for miss in result.missed:
+        console.print(f"[yellow]miss:[/yellow] {miss}")
 
 
 @app.command()
@@ -589,7 +659,7 @@ def chem(
     db: Path = DB_OPTION,
     json: bool = JSON_FLAG,
 ) -> None:
-    """Compute FC26 chemistry for a lineup file."""
+    """Compute FC 27 chemistry for a lineup file."""
     from .chem.engine import compute_chemistry
     from .chem.lineup import load_lineup, resolve_cards
     try:
@@ -742,7 +812,7 @@ def serve(
     refresh_min_ovr: int = typer.Option(DEFAULT_MIN_OVR, "--refresh-min-ovr",
                                         help="Lowest OVR to re-scrape on auto-refresh"),
 ) -> None:
-    """Start the FC 26 API server (no auth — local network only).
+    """Start the FC 27 API server (no auth — local network only).
 
     If the built SPA exists (default web/dist), it is served from the same
     origin so one process hosts both the API and the frontend. With

@@ -141,14 +141,62 @@ def _extract_subs(html: str) -> Optional[SubStats]:
             field_values[field] = int(val)
 
     if not field_values:
+        field_values = _subs_from_blob(html)
+    if not field_values:
         return None
 
     return SubStats(**field_values)
 
 
+# JS-blob keys (``attributeSprintSpeed:90``) -> SubStats fields.
+_BLOB_ATTR_TO_FIELD: dict[str, str] = {
+    "Acceleration": "acceleration", "SprintSpeed": "sprint_speed",
+    "Positioning": "positioning", "Finishing": "finishing",
+    "ShotPower": "shot_power", "LongShots": "long_shots", "Volleys": "volleys",
+    "Penalties": "penalties", "Vision": "vision", "Crossing": "crossing",
+    "FkAccuracy": "fk_accuracy", "ShortPassing": "short_passing",
+    "LongPassing": "long_passing", "Curve": "curve", "Agility": "agility",
+    "Balance": "balance", "Reactions": "reactions", "BallControl": "ball_control",
+    "Dribbling": "dribbling", "Composure": "composure",
+    "Interceptions": "interceptions", "HeadingAccuracy": "heading_accuracy",
+    "DefensiveAwareness": "def_awareness", "StandingTackle": "standing_tackle",
+    "SlidingTackle": "sliding_tackle", "Jumping": "jumping", "Stamina": "stamina",
+    "Strength": "strength", "Aggression": "aggression",
+}
+_BLOB_ATTR_RE = re.compile(r"\battribute([A-Za-z]+):(\d{1,2})\b")
+
+
+def _subs_from_blob(html: str) -> dict[str, int]:
+    """Sub-stats of the page's main card from the JS data blob (first occurrence wins)."""
+    start = html.find("attributeAcceleration:")
+    if start < 0:
+        return {}
+    values: dict[str, int] = {}
+    for key, val in _BLOB_ATTR_RE.findall(html[start : start + 3000]):
+        field = _BLOB_ATTR_TO_FIELD.get(key)
+        if field and field not in values:
+            values[field] = int(val)
+    return values
+
+
 # ---------------------------------------------------------------------------
 # Playstyle extraction from DOM
 # ---------------------------------------------------------------------------
+
+_TITLED_BADGE_RE = re.compile(
+    r'<div(?: class="[^"]*")? title="([^"]+)"><svg[^>]+height="42"[^>]*>(.*?)</svg>',
+    re.DOTALL,
+)
+
+
+def _is_plus_badge(svg_content: str) -> Optional[bool]:
+    """True = PlayStyle+, False = regular PlayStyle, None = not a playstyle badge."""
+    if _PS_PLUS_FILL in svg_content or _PENTAGON_PATH in svg_content:
+        return True
+    if _DIAMOND_PATH in svg_content:
+        return False
+    return None
+
 
 def _extract_playstyles(
     html: str,
@@ -164,6 +212,15 @@ def _extract_playstyles(
     its label in the DOM, so the distance is small and predictable regardless of
     card position.
     """
+    # FC 27 layout: the badge name is the ``title`` of the div wrapping the 42px
+    # SVG (no label span any more). Prefer it; fall back to the span scan below
+    # for older saved pages.
+    titled = _TITLED_BADGE_RE.findall(html)
+    if titled:
+        plus = tuple(name for name, svg in titled if _is_plus_badge(svg) is True)
+        regular = tuple(name for name, svg in titled if _is_plus_badge(svg) is False)
+        return regular, plus
+
     svg_42_re = re.compile(
         r'<svg[^>]+height="42"[^>]*>(.*?)</svg>', re.DOTALL
     )
