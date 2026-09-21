@@ -127,6 +127,28 @@ export default function SearchFilterBar({ params, onChange }: Props) {
         className="bg-card border border-border rounded px-3 py-1.5 text-sm text-fg placeholder-muted w-20 focus:outline-none focus:border-gold disabled:opacity-40"
       />
 
+      <input
+        type="number"
+        aria-label="Min price"
+        placeholder="Min price"
+        min={0}
+        step={1000}
+        value={params.min_price ?? ''}
+        onChange={e => onChange({ ...params, min_price: e.target.value ? Number(e.target.value) : undefined, offset: 0 })}
+        className="bg-card border border-border rounded px-3 py-1.5 text-sm text-fg placeholder-muted w-28 focus:outline-none focus:border-gold"
+      />
+
+      <input
+        type="number"
+        aria-label="Max price"
+        placeholder="Max price"
+        min={0}
+        step={1000}
+        value={params.max_price ?? ''}
+        onChange={e => onChange({ ...params, max_price: e.target.value ? Number(e.target.value) : undefined, offset: 0 })}
+        className="bg-card border border-border rounded px-3 py-1.5 text-sm text-fg placeholder-muted w-28 focus:outline-none focus:border-gold"
+      />
+
       <select
         aria-label="Sort"
         value={params.sort ?? 'ovr'}
@@ -140,6 +162,7 @@ export default function SearchFilterBar({ params, onChange }: Props) {
           </option>
         ))}
         <option value="name">Name A–Z</option>
+        <option value="price">Price ↑ (cheapest)</option>
       </select>
     </div>
   )

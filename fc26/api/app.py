@@ -60,7 +60,9 @@ _SORT_KEYS = {
     "def": lambda c: c.face.def_ or 0,
     "phy": lambda c: c.face.phy or 0,
     "name": lambda c: c.player_name.lower(),
+    "price": lambda c: c.price if c.price is not None else float("inf"),   # cheapest first, unpriced last
 }
+_ASCENDING_SORTS = {"name", "price"}
 
 
 def _ok(data: Any) -> dict:
@@ -141,7 +143,7 @@ def create_app(
                 with contextlib.suppress(asyncio.CancelledError):
                     await task
 
-    app = FastAPI(title="FC 26 API", lifespan=_lifespan)
+    app = FastAPI(title="FC 27 API", lifespan=_lifespan)
 
     app.add_middleware(
         CORSMiddleware,
@@ -182,6 +184,8 @@ def create_app(
         stat: str | None = None,
         stat_min: int | None = None,
         no_price: bool = False,
+        min_price: int | None = None,
+        max_price: int | None = None,
         sort: str = "ovr",
         limit: int = 50,
         offset: int = 0,
@@ -189,7 +193,7 @@ def create_app(
         if sort not in _SORT_KEYS:
             raise FC26Error(
                 f"unknown sort key {sort!r} "
-                "(use: ovr, pac, sho, pas, dri, def, phy, name)"
+                "(use: ovr, pac, sho, pas, dri, def, phy, name, price)"
             )
         if stat is not None and stat not in _FACE_ATTR:
             raise FC26Error(
@@ -226,7 +230,14 @@ def create_app(
                      if (v := getattr(c.face, attr)) is not None and v >= stat_min]
         if no_price:
             cards = [c for c in cards if c.price is None]
-        reverse = sort != "name"
+        if min_price is not None or max_price is not None:
+            # a price range only makes sense for cards that have a market price
+            lo = min_price if min_price is not None else 0
+            hi = max_price if max_price is not None else float("inf")
+            if lo < 0 or hi < lo:
+                raise FC26Error("price range must satisfy 0 <= min_price <= max_price")
+            cards = [c for c in cards if c.price is not None and lo <= c.price <= hi]
+        reverse = sort not in _ASCENDING_SORTS
         cards.sort(key=_SORT_KEYS[sort], reverse=reverse)
         total = len(cards)
         return _ok({"total": total, "cards": [card_to_dict(c) for c in cards[offset:offset + limit]]})
@@ -463,6 +474,9 @@ def create_app(
         league: str | None = None,
         nation: str | None = None,
         club: str | None = None,
+        min_price: int | None = None,
+        stat: str | None = None,
+        stat_min: int | None = None,
         limit: int = 30,
         per_tier: int | None = None,
     ) -> dict:
@@ -472,6 +486,12 @@ def create_app(
             raise FC26Error("max_price must be >= 1")
         if per_tier is not None and per_tier < 1:
             raise FC26Error("per_tier must be >= 1")
+        if stat is not None and stat not in _FACE_ATTR:
+            raise FC26Error(
+                f"unknown stat {stat!r} (use: pac, sho, pas, dri, def, phy)"
+            )
+        if min_price is not None and not 0 <= min_price <= max_price:
+            raise FC26Error("price range must satisfy 0 <= min_price <= max_price")
         repo = CardRepository(db_path)
         positions = _squad_positions(squad, repo) if squad else None
         pool = repo.find_all()
@@ -485,6 +505,12 @@ def create_app(
         if club:
             wanted_club = club.lower()
             pool = [c for c in pool if c.club is not None and c.club.lower() == wanted_club]
+        if stat is not None and stat_min is not None:
+            attr = _FACE_ATTR[stat]
+            pool = [c for c in pool
+                    if (v := getattr(c.face, attr)) is not None and v >= stat_min]
+        if min_price is not None:
+            pool = [c for c in pool if c.price is not None and c.price >= min_price]
         picks = value_picks(
             pool, min_ovr=min_ovr, max_price=max_price,
             pos=pos, positions=positions, limit=limit, per_tier=per_tier,

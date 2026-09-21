@@ -13,6 +13,8 @@ export interface CardParams {
   stat?: string
   stat_min?: number
   no_price?: boolean
+  min_price?: number
+  max_price?: number
   sort?: string
   limit?: number
   offset?: number
@@ -32,6 +34,8 @@ function buildQs(params: CardParams): string {
     qs.set('stat_min', String(params.stat_min))
   }
   if (params.no_price) qs.set('no_price', 'true')
+  if (params.min_price != null) qs.set('min_price', String(params.min_price))
+  if (params.max_price != null) qs.set('max_price', String(params.max_price))
   if (params.sort) qs.set('sort', params.sort)
   if (params.limit != null) qs.set('limit', String(params.limit))
   if (params.offset != null) qs.set('offset', String(params.offset))

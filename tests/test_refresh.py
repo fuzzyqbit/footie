@@ -48,4 +48,4 @@ def test_create_app_default_has_no_auto_refresh(tmp_path):
     from fc26.api.app import create_app
 
     app = create_app(db_path=tmp_path / "db.json", squads_dir=tmp_path)
-    assert app.title == "FC 26 API"
+    assert app.title == "FC 27 API"

@@ -6,6 +6,13 @@ import CardTile from '../components/CardTile'
 import SearchSelect from '../components/SearchSelect'
 import SkeletonGrid from '../components/SkeletonGrid'
 
+// Face stats; GK cards keep the keeper attributes in the same slots.
+const STATS = [
+  { key: 'pac', out: 'PAC', gk: 'DIV' }, { key: 'sho', out: 'SHO', gk: 'HAN' },
+  { key: 'pas', out: 'PAS', gk: 'KIC' }, { key: 'dri', out: 'DRI', gk: 'REF' },
+  { key: 'def', out: 'DEF', gk: 'SPD' }, { key: 'phy', out: 'PHY', gk: 'POS' },
+]
+
 const POSITIONS = ['GK', 'CB', 'RB', 'LB', 'CDM', 'CM', 'CAM', 'RM', 'LM', 'RW', 'LW', 'ST', 'CF']
 
 export default function ValuePage() {
@@ -15,6 +22,9 @@ export default function ValuePage() {
   const [league, setLeague] = useState('')
   const [nation, setNation] = useState('')
   const [club, setClub] = useState('')
+  const [minPrice, setMinPrice] = useState<number | undefined>(undefined)
+  const [stat, setStat] = useState('')
+  const [statMin, setStatMin] = useState<number | undefined>(undefined)
 
   const { data: squads } = useSquads()
   const { data: meta } = useMeta()
@@ -23,6 +33,9 @@ export default function ValuePage() {
     limit: 120,
     pos: pos || undefined,
     max_price: maxPrice,
+    min_price: minPrice,
+    stat: stat || undefined,
+    stat_min: statMin,
     squad: squad || undefined,
     league: league || undefined,
     nation: nation || undefined,
@@ -61,6 +74,36 @@ export default function ValuePage() {
 
         <SearchSelect label="Club" placeholder="Any club" value={club}
           options={meta?.clubs ?? []} onChange={setClub} className="w-40" />
+
+        <select aria-label="Stat filter" value={stat} onChange={e => setStat(e.target.value)} className={inputCls}>
+          <option value="">Stat ≥</option>
+          {STATS.map(s => (
+            <option key={s.key} value={s.key}>{pos === 'GK' ? s.gk : s.out}</option>
+          ))}
+        </select>
+
+        <input
+          type="number"
+          aria-label="Min stat"
+          placeholder="Min"
+          min={1}
+          max={99}
+          disabled={!stat}
+          value={statMin ?? ''}
+          onChange={e => setStatMin(e.target.value ? Number(e.target.value) : undefined)}
+          className={`${inputCls} w-20 placeholder-muted disabled:opacity-40`}
+        />
+
+        <input
+          type="number"
+          aria-label="Min price"
+          placeholder="Min price"
+          min={0}
+          step={1000}
+          value={minPrice ?? ''}
+          onChange={e => setMinPrice(e.target.value ? Number(e.target.value) : undefined)}
+          className={`${inputCls} w-32 placeholder-muted`}
+        />
 
         <input
           type="number"

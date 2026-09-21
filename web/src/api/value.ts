@@ -5,6 +5,9 @@ import type { ValueResponse } from '../types'
 export interface ValueParams {
   min_ovr?: number
   max_price?: number
+  min_price?: number
+  stat?: string
+  stat_min?: number
   pos?: string
   squad?: string
   league?: string
@@ -18,6 +21,11 @@ function buildQs(params: ValueParams): string {
   const qs = new URLSearchParams()
   if (params.min_ovr != null) qs.set('min_ovr', String(params.min_ovr))
   if (params.max_price != null) qs.set('max_price', String(params.max_price))
+  if (params.min_price != null) qs.set('min_price', String(params.min_price))
+  if (params.stat && params.stat_min != null) {
+    qs.set('stat', params.stat)
+    qs.set('stat_min', String(params.stat_min))
+  }
   if (params.pos) qs.set('pos', params.pos)
   if (params.squad) qs.set('squad', params.squad)
   if (params.league) qs.set('league', params.league)
