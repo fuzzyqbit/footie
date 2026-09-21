@@ -1,7 +1,7 @@
 [project]
 name = "fc26"
 version = "0.1.0"
-description = "FC 26 (PS5) FUT player database and squad assistant"
+description = "FC 27 (PS5) FUT player database and squad assistant"
 requires-python = ">=3.12"
 dependencies = [
     "typer>=0.12",

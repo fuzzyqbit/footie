@@ -16,7 +16,7 @@ function renderApp(path = '/cards') {
 
 test('renders sidebar and redirects root to Cards', async () => {
   renderApp('/')
-  expect(screen.getByText('FC 26')).toBeInTheDocument()
+  expect(screen.getByText('FC 27')).toBeInTheDocument()
   expect(await screen.findByText('Mbappe')).toBeInTheDocument()
 })
 

@@ -20,7 +20,7 @@ export default function Sidebar() {
   const watchCount = useWatchlist().length
   return (
     <nav className="w-40 flex-shrink-0 bg-card border-r border-border flex flex-col py-6 px-3 gap-1">
-      <div className="text-gold font-bold text-lg px-3 mb-6">FC 26</div>
+      <div className="text-gold font-bold text-lg px-3 mb-6">FC 27</div>
       {LINKS.map(({ to, label }) => (
         <NavLink
           key={to}

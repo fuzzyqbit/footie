@@ -1,6 +1,6 @@
-# ⚽ FC 26 Playbook (PS5)
+# ⚽ FC 27 Playbook (PS5)
 
-A practical, opinionated guide to dominating **EA Sports FC 26** on PlayStation 5 —
+A practical, opinionated guide to dominating **EA Sports FC 27** on PlayStation 5 —
 strategies, formations & lineups, tactics (FC IQ + Player Roles), and player
 acquisition plans for both **Ultimate Team (FUT)** and **Career Mode**.
 
@@ -35,6 +35,12 @@ acquisition plans for both **Ultimate Team (FUT)** and **Career Mode**.
     fast-player list. → [`docs/10-fastest-xi.md`](docs/10-fastest-xi.md)
 11. **Special cards.** Per-card stats crawled from fut.gg player pages (paste a card
     URL to add). → [`docs/11-special-cards.md`](docs/11-special-cards.md)
+
+> **FC 27 data:** the card database (`data/players.json`) is FC 27, scraped from
+> futbin (`fc26 expand` for cards + prices, `fc26 images` for PlayStyles + HD art).
+> Docs 08-11 are still FC 26 snapshots, and `fc26 seed` / `sync` / `enrich` are
+> FC 26-era commands - don't run them against the FC 27 database. The command is
+> still named `fc26`.
 
 ## The `fc26` program
 
