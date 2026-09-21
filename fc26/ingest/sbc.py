@@ -53,7 +53,7 @@ TIMEOUT_SECONDS = 20
 
 # Strip a leading numeric id + the EA SPORTS suffix from the <h1> fallback name.
 _LEADING_ID_RE = re.compile(r"^\d+\s*")
-_SUFFIX_RE = re.compile(r"\s*-?\s*EA SPORTS FC 26 SBC\s*$", re.IGNORECASE)
+_SUFFIX_RE = re.compile(r"\s*-?\s*EA SPORTS FC \d+ SBC\s*$", re.IGNORECASE)
 
 # Leaf-page field regexes over the raw RSC payload (JS object literals).
 _NAME_RE = re.compile(r'slug:"([^"]+)",categoryEaId:\d+,name:"([^"]+)"')
@@ -65,6 +65,16 @@ _PLAYER_EA_ID_RE = re.compile(r"playerEaId:(\d+|null)")
 _REPEATABLE_RE = re.compile(r"isRepeatable:(!0|!1)")
 _REPEATS_RE = re.compile(r"numberOfRepeats:(\d+)")
 _H1_RE = re.compile(r"<h1[^>]*>(.*?)</h1>", re.IGNORECASE | re.DOTALL)
+# One sub-challenge object in the RSC payload: name/description, the live cheapest
+# solution price, and the human-readable requirement lines EA shows in-game.
+_CHALLENGE_RE = re.compile(
+    r'challengeType:"[^"]*".*?name:"((?:[^"\\]|\\.)*)",description:"((?:[^"\\]|\\.)*)"'
+    r".*?cheapestSolutionPrice:(\d+|null)"
+    r".*?requirementsText:\$R\[\d+\]=\[(.*?)\],isStreamlined",
+    re.DOTALL,
+)
+_JS_STRING_RE = re.compile(r'"((?:[^"\\]|\\.)*)"')
+
 _TAG_RE = re.compile(r"<[^>]+>")
 
 # Leaf URL: /sbc/<category>/<slug>/ where <category> != "category".
@@ -239,6 +249,17 @@ def parse_sbc(leaf_html: str, url: str) -> dict:
         if not (pid in seen_ids or seen_ids.add(pid))
     ]
 
+    # How to complete it: each sub-challenge with its requirement lines + price.
+    challenges = [
+        {
+            "name": _unescape(ch_name),
+            "description": _unescape(ch_desc),
+            "requirements": [_unescape(r) for r in _JS_STRING_RE.findall(reqs)],
+            "cost": None if price == "null" else int(price),
+        }
+        for ch_name, ch_desc, price, reqs in _CHALLENGE_RE.findall(leaf_html)
+    ]
+
     repeat_match = _REPEATABLE_RE.search(leaf_html)
     repeatable = repeat_match.group(1) == "!0" if repeat_match else False
     repeats_match = _REPEATS_RE.search(leaf_html)
@@ -256,6 +277,7 @@ def parse_sbc(leaf_html: str, url: str) -> dict:
         "reward_player_ea_ids": reward_player_ea_ids,
         "repeatable": repeatable,
         "number_of_repeats": number_of_repeats,
+        "challenges": challenges,
         "source_url": url,
     }
 

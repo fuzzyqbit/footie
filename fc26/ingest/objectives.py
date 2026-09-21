@@ -29,6 +29,7 @@ from ..db import CardRepository
 from ..known_names import fold
 
 HUB_URL = "https://www.fut.gg/objectives/"
+GENERIC_GROUP = "Objectives"   # clean_group_name() of a hub/category index page
 BASE_URL = "https://www.fut.gg"
 
 # fut.gg blocks the repo's default UA but serves a normal browser UA fine.
@@ -49,7 +50,7 @@ SKIP_PATHS = {
 
 # Strip a leading numeric id and the EA SPORTS suffix from the h1 group name.
 _LEADING_ID_RE = re.compile(r"^\d+\s*")
-_SUFFIX_RE = re.compile(r"\s*-?\s*EA SPORTS FC 26 Objectives\s*$", re.IGNORECASE)
+_SUFFIX_RE = re.compile(r"\s*-?\s*EA SPORTS FC \d+ Objectives\s*$", re.IGNORECASE)
 
 
 def default_fetch_html(url: str) -> str:
@@ -221,7 +222,15 @@ def build_objectives(
                     "source_url": url,
                     "tasks": tasks,
                 }
-    return sorted(results.values(), key=lambda r: (r["card_id"], r["source_url"]))
+    # Hub/category index pages (group "Objectives") also show reward players, but
+    # their text describes the whole category, not how to unlock that player. Keep
+    # such a record only when no specific objective page matched the same card.
+    specific_ids = {r["card_id"] for r in results.values() if r["objective"] != GENERIC_GROUP}
+    records = [
+        r for r in results.values()
+        if r["objective"] != GENERIC_GROUP or r["card_id"] not in specific_ids
+    ]
+    return sorted(records, key=lambda r: (r["card_id"], r["source_url"]))
 
 
 def write_objectives(

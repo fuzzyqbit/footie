@@ -22,7 +22,7 @@ export default function ObjectivesPage() {
       <h1 className="text-2xl font-bold text-fg mb-1">Objectives</h1>
       <p className="text-muted text-sm mb-4">
         Players you unlock by completing objectives — matched from the live fut.gg objectives hub.
-        Open a card’s objective for the full task list.
+        Each player lists the tasks that unlock them.
       </p>
 
       {error && (
@@ -42,16 +42,12 @@ export default function ObjectivesPage() {
           {cards.map(card => (
             <div key={card.id}>
               <CardTile card={card} />
-              <a
-                href={card.objective_url}
-                target="_blank"
-                rel="noreferrer"
-                className="flex justify-between items-center text-xs mt-1 px-1 text-gold hover:underline"
+              <div
+                className="text-xs mt-1 px-1 text-gold font-semibold truncate"
                 title={`Objective: ${card.objective}`}
               >
-                <span className="truncate">{card.objective}</span>
-                <span className="shrink-0 ml-2">open →</span>
-              </a>
+                {card.objective}
+              </div>
               {card.tasks.length > 0 ? (
                 <ul className="mt-1 px-1 space-y-1">
                   {card.tasks.map((task, i) => (
@@ -66,7 +62,7 @@ export default function ObjectivesPage() {
                 </ul>
               ) : (
                 <p className="mt-1 px-1 text-xs text-muted/60 italic">
-                  Tasks not listed — open the objective for details.
+                  Tasks not scraped yet — run fc26 refresh-objectives.
                 </p>
               )}
             </div>

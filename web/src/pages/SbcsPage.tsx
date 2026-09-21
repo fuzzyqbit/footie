@@ -2,6 +2,13 @@ import { useQuery } from '@tanstack/react-query'
 import { apiFetch } from '../api/client'
 import SkeletonGrid from '../components/SkeletonGrid'
 
+interface SbcChallenge {
+  name: string
+  description: string
+  requirements: string[]
+  cost: number | null
+}
+
 interface Sbc {
   slug: string
   name: string
@@ -14,6 +21,7 @@ interface Sbc {
   reward_player_ea_ids: number[]
   repeatable: boolean
   number_of_repeats: number | null
+  challenges?: SbcChallenge[]
   source_url: string
 }
 
@@ -51,7 +59,7 @@ export default function SbcsPage() {
       <p className="text-muted text-sm mb-4">
         Best Squad Building Challenges to do right now — scraped live from the fut.gg SBC hub.
         Ranked so cheap, repeatable pack &amp; upgrade SBCs surface first. Cost is fut.gg’s
-        cheapest console solution; open an SBC for the full requirements.
+        cheapest console solution. Each SBC lists what every squad needs to complete it.
       </p>
 
       {error && (
@@ -69,12 +77,9 @@ export default function SbcsPage() {
       ) : (
         <div className="flex flex-col gap-2">
           {sbcs.map(sbc => (
-            <a
+            <div
               key={sbc.slug}
-              href={sbc.source_url}
-              target="_blank"
-              rel="noreferrer"
-              className="block bg-card border border-border rounded p-3 hover:border-gold transition-colors"
+              className="bg-card border border-border rounded p-3"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
@@ -101,7 +106,42 @@ export default function SbcsPage() {
                   <div className="text-[10px] text-muted">cheapest</div>
                 </div>
               </div>
-            </a>
+              {(sbc.challenges ?? []).length > 0 ? (
+                <ol className="mt-3 space-y-2 border-t border-border pt-2">
+                  {(sbc.challenges ?? []).map((ch, i) => (
+                    <li key={i}>
+                      <div className="flex items-baseline justify-between gap-3">
+                        <span className="text-sm text-fg">
+                          {(sbc.challenges ?? []).length > 1 && (
+                            <span className="text-muted mr-1.5">{i + 1}.</span>
+                          )}
+                          {ch.name}
+                        </span>
+                        <span className="text-xs text-gold shrink-0">
+                          {formatCost(ch.cost, true)}
+                        </span>
+                      </div>
+                      {ch.requirements.length > 0 ? (
+                        <ul className="mt-1 space-y-0.5">
+                          {ch.requirements.map((req, j) => (
+                            <li key={j} className="text-xs text-muted leading-snug flex gap-1.5">
+                              <span className="text-gold shrink-0">•</span>
+                              <span>{req}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="mt-1 text-xs text-muted/60 italic">No requirements listed.</p>
+                      )}
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p className="mt-2 text-xs text-muted/60 italic">
+                  Requirements not scraped yet — run fc26 refresh-sbcs.
+                </p>
+              )}
+            </div>
           ))}
         </div>
       )}
